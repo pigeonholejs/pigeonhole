@@ -39,32 +39,6 @@ export interface RenderResult {
 }
 
 /**
- * Markdoc の Tag ノードの型
- *
- * @markdoc/markdoc の Tag クラスに対応する。
- */
-export interface TagNode {
-    $$mdtype: "Tag"
-    name: string
-    attributes: Record<string, unknown>
-    children: RenderableNode[]
-}
-
-/**
- * レンダリング可能なノードの型
- *
- * Markdoc の RenderableTreeNode に対応する。
- */
-export type RenderableNode =
-    | TagNode
-    | string
-    | number
-    | boolean
-    | null
-    | undefined
-    | RenderableNode[]
-
-/**
  * Document のオプション
  */
 export interface DocumentOptions {

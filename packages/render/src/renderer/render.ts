@@ -1,3 +1,4 @@
+import { Tag, type RenderableTreeNode } from "@markdoc/markdoc"
 import { filterProps } from "../props/index"
 import {
     beginRendering,
@@ -8,7 +9,7 @@ import {
 } from "../island/island-marker"
 import { escapeHtml } from "./escape"
 import { serializeAttributes } from "./serialize-attributes"
-import type { RenderOptions, RenderResult, RenderableNode, TagNode } from "../types"
+import type { RenderOptions, RenderResult } from "../types"
 
 // HTML void 要素のセット
 // https://html.spec.whatwg.org/multipage/syntax.html#void-elements
@@ -28,19 +29,9 @@ const VOID_ELEMENTS = new Set([
     "wbr",
 ])
 
-/** TagNode かどうかを判定する */
-function isTagNode(node: unknown): node is TagNode {
-    return (
-        typeof node === "object" &&
-        node !== null &&
-        "$$mdtype" in node &&
-        (node as TagNode).$$mdtype === "Tag"
-    )
-}
-
 /** 単一ノードをレンダリングする */
 async function renderNode(
-    node: RenderableNode,
+    node: RenderableTreeNode,
     options: RenderOptions,
     context: { hasIslands: boolean },
 ): Promise<string> {
@@ -64,7 +55,7 @@ async function renderNode(
         return results.join("")
     }
 
-    if (isTagNode(node)) {
+    if (Tag.isTag(node)) {
         return renderTag(node, options, context)
     }
 
@@ -73,7 +64,7 @@ async function renderNode(
 
 /** children をレンダリングする */
 async function renderChildren(
-    children: RenderableNode[],
+    children: RenderableTreeNode[],
     options: RenderOptions,
     context: { hasIslands: boolean },
 ): Promise<string> {
@@ -94,7 +85,7 @@ async function renderChildren(
  * - island: island 指定のみ wrapIslandHtml、それ以外は componentHtml
  */
 async function renderTag(
-    tag: TagNode,
+    tag: Tag,
     options: RenderOptions,
     context: { hasIslands: boolean },
 ): Promise<string> {
@@ -177,7 +168,7 @@ async function renderTag(
  * Markdoc の RenderableTreeNode を HTML に変換する
  */
 export async function renderToHtml(
-    node: RenderableNode,
+    node: RenderableTreeNode,
     options: RenderOptions = {},
 ): Promise<RenderResult> {
     beginRendering()

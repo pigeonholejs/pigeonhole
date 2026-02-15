@@ -13,14 +13,12 @@
         "fmt": "oxfmt --write .",
         "test": "pnpm vitest run"
     },
-    "dependencies": {},
+    "dependencies": {
+        "@markdoc/markdoc": "^0.5.4"
+    },
     "devDependencies": {
-        "@markdoc/markdoc": "^0.5.4",
         "jsdom": "^26.1.0",
         "vitest": "^4.0.18"
-    },
-    "peerDependencies": {
-        "@markdoc/markdoc": "^0.5.4"
     },
     "packageManager": "pnpm@10.28.1"
 }

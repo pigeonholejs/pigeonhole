@@ -1,16 +1,17 @@
 import { test, assert } from "vitest"
+import { Tag, type RenderableTreeNode } from "@markdoc/markdoc"
 import { renderToHtml } from "./render"
-import type { RenderOptions, TagNode, RenderableNode } from "../types"
+import type { RenderOptions } from "../types"
 
 /**
- * ヘルパー: TagNode を生成する
+ * ヘルパー: Tag を生成する
  */
 function tag(
     name: string,
     attributes: Record<string, unknown> = {},
-    children: RenderableNode[] = [],
-): TagNode {
-    return { $$mdtype: "Tag", name, attributes, children }
+    children: RenderableTreeNode[] = [],
+): Tag {
+    return new Tag(name, attributes, children)
 }
 
 // --- 基本ノード型 ---
@@ -19,11 +20,6 @@ test("renderToHtml: null は空文字を返す", async () => {
     const result = await renderToHtml(null)
     assert.equal(result.html, "")
     assert.equal(result.hasIslands, false)
-})
-
-test("renderToHtml: undefined は空文字を返す", async () => {
-    const result = await renderToHtml(undefined)
-    assert.equal(result.html, "")
 })
 
 test("renderToHtml: boolean は空文字を返す", async () => {
