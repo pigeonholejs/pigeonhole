@@ -30,9 +30,12 @@ importers:
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
-      '@types/node':
-        specifier: ^25.2.3
-        version: 25.2.3
+      vitest:
+        specifier: ^4.0.18
+        version: 4.0.18(@types/node@25.2.3)
+
+  packages/render:
+    devDependencies:
       vitest:
         specifier: ^4.0.18
         version: 4.0.18(@types/node@25.2.3)
@@ -1178,6 +1181,7 @@ snapshots:
   '@types/node@25.2.3':
     dependencies:
       undici-types: 7.16.0
+    optional: true
 
   '@vitest/expect@4.0.18':
     dependencies:
@@ -1400,7 +1404,8 @@ snapshots:
 
   tinyrainbow@3.0.3: {}
 
-  undici-types@7.16.0: {}
+  undici-types@7.16.0:
+    optional: true
 
   vite@7.3.1(@types/node@25.2.3):
     dependencies:
