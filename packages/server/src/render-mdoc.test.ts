@@ -24,7 +24,8 @@ describe("renderMdoc", () => {
             {
                 mode: "ssr",
                 components: {
-                    Callout: (props, children) =>
+                    Callout: (props, children: string) =>
+                        // oxlint-disable-next-line typescript/restrict-template-expressions
                         `<div class="callout-${props.type}">${children}</div>`,
                 },
             },
