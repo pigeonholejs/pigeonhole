@@ -7,7 +7,9 @@
     "license": "MIT",
     "author": "",
     "exports": {
-        ".": "./src/index.ts"
+        ".": "./src/index.ts",
+        "./client": "./src/client/index.ts",
+        "./lit": "./src/lit/index.ts"
     },
     "scripts": {
         "lint": "oxlint .",
@@ -18,13 +20,25 @@
         "test": "pnpm vitest run"
     },
     "peerDependencies": {
-        "@lit-labs/ssr-client": ">=1.0.0"
+        "@lit-labs/ssr": ">=1.0.0",
+        "@lit-labs/ssr-client": ">=1.0.0",
+        "lit": ">=3.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@lit-labs/ssr": {
+            "optional": true
+        },
+        "lit": {
+            "optional": true
+        }
     },
     "dependencies": {
         "@markdoc/markdoc": "^0.5.4"
     },
     "devDependencies": {
+        "@lit-labs/ssr": "^4.0.0",
         "jsdom": "^26.1.0",
+        "lit": "^3.3.2",
         "typescript": "^5.9.3",
         "vitest": "^4.0.18"
     },

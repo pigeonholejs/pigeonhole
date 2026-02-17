@@ -135,11 +135,14 @@ async function renderTag(
             context.hasIslands = true
             const islandId = generateIslandId(renderCtx)
             const ceTagName = options.islandTagNames?.[name] ?? name
+            const isCustomElement = options.islandTagNames?.[name] !== undefined
             const componentHtml = await component(
                 sanitized,
                 (sanitized.children as string) ?? childrenHtml,
             )
-            return wrapIslandHtml(islandId, ceTagName, componentHtml, sanitized)
+            return wrapIslandHtml(islandId, ceTagName, componentHtml, sanitized, {
+                deferHydration: isCustomElement,
+            })
         }
 
         // island: island 指定コンポーネントのみ SSR + markers、それ以外は SSR のみ
@@ -151,7 +154,10 @@ async function renderTag(
             context.hasIslands = true
             const islandId = generateIslandId(renderCtx)
             const ceTagName = options.islandTagNames?.[name] ?? name
-            return wrapIslandHtml(islandId, ceTagName, componentHtml, sanitized)
+            const isCustomElement = options.islandTagNames?.[name] !== undefined
+            return wrapIslandHtml(islandId, ceTagName, componentHtml, sanitized, {
+                deferHydration: isCustomElement,
+            })
         }
         return componentHtml
     }

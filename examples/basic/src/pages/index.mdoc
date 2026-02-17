@@ -3,8 +3,11 @@ input:
   - name
 import:
   - "src/components/Greeting.mdoc.tsx"
+  - "src/components/Counter.mdoc.tsx"
 ---
 
 # Hello
 
 {% Greeting name=$name /%}
+
+{% Counter count=42 /%}

@@ -60,7 +60,9 @@ export function wrapIslandHtml(
     tagName: string,
     innerHtml: string,
     props: Record<string, unknown>,
+    options?: { deferHydration?: boolean },
 ): string {
     const propsScript = serializeIslandProps(islandId, props)
-    return `<${tagName} ${PH_ISLAND_ID_ATTR}="${islandId}">${innerHtml}</${tagName}>${propsScript}`
+    const deferAttr = options?.deferHydration ? " defer-hydration" : ""
+    return `<${tagName} ${PH_ISLAND_ID_ATTR}="${islandId}"${deferAttr}>${innerHtml}</${tagName}>${propsScript}`
 }

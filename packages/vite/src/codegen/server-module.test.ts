@@ -32,6 +32,54 @@ test("ComponentInfo からサーバー仮想モジュールを生成する", () 
     assert.include(result, "  Footer: {},")
 })
 
+// Lit コンポーネント（customElementTagName あり）のブリッジ生成
+test("Lit コンポーネントを createLitBridge でラップする", () => {
+    const components: ComponentInfo[] = [
+        {
+            filePath: "/project/src/components/Counter.mdoc.tsx",
+            tagName: "Counter",
+            isIsland: true,
+            customElementTagName: "ph-counter",
+            propsSchema: { count: { type: "number", optional: false } },
+        },
+        {
+            filePath: "/project/src/components/Card.mdoc.tsx",
+            tagName: "Card",
+            isIsland: false,
+            customElementTagName: null,
+            propsSchema: {},
+        },
+    ]
+
+    const result = generateServerModule(components)
+    // Lit ブリッジ import が含まれる
+    assert.include(result, 'import { createLitBridge } from "@pigeonhole/render/lit";')
+    // Lit コンポーネントはクラスインポート + ブリッジラップ
+    assert.include(result, 'import { Counter as _CounterClass } from "/project/src/components/Counter.mdoc.tsx";')
+    assert.include(result, 'const Counter = createLitBridge(_CounterClass, "ph-counter");')
+    // 関数コンポーネントは既存通り
+    assert.include(result, 'import { Card } from "/project/src/components/Card.mdoc.tsx";')
+    // components map に両方含まれる
+    assert.include(result, "  Counter,")
+    assert.include(result, "  Card,")
+})
+
+// Lit コンポーネントがない場合は createLitBridge をインポートしない
+test("Lit コンポーネントがない場合はブリッジをインポートしない", () => {
+    const components: ComponentInfo[] = [
+        {
+            filePath: "/project/src/components/Card.mdoc.tsx",
+            tagName: "Card",
+            isIsland: false,
+            customElementTagName: null,
+            propsSchema: {},
+        },
+    ]
+
+    const result = generateServerModule(components)
+    assert.notInclude(result, "createLitBridge")
+})
+
 // 空のコンポーネントリスト
 test("空のコンポーネントリストでは空の components を生成する", () => {
     const result = generateServerModule([])

@@ -72,3 +72,17 @@ test("wrapIslandHtml: island HTML をラップする", () => {
         '<my-counter data-ph-island-id="ph-1"><span>0</span></my-counter><script type="application/json" id="ph-props-ph-1">{"count":0}</script>',
     )
 })
+
+test("wrapIslandHtml: deferHydration オプションで defer-hydration 属性を追加する", () => {
+    const result = wrapIslandHtml("ph-1", "my-counter", "<span>0</span>", { count: 0 }, { deferHydration: true })
+    assert.include(result, 'defer-hydration')
+    assert.equal(
+        result,
+        '<my-counter data-ph-island-id="ph-1" defer-hydration><span>0</span></my-counter><script type="application/json" id="ph-props-ph-1">{"count":0}</script>',
+    )
+})
+
+test("wrapIslandHtml: deferHydration なしでは defer-hydration 属性がない", () => {
+    const result = wrapIslandHtml("ph-1", "my-counter", "<span>0</span>", { count: 0 })
+    assert.notInclude(result, "defer-hydration")
+})

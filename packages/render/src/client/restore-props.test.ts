@@ -96,6 +96,30 @@ test("restoreIslandProps: script が空の場合はスキップする", () => {
     assert.isUndefined(el.count)
 })
 
+test("restoreIslandProps: defer-hydration 属性を除去する", () => {
+    setupDom(`
+        <my-counter data-ph-island-id="ph-1" defer-hydration></my-counter>
+        <script type="application/json" id="ph-props-ph-1">{"count":5}</script>
+    `)
+
+    restoreIslandProps()
+
+    const el = document.querySelector("[data-ph-island-id='ph-1']")!
+    assert.isFalse(el.hasAttribute("defer-hydration"))
+})
+
+test("restoreIslandProps: defer-hydration がない要素では何も起きない", () => {
+    setupDom(`
+        <my-counter data-ph-island-id="ph-1"></my-counter>
+        <script type="application/json" id="ph-props-ph-1">{"count":5}</script>
+    `)
+
+    restoreIslandProps()
+
+    const el = document.querySelector("[data-ph-island-id='ph-1']")!
+    assert.isFalse(el.hasAttribute("defer-hydration"))
+})
+
 test("restoreIslandProps: 複数プロパティを復元する", () => {
     setupDom(`
         <my-comp data-ph-island-id="ph-1"></my-comp>

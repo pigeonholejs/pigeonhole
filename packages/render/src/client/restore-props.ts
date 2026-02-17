@@ -47,4 +47,9 @@ function restoreSingleIsland(scriptElement: Element): void {
     for (const [key, value] of Object.entries(props)) {
         ;(islandElement as unknown as Record<string, unknown>)[key] = value
     }
+
+    // defer-hydration を除去して Lit hydration をトリガー
+    if (islandElement.hasAttribute("defer-hydration")) {
+        islandElement.removeAttribute("defer-hydration")
+    }
 }
