@@ -10,7 +10,7 @@ export function generateClientModule(islands: ComponentInfo[]): string {
     lines.push("")
 
     // restoreIslandProps
-    lines.push('import { restoreIslandProps } from "pigeonhole/client";')
+    lines.push('import { restoreIslandProps } from "@pigeonhole/render/client";')
     lines.push("restoreIslandProps();")
     lines.push("")
 

@@ -1,5 +1,6 @@
-import { readdir, readFile } from "node:fs/promises"
+import { readFile } from "node:fs/promises"
 import { basename, join } from "node:path"
+import { glob } from "tinyglobby"
 import { normalizePath } from "vite"
 import { detectUseClient } from "./detect-use-client"
 import { extractCustomElementTag } from "./extract-custom-element-tag"
@@ -38,24 +39,6 @@ function scanComponentFile(filePath: string, source: string): ComponentInfo {
     }
 }
 
-// ディレクトリを再帰走査して *.mdoc.tsx ファイルを収集する
-async function walkDirectory(directory: string): Promise<string[]> {
-    const files: string[] = []
-
-    const entries = await readdir(directory, { withFileTypes: true })
-    for (const entry of entries) {
-        const fullPath = join(directory, entry.name)
-        if (entry.isDirectory()) {
-            const subFiles = await walkDirectory(fullPath)
-            files.push(...subFiles)
-        } else if (entry.name.endsWith(".mdoc.tsx")) {
-            files.push(fullPath)
-        }
-    }
-
-    return files
-}
-
 // コンポーネントディレクトリ配下をスキャンする
 export async function scanComponents(root: string, dir: string): Promise<ComponentInfo[]> {
     const absoluteDir = join(root, dir)
@@ -63,7 +46,7 @@ export async function scanComponents(root: string, dir: string): Promise<Compone
 
     let files: string[]
     try {
-        files = await walkDirectory(absoluteDir)
+        files = await glob(["**/*.mdoc.tsx"], { cwd: absoluteDir, absolute: true })
     } catch {
         // ディレクトリが存在しない場合は空を返す
         return results

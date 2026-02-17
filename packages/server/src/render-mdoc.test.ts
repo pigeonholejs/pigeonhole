@@ -70,6 +70,33 @@ describe("renderMdoc", () => {
         assert.equal(result.hasIslands, false)
     })
 
+    test("denyPatterns で指定した属性がコンポーネントに渡らない", async () => {
+        const source = '{% Callout class="foo" id="bar" type="info" %}content{% /Callout %}'
+        const result = await renderMdoc(
+            source,
+            {},
+            {
+                mode: "ssr",
+                components: {
+                    Callout: (props, children) => {
+                        const keys = Object.keys(props).sort().join(",")
+                        return `<div data-props="${keys}">${children}</div>`
+                    },
+                },
+                propsSchemas: {
+                    Callout: {
+                        type: { type: "string", optional: false },
+                        children: { type: "string", optional: true },
+                    },
+                },
+                denyPatterns: ["class", "id"],
+            },
+        )
+        assert.include(result.html, 'data-props="children,type"')
+        assert.notInclude(result.html, "foo")
+        assert.notInclude(result.html, "bar")
+    })
+
     test("island モードで island コンポーネントがあれば hasIslands が true になる", async () => {
         const source = '{% Callout type="info" %}content{% /Callout %}'
         const result = await renderMdoc(

@@ -1,5 +1,6 @@
-import { readdir, readFile } from "node:fs/promises"
+import { readFile } from "node:fs/promises"
 import { join } from "node:path"
+import { glob } from "tinyglobby"
 import { normalizePath } from "vite"
 import { parse, filterFrontmatter } from "@pigeonhole/markdoc"
 import type { MdocFileInfo } from "./types"
@@ -48,24 +49,6 @@ function extractTagAttributeNames(ast: {
     return tagAttributes
 }
 
-// ディレクトリを再帰走査して *.mdoc ファイルを収集する
-async function walkDirectory(directory: string): Promise<string[]> {
-    const files: string[] = []
-
-    const entries = await readdir(directory, { withFileTypes: true })
-    for (const entry of entries) {
-        const fullPath = join(directory, entry.name)
-        if (entry.isDirectory()) {
-            const subFiles = await walkDirectory(fullPath)
-            files.push(...subFiles)
-        } else if (entry.name.endsWith(".mdoc")) {
-            files.push(fullPath)
-        }
-    }
-
-    return files
-}
-
 // 指定ディレクトリ配下の .mdoc ファイルをスキャンする
 export async function scanMdocFiles(root: string, dir: string): Promise<MdocFileInfo[]> {
     const absoluteDir = join(root, dir)
@@ -73,7 +56,7 @@ export async function scanMdocFiles(root: string, dir: string): Promise<MdocFile
 
     let files: string[]
     try {
-        files = await walkDirectory(absoluteDir)
+        files = await glob(["**/*.mdoc"], { cwd: absoluteDir, absolute: true })
     } catch {
         // ディレクトリが存在しない場合は空を返す
         return results

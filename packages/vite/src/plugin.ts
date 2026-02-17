@@ -116,7 +116,7 @@ export function pigeonhole(): Plugin {
                 }
                 return [
                     'import "@lit-labs/ssr-client/lit-element-hydrate-support.js";',
-                    'import { restoreIslandProps } from "pigeonhole/client";',
+                    'import { restoreIslandProps } from "@pigeonhole/render/client";',
                     "restoreIslandProps();",
                     "export const islands = {};",
                 ].join("\n")

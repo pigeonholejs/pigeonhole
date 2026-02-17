@@ -27,11 +27,19 @@ export async function renderMdoc(
     if (options.components) {
         for (const name of Object.keys(options.components)) {
             const schema = options.propsSchemas?.[name]
-            const attributes: Record<string, { type: BooleanConstructor | NumberConstructor | StringConstructor }> = {}
+            const attributes: Record<string, { type: BooleanConstructor | NumberConstructor | StringConstructor; render?: boolean }> = {}
             if (schema) {
                 for (const [key, def] of Object.entries(schema)) {
                     if (key !== "children") {
                         attributes[key] = { type: MARKDOC_TYPE_MAP[def.type] ?? String }
+                    }
+                }
+            }
+            // 単純な deny パターン（ワイルドカードなし）を render: false として注入
+            if (options.denyPatterns) {
+                for (const pattern of options.denyPatterns) {
+                    if (!pattern.includes("*")) {
+                        attributes[pattern] = { type: String, render: false }
                     }
                 }
             }
