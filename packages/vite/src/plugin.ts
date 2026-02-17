@@ -1,7 +1,7 @@
 // Vite Plugin 本体
 
 import { mkdirSync, writeFileSync } from "node:fs"
-import { join } from "node:path"
+import { basename, join } from "node:path"
 import type { Plugin } from "vite"
 import type { PropsSchema } from "@pigeonhole/render"
 import { loadConfig } from "./config/load-config"
@@ -18,6 +18,21 @@ const VIRTUAL_COMPONENTS = "virtual:pigeonhole/components"
 const VIRTUAL_CLIENT = "virtual:pigeonhole/client"
 const RESOLVED_VIRTUAL_COMPONENTS = `\0${VIRTUAL_COMPONENTS}`
 const RESOLVED_VIRTUAL_CLIENT = `\0${VIRTUAL_CLIENT}`
+
+// タグ名衝突を検知し、衝突があればエラーを投げる
+function registerTagName(
+    tagNameSourceMap: Map<string, string>,
+    tagName: string,
+    filePath: string,
+): void {
+    const existing = tagNameSourceMap.get(tagName)
+    if (existing) {
+        throw new Error(
+            `tag name collision for "${tagName}": defined in both "${existing}" and "${filePath}"`,
+        )
+    }
+    tagNameSourceMap.set(tagName, filePath)
+}
 
 // Pigeonhole Vite プラグインを作成する
 export function pigeonhole(): Plugin {
@@ -48,32 +63,20 @@ export function pigeonhole(): Plugin {
             // コンポーネント名 → PropsSchema マップ
             const componentSchemaMap = new Map<string, PropsSchema>()
             for (const component of scannedComponents) {
-                const existing = tagNameSourceMap.get(component.tagName)
-                if (existing) {
-                    throw new Error(
-                        `tag name collision for "${component.tagName}": defined in both "${existing}" and "${component.filePath}"`,
-                    )
-                }
-                tagNameSourceMap.set(component.tagName, component.filePath)
+                registerTagName(tagNameSourceMap, component.tagName, component.filePath)
                 componentSchemaMap.set(component.tagName, component.propsSchema)
             }
 
             // .mdoc コンポーネントの input から PropsSchema を構築
             for (const mdocComponent of mdocComponents) {
-                const fileName = mdocComponent.filePath.split("/").at(-1) ?? ""
+                const fileName = basename(mdocComponent.filePath)
                 const tagName = fileName.replace(".mdoc", "")
 
-                const existing = tagNameSourceMap.get(tagName)
-                if (existing) {
-                    throw new Error(
-                        `tag name collision for "${tagName}": defined in both "${existing}" and "${mdocComponent.filePath}"`,
-                    )
-                }
-                tagNameSourceMap.set(tagName, mdocComponent.filePath)
+                registerTagName(tagNameSourceMap, tagName, mdocComponent.filePath)
 
                 const schema: PropsSchema = {}
                 for (const input of mdocComponent.inputs) {
-                    schema[input.variableName] = "string"
+                    schema[input.variableName] = { type: "string", optional: false }
                 }
                 componentSchemaMap.set(tagName, schema)
             }

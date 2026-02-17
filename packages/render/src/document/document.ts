@@ -34,14 +34,14 @@ export function buildBootstrapScript(islandModules?: string[]): string {
  * @returns 完全な HTML 文字列
  */
 export function createDocument(options: DocumentOptions): string {
-    const { title, head, body, hasIslands, islandModules } = options
+    const { title, head, body, hasIslands, islandModules, lang = "en" } = options
     const titleTag = title !== undefined ? `<title>${title}</title>` : ""
     const headContent = head ?? ""
     const bootstrapScript = hasIslands === true ? buildBootstrapScript(islandModules) : ""
 
     return [
         "<!doctype html>",
-        '<html lang="ja">',
+        `<html lang="${lang}">`,
         "<head>",
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1.0">',

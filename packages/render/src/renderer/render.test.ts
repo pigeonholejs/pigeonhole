@@ -79,7 +79,7 @@ test("renderToHtml: ssr モードで component を描画する", async () => {
         components: {
             Counter: (props, children) => `<my-counter>${children}</my-counter>`,
         },
-        propsSchemas: { Counter: { count: "number" } },
+        propsSchemas: { Counter: { count: { type: "number", optional: false } } },
     }
     const result = await renderToHtml(tag("Counter", { count: 5 }, ["click me"]), options)
     assert.equal(result.html, "<my-counter>click me</my-counter>")
@@ -108,7 +108,7 @@ test("renderToHtml: csr モードで空 shell + props script を出力する", a
         components: {
             Counter: () => "<span>0</span>",
         },
-        propsSchemas: { Counter: { count: "number" } },
+        propsSchemas: { Counter: { count: { type: "number", optional: false } } },
     }
     const result = await renderToHtml(tag("Counter", { count: 0 }), options)
     assert.include(result.html, '<Counter data-ph-island-id="ph-1"></Counter>')
@@ -123,7 +123,7 @@ test("renderToHtml: csr モードで islandTagNames を使う", async () => {
         components: {
             Counter: () => "<span>0</span>",
         },
-        propsSchemas: { Counter: { count: "number" } },
+        propsSchemas: { Counter: { count: { type: "number", optional: false } } },
         islandTagNames: { Counter: "my-counter" },
     }
     const result = await renderToHtml(tag("Counter", { count: 0 }), options)
@@ -138,7 +138,7 @@ test("renderToHtml: hydration モードで全コンポーネントに island mar
         components: {
             Counter: () => "<span>0</span>",
         },
-        propsSchemas: { Counter: { count: "number" } },
+        propsSchemas: { Counter: { count: { type: "number", optional: false } } },
     }
     const result = await renderToHtml(tag("Counter", { count: 0 }), options)
     assert.include(result.html, 'data-ph-island-id="ph-1"')
@@ -155,7 +155,7 @@ test("renderToHtml: island モードで island コンポーネントに markers 
         components: {
             Counter: () => "<span>0</span>",
         },
-        propsSchemas: { Counter: { count: "number" } },
+        propsSchemas: { Counter: { count: { type: "number", optional: false } } },
         islandComponents: new Set(["Counter"]),
     }
     const result = await renderToHtml(tag("Counter", { count: 0 }), options)
@@ -204,7 +204,7 @@ test("renderToHtml: filterProps でスキーマ外の属性を除外する", asy
                 return "<div></div>"
             },
         },
-        propsSchemas: { Comp: { title: "string" } },
+        propsSchemas: { Comp: { title: { type: "string", optional: false } } },
     }
     await renderToHtml(tag("Comp", { title: "hello", extra: "removed" }), options)
     assert.equal(receivedProps.title, "hello")

@@ -2,10 +2,11 @@ import type { Context } from "hono"
 import { renderMdoc } from "@pigeonhole/server"
 import type { ServerComponent } from "@pigeonhole/server"
 import { createDocument } from "@pigeonhole/render"
+import type { PropsSchema } from "@pigeonhole/render"
 
 export interface PageRendererOptions {
     components?: Record<string, ServerComponent>
-    propsSchemas?: Record<string, Record<string, string>>
+    propsSchemas?: Record<string, PropsSchema>
 }
 
 export function createPageRenderer(options: PageRendererOptions = {}) {

@@ -10,7 +10,7 @@ test("island コンポーネントからクライアント仮想モジュール�
             tagName: "Counter",
             isIsland: true,
             customElementTagName: "ph-counter",
-            propsSchema: { count: "number" },
+            propsSchema: { count: { type: "number", optional: false } },
         },
     ]
 

@@ -1,3 +1,5 @@
+import type { PropsSchema } from "./props/props-filter"
+
 /**
  * レンダリングモード
  * - ssr: 完全な静的 HTML。JS 不要。
@@ -23,7 +25,7 @@ export type ServerComponent = (
 export interface RenderOptions {
     mode?: RenderMode
     components?: Record<string, ServerComponent>
-    propsSchemas?: Record<string, Record<string, string>>
+    propsSchemas?: Record<string, PropsSchema>
     denyPatterns?: string[]
     authorAttrsMap?: Record<string, Set<string>>
     islandComponents?: Set<string>
@@ -47,4 +49,5 @@ export interface DocumentOptions {
     body: string
     hasIslands?: boolean
     islandModules?: string[]
+    lang?: string
 }

@@ -29,7 +29,10 @@ describe("renderMdoc", () => {
                         `<div class="callout-${props.type}">${children}</div>`,
                 },
                 propsSchemas: {
-                    Callout: { type: "string", "children?": "string" },
+                    Callout: {
+                        type: { type: "string", optional: false },
+                        children: { type: "string", optional: true },
+                    },
                 },
             },
         )
@@ -50,7 +53,10 @@ describe("renderMdoc", () => {
                         `<div data-count="${props.count}">${children}</div>`,
                 },
                 propsSchemas: {
-                    Counter: { count: "number", "children?": "string" },
+                    Counter: {
+                        count: { type: "number", optional: false },
+                        children: { type: "string", optional: true },
+                    },
                 },
             },
         )
@@ -75,7 +81,10 @@ describe("renderMdoc", () => {
                     Callout: (props, children) => `<div class="callout">${children}</div>`,
                 },
                 propsSchemas: {
-                    Callout: { type: "string", "children?": "string" },
+                    Callout: {
+                        type: { type: "string", optional: false },
+                        children: { type: "string", optional: true },
+                    },
                 },
                 islandComponents: new Set(["Callout"]),
             },

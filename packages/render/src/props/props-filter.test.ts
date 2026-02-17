@@ -5,7 +5,10 @@ import { filterProps } from "./props-filter"
 test("schema に宣言されたキーのみ通す", () => {
     const result = filterProps({
         attrs: { title: "hello", count: 42, undeclared: "bad" },
-        schema: { title: "string", count: "number" },
+        schema: {
+            title: { type: "string", optional: false },
+            count: { type: "number", optional: false },
+        },
         authorAttrs: new Set(["title", "count"]),
         denyPatterns: [],
     })
@@ -16,7 +19,7 @@ test("schema に宣言されたキーのみ通す", () => {
 test("schema に存在しない attrs のキーは破棄される", () => {
     const result = filterProps({
         attrs: { title: "hello", evil: "script", hack: "xss" },
-        schema: { title: "string" },
+        schema: { title: { type: "string", optional: false } },
         authorAttrs: new Set(["title"]),
         denyPatterns: [],
     })
@@ -30,7 +33,7 @@ test("authorAttrs に schema 未宣言キーがある場合 build error", () => 
         () =>
             filterProps({
                 attrs: { title: "hello", evil: "script" },
-                schema: { title: "string" },
+                schema: { title: { type: "string", optional: false } },
                 authorAttrs: new Set(["title", "evil"]),
                 denyPatterns: [],
             }),
@@ -44,7 +47,10 @@ test("authorAttrs に deny パターン一致キーがある場合 build error",
         () =>
             filterProps({
                 attrs: { title: "hello", class: "foo" },
-                schema: { title: "string", class: "string" },
+                schema: {
+                    title: { type: "string", optional: false },
+                    class: { type: "string", optional: false },
+                },
                 authorAttrs: new Set(["title", "class"]),
                 denyPatterns: ["class", "style", "id"],
             }),
@@ -57,7 +63,10 @@ test("ワイルドカード deny パターンに一致する場合 build error",
         () =>
             filterProps({
                 attrs: { title: "hello", "on-click": "alert(1)" },
-                schema: { title: "string", "on-click": "string" },
+                schema: {
+                    title: { type: "string", optional: false },
+                    "on-click": { type: "string", optional: false },
+                },
                 authorAttrs: new Set(["title", "on-click"]),
                 denyPatterns: ["on-*"],
             }),
@@ -69,7 +78,10 @@ test("ワイルドカード deny パターンに一致する場合 build error",
 test("schema に children がある場合のみ children を通す", () => {
     const result = filterProps({
         attrs: { title: "hello" },
-        schema: { title: "string", children: "string" },
+        schema: {
+            title: { type: "string", optional: false },
+            children: { type: "string", optional: false },
+        },
         authorAttrs: new Set(["title"]),
         denyPatterns: [],
         renderedChildren: "<p>child</p>",
@@ -84,7 +96,7 @@ test("schema に children がある場合のみ children を通す", () => {
 test("schema に children がない場合は children を除外する", () => {
     const result = filterProps({
         attrs: { title: "hello" },
-        schema: { title: "string" },
+        schema: { title: { type: "string", optional: false } },
         authorAttrs: new Set(["title"]),
         denyPatterns: [],
         renderedChildren: "<p>child</p>",
@@ -97,7 +109,7 @@ test("schema に children がない場合は children を除外する", () => {
 test("自動生成属性は build error にならないが schema にない場合は破棄される", () => {
     const result = filterProps({
         attrs: { title: "hello", id: "auto-generated-id" },
-        schema: { title: "string" },
+        schema: { title: { type: "string", optional: false } },
         authorAttrs: new Set(["title"]),
         denyPatterns: ["id"],
     })
@@ -108,7 +120,10 @@ test("自動生成属性は build error にならないが schema にない場�
 test("自動生成属性が schema に宣言されている場合は通す", () => {
     const result = filterProps({
         attrs: { title: "hello", id: "heading-1" },
-        schema: { title: "string", id: "string" },
+        schema: {
+            title: { type: "string", optional: false },
+            id: { type: "string", optional: false },
+        },
         authorAttrs: new Set(["title"]),
         denyPatterns: [],
     })
@@ -126,7 +141,7 @@ test("attrs に大量のキーがあっても schema に宣言されたキーの
 
     const result = filterProps({
         attrs,
-        schema: { title: "string" },
+        schema: { title: { type: "string", optional: false } },
         authorAttrs: new Set(["title"]),
         denyPatterns: [],
     })

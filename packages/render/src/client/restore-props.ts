@@ -14,8 +14,9 @@ export function restoreIslandProps(): void {
     for (const script of scripts) {
         try {
             restoreSingleIsland(script)
-        } catch {
+        } catch (error) {
             // 復元失敗時は SSR 静的表示にフォールバック
+            console.warn(`[pigeonhole] failed to restore island props for "${script.id}":`, error)
         }
     }
 }

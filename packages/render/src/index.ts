@@ -3,7 +3,7 @@ export type { RenderableTreeNode } from "@markdoc/markdoc"
 
 // props
 export { matchesDenyPattern } from "./props/index"
-export { filterProps, type FilterPropsInput, type PropsSchema } from "./props/index"
+export { filterProps, type FilterPropsInput, type PropsSchema, type PropsDef } from "./props/index"
 // types
 export type {
     RenderMode,
@@ -17,7 +17,8 @@ export { renderToHtml } from "./renderer/index"
 export { escapeHtml, escapeAttribute } from "./renderer/index"
 // island
 export { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX } from "./island/index"
-export { serializeIslandProps, wrapIslandHtml } from "./island/index"
+export { serializeIslandProps, wrapIslandHtml, createRenderContext } from "./island/index"
+export type { RenderContext } from "./island/index"
 // client
 export { restoreIslandProps } from "./client/index"
 // document

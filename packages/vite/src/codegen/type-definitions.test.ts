@@ -10,7 +10,10 @@ test("ComponentInfo から types.d.ts の内容を生成する", () => {
             tagName: "Card",
             isIsland: false,
             customElementTagName: null,
-            propsSchema: { title: "string", "count?": "number" },
+            propsSchema: {
+                title: { type: "string", optional: false },
+                count: { type: "number", optional: true },
+            },
         },
     ]
 

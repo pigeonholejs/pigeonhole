@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { test, assert } from "vitest"
+import { test, assert, vi } from "vitest"
 import { restoreIslandProps } from "./restore-props"
 
 /**
@@ -47,6 +47,8 @@ test("restoreIslandProps: 複数 island のプロパティを復元する", () =
 })
 
 test("restoreIslandProps: 1 つの失敗で他の復元を止めない", () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {})
+
     setupDom(`
         <my-counter data-ph-island-id="ph-1"></my-counter>
         <script type="application/json" id="ph-props-ph-1">{invalid json}</script>
@@ -61,6 +63,11 @@ test("restoreIslandProps: 1 つの失敗で他の復元を止めない", () => {
         unknown
     >
     assert.equal(el2.count, 2)
+
+    assert.equal(warnSpy.mock.calls.length, 1)
+    assert.include(warnSpy.mock.calls[0]?.[0] as string, "failed to restore island props")
+
+    warnSpy.mockRestore()
 })
 
 test("restoreIslandProps: 対応する要素がない場合はスキップする", () => {

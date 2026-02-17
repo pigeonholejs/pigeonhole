@@ -1,12 +1,12 @@
 import { Tag, type RenderableTreeNode } from "@markdoc/markdoc"
 import { filterProps } from "../props/index"
 import {
-    beginRendering,
-    endRendering,
+    createRenderContext,
     generateIslandId,
     wrapIslandHtml,
     serializeIslandProps,
 } from "../island/island-marker"
+import type { RenderContext } from "../island/island-marker"
 import { escapeHtml } from "./escape"
 import { serializeAttributes } from "./serialize-attributes"
 import type { RenderOptions, RenderResult } from "../types"
@@ -34,6 +34,7 @@ async function renderNode(
     node: RenderableTreeNode,
     options: RenderOptions,
     context: { hasIslands: boolean },
+    renderCtx: RenderContext,
 ): Promise<string> {
     if (node === null || node === undefined || typeof node === "boolean") {
         return ""
@@ -50,13 +51,13 @@ async function renderNode(
     if (Array.isArray(node)) {
         const results: string[] = []
         for (const child of node) {
-            results.push(await renderNode(child, options, context))
+            results.push(await renderNode(child, options, context, renderCtx))
         }
         return results.join("")
     }
 
     if (Tag.isTag(node)) {
-        return renderTag(node, options, context)
+        return renderTag(node, options, context, renderCtx)
     }
 
     return ""
@@ -67,10 +68,11 @@ async function renderChildren(
     children: RenderableTreeNode[],
     options: RenderOptions,
     context: { hasIslands: boolean },
+    renderCtx: RenderContext,
 ): Promise<string> {
     const results: string[] = []
     for (const child of children) {
-        results.push(await renderNode(child, options, context))
+        results.push(await renderNode(child, options, context, renderCtx))
     }
     return results.join("")
 }
@@ -88,6 +90,7 @@ async function renderTag(
     tag: Tag,
     options: RenderOptions,
     context: { hasIslands: boolean },
+    renderCtx: RenderContext,
 ): Promise<string> {
     const { name, attributes, children } = tag
     const component = options.components?.[name]
@@ -95,7 +98,7 @@ async function renderTag(
 
     // カスタムコンポーネントの解決
     if (component) {
-        const childrenHtml = await renderChildren(children, options, context)
+        const childrenHtml = await renderChildren(children, options, context, renderCtx)
 
         // props schema に基づく allow-list フィルタ（未提供時は空 schema＝全属性拒否）
         const effectiveSchema = options.propsSchemas?.[name] ?? {}
@@ -121,7 +124,7 @@ async function renderTag(
         if (mode === "csr") {
             // csr: 空 shell + props script（component 関数は呼び出さない）
             context.hasIslands = true
-            const islandId = generateIslandId()
+            const islandId = generateIslandId(renderCtx)
             const ceTagName = options.islandTagNames?.[name] ?? name
             const propsScript = serializeIslandProps(islandId, sanitized)
             return `<${ceTagName} data-ph-island-id="${islandId}"></${ceTagName}>${propsScript}`
@@ -130,7 +133,7 @@ async function renderTag(
         if (mode === "hydration") {
             // hydration: 全コンポーネントを island 扱い → SSR + island markers
             context.hasIslands = true
-            const islandId = generateIslandId()
+            const islandId = generateIslandId(renderCtx)
             const ceTagName = options.islandTagNames?.[name] ?? name
             const componentHtml = await component(
                 sanitized,
@@ -146,7 +149,7 @@ async function renderTag(
         )
         if (options.islandComponents?.has(name)) {
             context.hasIslands = true
-            const islandId = generateIslandId()
+            const islandId = generateIslandId(renderCtx)
             const ceTagName = options.islandTagNames?.[name] ?? name
             return wrapIslandHtml(islandId, ceTagName, componentHtml, sanitized)
         }
@@ -160,7 +163,7 @@ async function renderTag(
         return `<${name}${attrs}>`
     }
 
-    const childrenHtml = await renderChildren(children, options, context)
+    const childrenHtml = await renderChildren(children, options, context, renderCtx)
     return `<${name}${attrs}>${childrenHtml}</${name}>`
 }
 
@@ -171,12 +174,8 @@ export async function renderToHtml(
     node: RenderableTreeNode,
     options: RenderOptions = {},
 ): Promise<RenderResult> {
-    beginRendering()
-    try {
-        const context = { hasIslands: false }
-        const html = await renderNode(node, options, context)
-        return { html, hasIslands: context.hasIslands }
-    } finally {
-        endRendering()
-    }
+    const renderCtx = createRenderContext()
+    const context = { hasIslands: false }
+    const html = await renderNode(node, options, context, renderCtx)
+    return { html, hasIslands: context.hasIslands }
 }

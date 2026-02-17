@@ -27,10 +27,7 @@ export function validateMdocFiles(
         for (const [tagName, attrNames] of Object.entries(page.tagAttributes)) {
             const schema = componentSchemaMap.get(tagName)
             if (schema) {
-                // スキーマキーを正規化（? を除去）
-                const normalizedKeys = new Set(
-                    Object.keys(schema).map((key) => (key.endsWith("?") ? key.slice(0, -1) : key)),
-                )
+                const normalizedKeys = new Set(Object.keys(schema))
 
                 for (const attr of attrNames) {
                     // 未宣言属性の検出

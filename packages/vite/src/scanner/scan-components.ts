@@ -1,5 +1,5 @@
 import { readdir, readFile } from "node:fs/promises"
-import { join } from "node:path"
+import { basename, join } from "node:path"
 import { normalizePath } from "vite"
 import { detectUseClient } from "./detect-use-client"
 import { extractCustomElementTag } from "./extract-custom-element-tag"
@@ -14,7 +14,7 @@ function validateExportName(tagName: string, exportName: string): boolean {
 
 // 単一コンポーネントファイルをスキャンする
 function scanComponentFile(filePath: string, source: string): ComponentInfo {
-    const fileName = filePath.split("/").at(-1) ?? ""
+    const fileName = basename(filePath)
     const tagName = fileName.replace(".mdoc.tsx", "")
 
     const exportNames = extractExportNames(source)

@@ -29,10 +29,9 @@ export async function renderMdoc(
             const schema = options.propsSchemas?.[name]
             const attributes: Record<string, { type: BooleanConstructor | NumberConstructor | StringConstructor }> = {}
             if (schema) {
-                for (const key of Object.keys(schema)) {
-                    const baseName = key.endsWith("?") ? key.slice(0, -1) : key
-                    if (baseName !== "children") {
-                        attributes[baseName] = { type: MARKDOC_TYPE_MAP[schema[key]] ?? String }
+                for (const [key, def] of Object.entries(schema)) {
+                    if (key !== "children") {
+                        attributes[key] = { type: MARKDOC_TYPE_MAP[def.type] ?? String }
                     }
                 }
             }

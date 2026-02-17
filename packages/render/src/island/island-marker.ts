@@ -1,15 +1,24 @@
 import { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX } from "./constants"
 
-// ID 生成用カウンター（リクエストごとにリセット）
-let islandCounter = 0
+/**
+ * リクエストスコープのレンダリングコンテキスト
+ *
+ * 並行リクエストでもアイランド ID が重複しないよう、
+ * カウンターをリクエストごとに分離する。
+ */
+export interface RenderContext {
+    islandCounter: number
+}
 
-// レンダリング中フラグ（並行レンダリング検出用）
-let isRendering = false
+/** 新しいレンダリングコンテキストを作成する */
+export function createRenderContext(): RenderContext {
+    return { islandCounter: 0 }
+}
 
 /** 一意なアイランド ID を生成する */
-export function generateIslandId(): string {
-    islandCounter += 1
-    return `ph-${islandCounter.toString(10)}`
+export function generateIslandId(ctx: RenderContext): string {
+    ctx.islandCounter += 1
+    return `ph-${ctx.islandCounter.toString(10)}`
 }
 
 /** JSON 内の < を \u003c にエスケープする */
@@ -54,24 +63,4 @@ export function wrapIslandHtml(
 ): string {
     const propsScript = serializeIslandProps(islandId, props)
     return `<${tagName} ${PH_ISLAND_ID_ATTR}="${islandId}">${innerHtml}</${tagName}>${propsScript}`
-}
-
-/**
- * レンダリング開始を宣言し、アイランド ID カウンターをリセットする
- *
- * 並行レンダリングが検出された場合は警告を出力する。
- */
-export function beginRendering(): void {
-    if (isRendering) {
-        console.warn(
-            "[pigeonhole] concurrent rendering detected: island counter may produce duplicate IDs",
-        )
-    }
-    isRendering = true
-    islandCounter = 0
-}
-
-/** レンダリング終了を宣言する */
-export function endRendering(): void {
-    isRendering = false
 }

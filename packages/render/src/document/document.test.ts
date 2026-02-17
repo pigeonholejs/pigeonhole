@@ -33,10 +33,15 @@ test("buildBootstrapScript: 順序を厳守する", () => {
 test("createDocument: 基本的なドキュメントを生成する", () => {
     const result = createDocument({ body: "<p>hello</p>" })
     assert.include(result, "<!doctype html>")
-    assert.include(result, '<html lang="ja">')
+    assert.include(result, '<html lang="en">')
     assert.include(result, '<meta charset="utf-8">')
     assert.include(result, "<p>hello</p>")
     assert.include(result, "</html>")
+})
+
+test("createDocument: lang パラメータでカスタム言語を設定する", () => {
+    const result = createDocument({ body: "", lang: "ja" })
+    assert.include(result, '<html lang="ja">')
 })
 
 test("createDocument: title を含める", () => {

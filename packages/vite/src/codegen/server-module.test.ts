@@ -10,7 +10,7 @@ test("ComponentInfo からサーバー仮想モジュールを生成する", () 
             tagName: "Card",
             isIsland: false,
             customElementTagName: null,
-            propsSchema: { title: "string" },
+            propsSchema: { title: { type: "string", optional: false } },
         },
         {
             filePath: "/project/src/components/Footer.mdoc.tsx",
@@ -28,7 +28,7 @@ test("ComponentInfo からサーバー仮想モジュールを生成する", () 
     assert.include(result, "  Card,")
     assert.include(result, "  Footer,")
     assert.include(result, "export const propsSchemas = {")
-    assert.include(result, '  Card: {"title":"string"},')
+    assert.include(result, '  Card: {"title":{"type":"string","optional":false}},')
     assert.include(result, "  Footer: {},")
 })
 

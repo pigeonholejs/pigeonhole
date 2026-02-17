@@ -12,9 +12,9 @@ interface CardProps {
 `
     const schema = extractPropsSchema(source, "CardProps")
     assert.deepEqual(schema, {
-        title: "string",
-        count: "number",
-        visible: "boolean",
+        title: { type: "string", optional: false },
+        count: { type: "number", optional: false },
+        visible: { type: "boolean", optional: false },
     })
 })
 
@@ -28,13 +28,13 @@ type CardProps = {
 `
     const schema = extractPropsSchema(source, "CardProps")
     assert.deepEqual(schema, {
-        title: "string",
-        count: "number",
+        title: { type: "string", optional: false },
+        count: { type: "number", optional: false },
     })
 })
 
 // オプショナルプロパティ
-test("オプショナルプロパティを ? 付きキーとして抽出する", () => {
+test("オプショナルプロパティを optional: true として抽出する", () => {
     const source = `
 interface CardProps {
     title: string;
@@ -43,8 +43,8 @@ interface CardProps {
 `
     const schema = extractPropsSchema(source, "CardProps")
     assert.deepEqual(schema, {
-        title: "string",
-        "count?": "number",
+        title: { type: "string", optional: false },
+        count: { type: "number", optional: true },
     })
 })
 
@@ -57,7 +57,7 @@ interface ButtonProps {
 `
     const schema = extractPropsSchema(source, "ButtonProps")
     assert.deepEqual(schema, {
-        variant: "string",
+        variant: { type: "string", optional: false },
     })
 })
 
@@ -71,8 +71,8 @@ interface ListProps {
 `
     const schema = extractPropsSchema(source, "ListProps")
     assert.deepEqual(schema, {
-        items: "unknown",
-        data: "unknown",
+        items: { type: "unknown", optional: false },
+        data: { type: "unknown", optional: false },
     })
 })
 
@@ -97,7 +97,7 @@ interface WrapperProps {
 `
     const schema = extractPropsSchema(source, "WrapperProps")
     assert.deepEqual(schema, {
-        children: "string",
-        title: "string",
+        children: { type: "string", optional: false },
+        title: { type: "string", optional: false },
     })
 })

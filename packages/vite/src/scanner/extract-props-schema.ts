@@ -51,8 +51,7 @@ export function extractPropsSchema(source: string, interfaceName: string): Props
     let propertyMatch = propertyRegex.exec(body)
     while (propertyMatch !== null) {
         const [, name, optional, rawType] = propertyMatch
-        const key = optional === "?" ? `${name}?` : name
-        schema[key] = classifyType(rawType)
+        schema[name] = { type: classifyType(rawType), optional: optional === "?" }
         propertyMatch = propertyRegex.exec(body)
     }
 
