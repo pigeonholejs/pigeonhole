@@ -4,7 +4,7 @@ import type { ComponentInfo } from "../scanner/types"
 // サーバー仮想モジュール (virtual:pigeonhole/components) を生成する
 export function generateServerModule(components: ComponentInfo[]): string {
     const lines: string[] = []
-    const hasLitComponents = components.some((c) => c.customElementTagName !== null)
+    const hasLitComponents = components.some((c) => c.customElementTagName.length > 0)
 
     if (hasLitComponents) {
         lines.push('import { createLitBridge } from "@pigeonhole/render/lit";')
@@ -13,13 +13,13 @@ export function generateServerModule(components: ComponentInfo[]): string {
 
     for (const component of components) {
         const path = normalizePath(component.filePath)
-        if (component.customElementTagName !== null) {
+        if (component.customElementTagName.length > 0) {
             // Lit: クラスをインポートしてブリッジでラップ
             lines.push(
                 `import { ${component.tagName} as _${component.tagName}Class } from "${path}";`,
             )
             lines.push(
-                `const ${component.tagName} = createLitBridge(_${component.tagName}Class, "${component.customElementTagName}");`,
+                `const ${component.tagName} = createLitBridge(_${component.tagName}Class, "${component.customElementTagName[0]}");`,
             )
         } else {
             // 関数コンポーネント: 既存通り

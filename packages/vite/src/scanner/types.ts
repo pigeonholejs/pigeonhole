@@ -5,7 +5,7 @@ export interface ComponentInfo {
     filePath: string
     tagName: string
     isIsland: boolean
-    customElementTagName: string | null
+    customElementTagName: string[]
     propsSchema: PropsSchema
 }
 

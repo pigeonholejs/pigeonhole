@@ -9,7 +9,7 @@ test("island コンポーネントからクライアント仮想モジュール�
             filePath: "/project/src/components/Counter.mdoc.tsx",
             tagName: "Counter",
             isIsland: true,
-            customElementTagName: "ph-counter",
+            customElementTagName: ["ph-counter"],
             propsSchema: { count: { type: "number", optional: false } },
         },
     ]
@@ -39,7 +39,7 @@ test("island マップに tagName と customElementTagName のマッピングを
             filePath: "/project/src/components/Counter.mdoc.tsx",
             tagName: "Counter",
             isIsland: true,
-            customElementTagName: "ph-counter",
+            customElementTagName: ["ph-counter"],
             propsSchema: {},
         },
     ]
@@ -48,14 +48,14 @@ test("island マップに tagName と customElementTagName のマッピングを
     assert.include(result, '"Counter": "ph-counter"')
 })
 
-// customElementTagName が null の island
-test("customElementTagName が null の island は islands マップに含めない", () => {
+// customElementTagName が空配列の island
+test("customElementTagName が空配列の island は islands マップに含めない", () => {
     const islands: ComponentInfo[] = [
         {
             filePath: "/project/src/components/Widget.mdoc.tsx",
             tagName: "Widget",
             isIsland: true,
-            customElementTagName: null,
+            customElementTagName: [],
             propsSchema: {},
         },
     ]

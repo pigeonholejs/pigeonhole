@@ -24,8 +24,8 @@ export function generateClientModule(islands: ComponentInfo[]): string {
     // island マップの export
     lines.push("export const islands = {")
     for (const island of islands) {
-        if (island.customElementTagName !== null) {
-            lines.push(`  "${island.tagName}": "${island.customElementTagName}",`)
+        if (island.customElementTagName.length > 0) {
+            lines.push(`  "${island.tagName}": "${island.customElementTagName[0]}",`)
         }
     }
     lines.push("};")

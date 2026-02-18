@@ -39,7 +39,7 @@ export function Card(props: CardProps, children: string): string {
         assert.equal(results.length, 1)
         assert.equal(results[0].tagName, "Card")
         assert.isFalse(results[0].isIsland)
-        assert.isNull(results[0].customElementTagName)
+        assert.deepEqual(results[0].customElementTagName, [])
         assert.deepEqual(results[0].propsSchema, { title: { type: "string", optional: false } })
     } finally {
         rmSync(root, { recursive: true, force: true })
@@ -69,7 +69,7 @@ export class CounterElement extends LitElement {}
         const results = await scanComponents(root, "src/components")
         assert.equal(results.length, 1)
         assert.isTrue(results[0].isIsland)
-        assert.equal(results[0].customElementTagName, "ph-counter")
+        assert.deepEqual(results[0].customElementTagName, ["ph-counter"])
         assert.equal(results[0].tagName, "Counter")
     } finally {
         rmSync(root, { recursive: true, force: true })

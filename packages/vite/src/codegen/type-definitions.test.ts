@@ -9,7 +9,7 @@ test("ComponentInfo から types.d.ts の内容を生成する", () => {
             filePath: "/project/src/components/Card.mdoc.tsx",
             tagName: "Card",
             isIsland: false,
-            customElementTagName: null,
+            customElementTagName: [],
             propsSchema: {
                 title: { type: "string", optional: false },
                 count: { type: "number", optional: true },
@@ -31,7 +31,7 @@ test("propsSchema が空のコンポーネントは interface を生成しない
             filePath: "/project/src/components/Footer.mdoc.tsx",
             tagName: "Footer",
             isIsland: false,
-            customElementTagName: null,
+            customElementTagName: [],
             propsSchema: {},
         },
     ]

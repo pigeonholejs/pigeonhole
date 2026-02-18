@@ -9,14 +9,14 @@ test("ComponentInfo からサーバー仮想モジュールを生成する", () 
             filePath: "/project/src/components/Card.mdoc.tsx",
             tagName: "Card",
             isIsland: false,
-            customElementTagName: null,
+            customElementTagName: [],
             propsSchema: { title: { type: "string", optional: false } },
         },
         {
             filePath: "/project/src/components/Footer.mdoc.tsx",
             tagName: "Footer",
             isIsland: false,
-            customElementTagName: null,
+            customElementTagName: [],
             propsSchema: {},
         },
     ]
@@ -39,14 +39,14 @@ test("Lit コンポーネントを createLitBridge でラップする", () => {
             filePath: "/project/src/components/Counter.mdoc.tsx",
             tagName: "Counter",
             isIsland: true,
-            customElementTagName: "ph-counter",
+            customElementTagName: ["ph-counter"],
             propsSchema: { count: { type: "number", optional: false } },
         },
         {
             filePath: "/project/src/components/Card.mdoc.tsx",
             tagName: "Card",
             isIsland: false,
-            customElementTagName: null,
+            customElementTagName: [],
             propsSchema: {},
         },
     ]
@@ -71,7 +71,7 @@ test("Lit コンポーネントがない場合はブリッジをインポート�
             filePath: "/project/src/components/Card.mdoc.tsx",
             tagName: "Card",
             isIsland: false,
-            customElementTagName: null,
+            customElementTagName: [],
             propsSchema: {},
         },
     ]
