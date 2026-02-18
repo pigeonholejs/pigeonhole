@@ -137,3 +137,194 @@ test("コンポーネントディレクトリが存在しない場合は空配�
         rmSync(root, { recursive: true, force: true })
     }
 })
+
+// SSR component detection (no island)
+test("SSR: 関数コンポーネントは island として検出されない", async () => {
+    const root = createTempDir()
+    try {
+        const componentsDir = join(root, "src/components")
+        mkdirSync(componentsDir, { recursive: true })
+
+        writeFileSync(
+            join(componentsDir, "Greeting.mdoc.tsx"),
+            `interface GreetingProps {
+    name: string;
+}
+
+export function Greeting(props: GreetingProps): string {
+    return \`<p>Hello, \${props.name}!</p>\`;
+}
+`,
+        )
+
+        const results = await scanComponents(root, "src/components")
+        assert.equal(results.length, 1)
+        assert.equal(results[0].tagName, "Greeting")
+        assert.isFalse(results[0].isIsland, "SSR component should NOT be an island")
+        assert.isNull(results[0].customElementTagName, "SSR component should NOT have customElementTagName")
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+// CSR/Island component detection with @customElement
+test("CSR/ISLAND: @customElement 付き Lit コンポーネントは island として検出される", async () => {
+    const root = createTempDir()
+    try {
+        const componentsDir = join(root, "src/components")
+        mkdirSync(componentsDir, { recursive: true })
+
+        writeFileSync(
+            join(componentsDir, "Interactive.mdoc.tsx"),
+            `import { LitElement, html } from "lit";
+import { customElement, property } from "lit/decorators.js";
+
+interface InteractiveProps {
+    value: string;
+}
+
+@customElement("ph-interactive")
+export class InteractiveElement extends LitElement {
+    @property({ type: String }) value = "";
+
+    render() {
+        return html\`<div>\${this.value}</div>\`;
+    }
+}
+`,
+        )
+
+        const results = await scanComponents(root, "src/components")
+        assert.equal(results.length, 1)
+        assert.equal(results[0].tagName, "Interactive")
+        assert.isTrue(results[0].isIsland, "CSR component with @customElement should be an island")
+        assert.equal(results[0].customElementTagName, "ph-interactive", "Should extract custom element tag name")
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+// Ensure old "use client" directive is ignored (no false positive)
+test("HYDRATION: 旧 'use client' ディレクティブは無視され、@customElement のみで判定される", async () => {
+    const root = createTempDir()
+    try {
+        const componentsDir = join(root, "src/components")
+        mkdirSync(componentsDir, { recursive: true })
+
+        // Component with "use client" but without @customElement should NOT be island
+        writeFileSync(
+            join(componentsDir, "Legacy.mdoc.tsx"),
+            `"use client"
+
+interface LegacyProps {
+    text: string;
+}
+
+export function Legacy(props: LegacyProps): string {
+    return \`<span>\${props.text}</span>\`;
+}
+`,
+        )
+
+        const results = await scanComponents(root, "src/components")
+        assert.equal(results.length, 1)
+        assert.equal(results[0].tagName, "Legacy")
+        assert.isFalse(results[0].isIsland, '"use client" without @customElement should NOT be an island')
+        assert.isNull(results[0].customElementTagName, "Should not have custom element tag name")
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+// Test multiple components with mixed SSR and Island types
+test("SSR + ISLAND: 混在したコンポーネントを正しく分類する", async () => {
+    const root = createTempDir()
+    try {
+        const componentsDir = join(root, "src/components")
+        mkdirSync(componentsDir, { recursive: true })
+
+        // SSR component
+        writeFileSync(
+            join(componentsDir, "Header.mdoc.tsx"),
+            `interface HeaderProps {
+    title: string;
+}
+
+export function Header(props: HeaderProps): string {
+    return \`<header><h1>\${props.title}</h1></header>\`;
+}
+`,
+        )
+
+        // Island component
+        writeFileSync(
+            join(componentsDir, "SearchBox.mdoc.tsx"),
+            `import { LitElement, html } from "lit";
+import { customElement } from "lit/decorators.js";
+
+@customElement("ph-search-box")
+export class SearchBoxElement extends LitElement {
+    render() {
+        return html\`<input type="text" />\`;
+    }
+}
+`,
+        )
+
+        // Another SSR component
+        writeFileSync(
+            join(componentsDir, "Footer.mdoc.tsx"),
+            `export function Footer(): string {
+    return \`<footer>Copyright 2026</footer>\`;
+}
+`,
+        )
+
+        const results = await scanComponents(root, "src/components")
+        assert.equal(results.length, 3)
+
+        const header = results.find((r) => r.tagName === "Header")
+        const searchBox = results.find((r) => r.tagName === "SearchBox")
+        const footer = results.find((r) => r.tagName === "Footer")
+
+        assert.isDefined(header)
+        assert.isDefined(searchBox)
+        assert.isDefined(footer)
+
+        assert.isFalse(header!.isIsland, "Header should be SSR only")
+        assert.isTrue(searchBox!.isIsland, "SearchBox should be an island")
+        assert.isFalse(footer!.isIsland, "Footer should be SSR only")
+
+        assert.isNull(header!.customElementTagName)
+        assert.equal(searchBox!.customElementTagName, "ph-search-box")
+        assert.isNull(footer!.customElementTagName)
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+// Edge case: @customElement with single quotes
+test("ISLAND: シングルクォートの @customElement も正しく検出される", async () => {
+    const root = createTempDir()
+    try {
+        const componentsDir = join(root, "src/components")
+        mkdirSync(componentsDir, { recursive: true })
+
+        writeFileSync(
+            join(componentsDir, "SingleQuote.mdoc.tsx"),
+            `import { LitElement } from "lit";
+import { customElement } from "lit/decorators.js";
+
+@customElement('ph-single-quote')
+export class SingleQuoteElement extends LitElement {}
+`,
+        )
+
+        const results = await scanComponents(root, "src/components")
+        assert.equal(results.length, 1)
+        assert.isTrue(results[0].isIsland, "Component with single quote @customElement should be island")
+        assert.equal(results[0].customElementTagName, "ph-single-quote")
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
