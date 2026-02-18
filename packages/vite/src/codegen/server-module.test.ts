@@ -8,14 +8,14 @@ test("ComponentInfo からサーバー仮想モジュールを生成する", () 
         {
             filePath: "/project/src/components/Card.mdoc.tsx",
             tagName: "Card",
-            isIsland: false,
+            hydrateMode: "none",
             customElementTagName: null,
             propsSchema: { title: { type: "string", optional: false } },
         },
         {
             filePath: "/project/src/components/Footer.mdoc.tsx",
             tagName: "Footer",
-            isIsland: false,
+            hydrateMode: "none",
             customElementTagName: null,
             propsSchema: {},
         },
@@ -38,14 +38,14 @@ test("Lit コンポーネントのテンプレート関数を生成する", () =
         {
             filePath: "/project/src/components/Counter.mdoc.tsx",
             tagName: "Counter",
-            isIsland: true,
+            hydrateMode: "eager",
             customElementTagName: "ph-counter",
             propsSchema: { count: { type: "number", optional: false } },
         },
         {
             filePath: "/project/src/components/Card.mdoc.tsx",
             tagName: "Card",
-            isIsland: false,
+            hydrateMode: "none",
             customElementTagName: null,
             propsSchema: {},
         },
@@ -76,7 +76,7 @@ test("複数の props のバインディングを生成する", () => {
         {
             filePath: "/project/src/components/Widget.mdoc.tsx",
             tagName: "Widget",
-            isIsland: true,
+            hydrateMode: "eager",
             customElementTagName: "ph-widget",
             propsSchema: {
                 title: { type: "string", optional: false },
@@ -98,7 +98,7 @@ test("Lit コンポーネントがない場合は Lit 関連をインポート�
         {
             filePath: "/project/src/components/Card.mdoc.tsx",
             tagName: "Card",
-            isIsland: false,
+            hydrateMode: "none",
             customElementTagName: null,
             propsSchema: {},
         },
@@ -110,13 +110,13 @@ test("Lit コンポーネントがない場合は Lit 関連をインポート�
     assert.notInclude(result, "unsafeHTML")
 })
 
-// 非 island の Lit コンポーネントには deferHydration が含まれない
-test("非 island コンポーネントの生成コードに deferHydration が含まれない", () => {
+// 非 hydrate の Lit コンポーネントには deferHydration が含まれない
+test("非 hydrate コンポーネントの生成コードに deferHydration が含まれない", () => {
     const components: ComponentInfo[] = [
         {
             filePath: "/project/src/components/Card.mdoc.tsx",
             tagName: "Card",
-            isIsland: false,
+            hydrateMode: "none",
             customElementTagName: null,
             propsSchema: {},
         },
@@ -124,6 +124,29 @@ test("非 island コンポーネントの生成コードに deferHydration が�
 
     const result = generateServerModule(components)
     assert.notInclude(result, "deferHydration")
+})
+
+// SSR-only Lit コンポーネント（customElementTagName あり、hydrateMode: "none"）
+test("SSR-only Lit コンポーネントは deferHydration: false で生成する", () => {
+    const components: ComponentInfo[] = [
+        {
+            filePath: "/project/src/components/Header.mdoc.tsx",
+            tagName: "Header",
+            hydrateMode: "none",
+            customElementTagName: "ph-header",
+            propsSchema: { title: { type: "string", optional: false } },
+        },
+    ]
+
+    const result = generateServerModule(components)
+    // Lit 関連インポートがある
+    assert.include(result, 'import { renderLitTemplate } from "@pigeonhole/render/lit";')
+    // 副作用インポートがある
+    assert.include(result, 'import "/project/src/components/Header.mdoc.tsx";')
+    // deferHydration: false で呼び出す
+    assert.include(result, "renderLitTemplate(template, { deferHydration: false })")
+    // deferHydration: true は含まれない
+    assert.notInclude(result, "deferHydration: true")
 })
 
 // 空のコンポーネントリスト

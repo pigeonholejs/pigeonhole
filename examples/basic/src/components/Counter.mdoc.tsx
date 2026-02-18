@@ -3,6 +3,8 @@ import { customElement, property } from "lit/decorators.js"
 
 @customElement("ph-counter")
 export class Counter extends LitElement {
+    static hydrate = "eager"
+
     static styles = css`
         :host {
             display: block;

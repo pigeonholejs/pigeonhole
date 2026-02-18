@@ -4,7 +4,6 @@ import {
     createRenderContext,
     generateIslandId,
     wrapIslandHtml,
-    serializeIslandProps,
 } from "../island/island-marker"
 import type { RenderContext } from "../island/island-marker"
 import { escapeHtml } from "./escape"
@@ -80,11 +79,8 @@ async function renderChildren(
 /**
  * Tag ノードをレンダリングする
  *
- * モード分岐:
- * - ssr: component 呼び出し → componentHtml 返却
- * - csr: 空 shell + props script（component 関数は呼び出さない）
- * - hydration: component 呼び出し → wrapIslandHtml（全コンポーネントを island 扱い）
- * - island: island 指定のみ wrapIslandHtml、それ以外は componentHtml
+ * hydrateComponents に含まれるコンポーネントは SSR + island markers、
+ * それ以外は SSR のみ。
  */
 async function renderTag(
     tag: Tag,
@@ -94,7 +90,6 @@ async function renderTag(
 ): Promise<string> {
     const { name, attributes, children } = tag
     const component = options.components?.[name]
-    const mode = options.mode ?? "island"
 
     // カスタムコンポーネントの解決
     if (component) {
@@ -111,48 +106,20 @@ async function renderTag(
             renderedChildren: childrenHtml,
         })
 
-        // モード別レンダリング
-        if (mode === "ssr") {
-            // ssr: component 呼び出し → componentHtml 返却（markers なし）
-            const componentHtml = await component(
-                sanitized,
-                (sanitized.children as string) ?? childrenHtml,
-            )
-            return componentHtml
-        }
-
-        if (mode === "csr") {
-            // csr: 空 shell + props script（component 関数は呼び出さない）
-            context.hasIslands = true
-            const islandId = generateIslandId(renderCtx)
-            const ceTagName = options.islandTagNames?.[name] ?? name
-            const propsScript = serializeIslandProps(islandId, sanitized)
-            return `<${ceTagName} data-ph-island-id="${islandId}"></${ceTagName}>${propsScript}`
-        }
-
-        if (mode === "hydration") {
-            // hydration: 全コンポーネントを island 扱い → SSR + island markers
-            context.hasIslands = true
-            const islandId = generateIslandId(renderCtx)
-            const ceTagName = options.islandTagNames?.[name] ?? name
-            const componentHtml = await component(
-                sanitized,
-                (sanitized.children as string) ?? childrenHtml,
-            )
-            return wrapIslandHtml(islandId, ceTagName, componentHtml, sanitized)
-        }
-
-        // island: island 指定コンポーネントのみ SSR + markers、それ以外は SSR のみ
         const componentHtml = await component(
             sanitized,
             (sanitized.children as string) ?? childrenHtml,
         )
-        if (options.islandComponents?.has(name)) {
+
+        if (options.hydrateComponents?.has(name)) {
+            // eager: SSR + hydration markers
             context.hasIslands = true
             const islandId = generateIslandId(renderCtx)
             const ceTagName = options.islandTagNames?.[name] ?? name
             return wrapIslandHtml(islandId, ceTagName, componentHtml, sanitized)
         }
+
+        // none (default): SSR only
         return componentHtml
     }
 

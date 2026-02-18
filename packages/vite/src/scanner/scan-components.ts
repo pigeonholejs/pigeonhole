@@ -4,6 +4,7 @@ import { glob } from "tinyglobby"
 import { normalizePath } from "vite"
 import { extractCustomElementTag } from "./extract-custom-element-tag"
 import { extractExportNames } from "./extract-export-names"
+import { extractHydrateMode } from "./extract-hydrate-mode"
 import { extractPropsSchema } from "./extract-props-schema"
 import type { ComponentInfo } from "./types"
 
@@ -26,13 +27,13 @@ function scanComponentFile(filePath: string, source: string): ComponentInfo {
     }
 
     const customElementTagName = extractCustomElementTag(source)
-    const isIsland = customElementTagName !== null
+    const hydrateMode = extractHydrateMode(source)
     const propsSchema = extractPropsSchema(source, `${tagName}Props`)
 
     return {
         filePath,
         tagName,
-        isIsland,
+        hydrateMode,
         customElementTagName,
         propsSchema,
     }

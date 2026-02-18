@@ -8,7 +8,7 @@ test("ComponentInfo から types.d.ts の内容を生成する", () => {
         {
             filePath: "/project/src/components/Card.mdoc.tsx",
             tagName: "Card",
-            isIsland: false,
+            hydrateMode: "none",
             customElementTagName: null,
             propsSchema: {
                 title: { type: "string", optional: false },
@@ -30,7 +30,7 @@ test("propsSchema が空のコンポーネントは interface を生成しない
         {
             filePath: "/project/src/components/Footer.mdoc.tsx",
             tagName: "Footer",
-            isIsland: false,
+            hydrateMode: "none",
             customElementTagName: null,
             propsSchema: {},
         },

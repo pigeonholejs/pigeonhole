@@ -8,7 +8,7 @@ test("island コンポーネントからクライアント仮想モジュール�
         {
             filePath: "/project/src/components/Counter.mdoc.tsx",
             tagName: "Counter",
-            isIsland: true,
+            hydrateMode: "eager",
             customElementTagName: "ph-counter",
             propsSchema: { count: { type: "number", optional: false } },
         },
@@ -38,7 +38,7 @@ test("island マップに tagName と customElementTagName のマッピングを
         {
             filePath: "/project/src/components/Counter.mdoc.tsx",
             tagName: "Counter",
-            isIsland: true,
+            hydrateMode: "eager",
             customElementTagName: "ph-counter",
             propsSchema: {},
         },
@@ -54,7 +54,7 @@ test("customElementTagName が null の island は islands マップに含めな
         {
             filePath: "/project/src/components/Widget.mdoc.tsx",
             tagName: "Widget",
-            isIsland: true,
+            hydrateMode: "eager",
             customElementTagName: null,
             propsSchema: {},
         },

@@ -71,11 +71,10 @@ test("renderToHtml: ネストしたタグを出力する", async () => {
     assert.equal(result.html, "<div><p>text</p></div>")
 })
 
-// --- ssr モード ---
+// --- SSR のみ（hydrateComponents 未指定 or 空） ---
 
-test("renderToHtml: ssr モードで component を描画する", async () => {
+test("renderToHtml: コンポーネントを SSR のみで描画する", async () => {
     const options: RenderOptions = {
-        mode: "ssr",
         components: {
             Counter: (props, children) => `<my-counter>${children}</my-counter>`,
         },
@@ -86,92 +85,59 @@ test("renderToHtml: ssr モードで component を描画する", async () => {
     assert.equal(result.hasIslands, false)
 })
 
-test("renderToHtml: ssr モードでは island markers を付けない", async () => {
+test("renderToHtml: hydrateComponents が空なら island markers を付けない", async () => {
     const options: RenderOptions = {
-        mode: "ssr",
         components: {
             Counter: () => "<span>0</span>",
         },
         propsSchemas: { Counter: {} },
-        islandComponents: new Set(["Counter"]),
+        hydrateComponents: new Set(),
     }
     const result = await renderToHtml(tag("Counter", {}), options)
     assert.notInclude(result.html, "data-ph-island-id")
     assert.equal(result.hasIslands, false)
 })
 
-// --- csr モード ---
+// --- ハイドレーション対象（hydrateComponents に含まれる） ---
 
-test("renderToHtml: csr モードで空 shell + props script を出力する", async () => {
+test("renderToHtml: hydrateComponents に含まれるコンポーネントに island markers を付ける", async () => {
     const options: RenderOptions = {
-        mode: "csr",
         components: {
             Counter: () => "<span>0</span>",
         },
         propsSchemas: { Counter: { count: { type: "number", optional: false } } },
+        hydrateComponents: new Set(["Counter"]),
     }
     const result = await renderToHtml(tag("Counter", { count: 0 }), options)
-    assert.include(result.html, '<Counter data-ph-island-id="ph-1"></Counter>')
+    assert.include(result.html, 'data-ph-island-id="ph-1"')
+    assert.include(result.html, "<span>0</span>")
     assert.include(result.html, '<script type="application/json" id="ph-props-ph-1">')
-    assert.include(result.html, '"count":0')
     assert.equal(result.hasIslands, true)
 })
 
-test("renderToHtml: csr モードで islandTagNames を使う", async () => {
+test("renderToHtml: hydrateComponents + islandTagNames でカスタム要素名を使う", async () => {
     const options: RenderOptions = {
-        mode: "csr",
         components: {
             Counter: () => "<span>0</span>",
         },
         propsSchemas: { Counter: { count: { type: "number", optional: false } } },
+        hydrateComponents: new Set(["Counter"]),
         islandTagNames: { Counter: "my-counter" },
     }
     const result = await renderToHtml(tag("Counter", { count: 0 }), options)
-    assert.include(result.html, '<my-counter data-ph-island-id="ph-1"></my-counter>')
-})
-
-// --- hydration モード ---
-
-test("renderToHtml: hydration モードで全コンポーネントに island markers を付ける", async () => {
-    const options: RenderOptions = {
-        mode: "hydration",
-        components: {
-            Counter: () => "<span>0</span>",
-        },
-        propsSchemas: { Counter: { count: { type: "number", optional: false } } },
-    }
-    const result = await renderToHtml(tag("Counter", { count: 0 }), options)
+    assert.include(result.html, "my-counter")
     assert.include(result.html, 'data-ph-island-id="ph-1"')
-    assert.include(result.html, "<span>0</span>")
-    assert.include(result.html, '<script type="application/json" id="ph-props-ph-1">')
-    assert.equal(result.hasIslands, true)
 })
 
-// --- island モード ---
+// --- 非ハイドレーションコンポーネント ---
 
-test("renderToHtml: island モードで island コンポーネントに markers を付ける", async () => {
+test("renderToHtml: hydrateComponents に含まれないコンポーネントは markers なし", async () => {
     const options: RenderOptions = {
-        mode: "island",
-        components: {
-            Counter: () => "<span>0</span>",
-        },
-        propsSchemas: { Counter: { count: { type: "number", optional: false } } },
-        islandComponents: new Set(["Counter"]),
-    }
-    const result = await renderToHtml(tag("Counter", { count: 0 }), options)
-    assert.include(result.html, 'data-ph-island-id="ph-1"')
-    assert.include(result.html, "<span>0</span>")
-    assert.equal(result.hasIslands, true)
-})
-
-test("renderToHtml: island モードで非 island コンポーネントは markers なし", async () => {
-    const options: RenderOptions = {
-        mode: "island",
         components: {
             Header: () => "<header>Header</header>",
         },
         propsSchemas: { Header: {} },
-        islandComponents: new Set(),
+        hydrateComponents: new Set(),
     }
     const result = await renderToHtml(tag("Header", {}), options)
     assert.equal(result.html, "<header>Header</header>")
@@ -179,17 +145,18 @@ test("renderToHtml: island モードで非 island コンポーネントは marke
     assert.equal(result.hasIslands, false)
 })
 
-test("renderToHtml: island モードがデフォルト", async () => {
+// --- デフォルト動作 ---
+
+test("renderToHtml: hydrateComponents 未指定は SSR のみ", async () => {
     const options: RenderOptions = {
         components: {
             Counter: () => "<span>0</span>",
         },
         propsSchemas: { Counter: {} },
-        islandComponents: new Set(["Counter"]),
     }
     const result = await renderToHtml(tag("Counter", {}), options)
-    assert.include(result.html, "data-ph-island-id")
-    assert.equal(result.hasIslands, true)
+    assert.notInclude(result.html, "data-ph-island-id")
+    assert.equal(result.hasIslands, false)
 })
 
 // --- filterProps 統合 ---
@@ -197,7 +164,6 @@ test("renderToHtml: island モードがデフォルト", async () => {
 test("renderToHtml: filterProps でスキーマ外の属性を除外する", async () => {
     let receivedProps: Record<string, unknown> = {}
     const options: RenderOptions = {
-        mode: "ssr",
         components: {
             Comp: (props) => {
                 receivedProps = props
@@ -215,7 +181,6 @@ test("renderToHtml: filterProps でスキーマ外の属性を除外する", asy
 
 test("renderToHtml: 非同期コンポーネントを処理する", async () => {
     const options: RenderOptions = {
-        mode: "ssr",
         components: {
             AsyncComp: async () => {
                 return "<p>async result</p>"

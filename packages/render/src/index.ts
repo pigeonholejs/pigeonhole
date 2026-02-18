@@ -6,7 +6,6 @@ export { matchesDenyPattern } from "./props/index"
 export { filterProps, type FilterPropsInput, type PropsSchema, type PropsDef } from "./props/index"
 // types
 export type {
-    RenderMode,
     RenderOptions,
     RenderResult,
     ServerComponent,

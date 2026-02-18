@@ -16,13 +16,12 @@ describe("renderMdoc", () => {
         assert.include(result.html, "Alice")
     })
 
-    test("ssr モードでコンポーネントを描画する", async () => {
+    test("コンポーネントを SSR で描画する", async () => {
         const source = '{% Callout type="info" %}content{% /Callout %}'
         const result = await renderMdoc(
             source,
             {},
             {
-                mode: "ssr",
                 components: {
                     Callout: (props, children: string) =>
                         // oxlint-disable-next-line typescript/restrict-template-expressions
@@ -47,7 +46,6 @@ describe("renderMdoc", () => {
             source,
             {},
             {
-                mode: "ssr",
                 components: {
                     Counter: (props, children) =>
                         `<div data-count="${props.count}">${children}</div>`,
@@ -76,7 +74,6 @@ describe("renderMdoc", () => {
             source,
             {},
             {
-                mode: "ssr",
                 components: {
                     Callout: (props, children) => {
                         const keys = Object.keys(props).sort().join(",")
@@ -97,13 +94,12 @@ describe("renderMdoc", () => {
         assert.notInclude(result.html, "bar")
     })
 
-    test("island モードで island コンポーネントがあれば hasIslands が true になる", async () => {
+    test("hydrateComponents に含まれるコンポーネントがあれば hasIslands が true になる", async () => {
         const source = '{% Callout type="info" %}content{% /Callout %}'
         const result = await renderMdoc(
             source,
             {},
             {
-                mode: "island",
                 components: {
                     Callout: (props, children) => `<div class="callout">${children}</div>`,
                 },
@@ -113,7 +109,7 @@ describe("renderMdoc", () => {
                         children: { type: "string", optional: true },
                     },
                 },
-                islandComponents: new Set(["Callout"]),
+                hydrateComponents: new Set(["Callout"]),
             },
         )
         assert.include(result.html, "callout")

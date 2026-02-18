@@ -1,4 +1,5 @@
 import { normalizePath } from "vite"
+import type { HydrateMode } from "../scanner/extract-hydrate-mode"
 import type { ComponentInfo } from "../scanner/types"
 
 // サーバー仮想モジュール (virtual:pigeonhole/components) を生成する
@@ -19,10 +20,11 @@ export function generateServerModule(components: ComponentInfo[]): string {
             // Lit: 副作用インポート（customElements.define）+ テンプレート関数生成
             lines.push(`import "${path}";`)
             lines.push(
-                generateIslandSsrFunction(
+                generateLitSsrFunction(
                     component.tagName,
                     component.customElementTagName,
                     Object.keys(component.propsSchema),
+                    component.hydrateMode,
                 ),
             )
         } else {
@@ -49,11 +51,12 @@ export function generateServerModule(components: ComponentInfo[]): string {
     return lines.join("\n")
 }
 
-/** Lit アイランドの SSR 関数をコード生成する */
-function generateIslandSsrFunction(
+/** Lit コンポーネントの SSR 関数をコード生成する */
+function generateLitSsrFunction(
     componentName: string,
     tagName: string,
     propNames: string[],
+    hydrateMode: HydrateMode,
 ): string {
     const propBindings = propNames
         .map((name) => `\n    .${name}=\${props.${name}}`)
@@ -63,7 +66,7 @@ function generateIslandSsrFunction(
         `const ${componentName} = async (props, children) => {`,
         `  const template = html\`<${tagName}${propBindings}`,
         `  >\${unsafeHTML(children || '')}</${tagName}>\`;`,
-        `  return renderLitTemplate(template, { deferHydration: true });`,
+        `  return renderLitTemplate(template, { deferHydration: ${hydrateMode === "eager"} });`,
         `};`,
     ].join("\n")
 }

@@ -38,7 +38,7 @@ export function Card(props: CardProps, children: string): string {
         const results = await scanComponents(root, "src/components")
         assert.equal(results.length, 1)
         assert.equal(results[0].tagName, "Card")
-        assert.isFalse(results[0].isIsland)
+        assert.equal(results[0].hydrateMode, "none")
         assert.isNull(results[0].customElementTagName)
         assert.deepEqual(results[0].propsSchema, { title: { type: "string", optional: false } })
     } finally {
@@ -46,8 +46,8 @@ export function Card(props: CardProps, children: string): string {
     }
 })
 
-// アイランドコンポーネントの検出
-test("@customElement 付きコンポーネントを island として検出する", async () => {
+// SSR-only Litコンポーネントの検出（@customElement あり、static hydrate なし）
+test("@customElement のみのコンポーネントは SSR-only Lit として検出する", async () => {
     const root = createTempDir()
     try {
         const componentsDir = join(root, "src/components")
@@ -66,7 +66,37 @@ export class CounterElement extends LitElement {}
 
         const results = await scanComponents(root, "src/components")
         assert.equal(results.length, 1)
-        assert.isTrue(results[0].isIsland)
+        assert.equal(results[0].hydrateMode, "none")
+        assert.equal(results[0].customElementTagName, "ph-counter")
+        assert.equal(results[0].tagName, "Counter")
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+// ハイドレーションコンポーネントの検出（@customElement + static hydrate = "eager"）
+test("@customElement + static hydrate = 'eager' のコンポーネントを hydrate 対象として検出する", async () => {
+    const root = createTempDir()
+    try {
+        const componentsDir = join(root, "src/components")
+        mkdirSync(componentsDir, { recursive: true })
+
+        writeFileSync(
+            join(componentsDir, "Counter.mdoc.tsx"),
+            `interface CounterProps {
+    count: number;
+}
+
+@customElement("ph-counter")
+export class CounterElement extends LitElement {
+    static hydrate = "eager"
+}
+`,
+        )
+
+        const results = await scanComponents(root, "src/components")
+        assert.equal(results.length, 1)
+        assert.equal(results[0].hydrateMode, "eager")
         assert.equal(results[0].customElementTagName, "ph-counter")
         assert.equal(results[0].tagName, "Counter")
     } finally {

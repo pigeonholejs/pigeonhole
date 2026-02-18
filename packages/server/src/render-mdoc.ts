@@ -50,11 +50,10 @@ export async function renderMdoc(
 
     const renderOptions: RenderOptions = {
         components: options.components,
-        mode: options.mode,
         propsSchemas: options.propsSchemas,
         authorAttrsMap: options.authorAttrsMap,
         denyPatterns: options.denyPatterns,
-        islandComponents: options.islandComponents,
+        hydrateComponents: options.hydrateComponents,
         islandTagNames: options.islandTagNames,
     }
 

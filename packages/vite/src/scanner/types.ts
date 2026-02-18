@@ -1,10 +1,11 @@
 import type { PropsSchema } from "@pigeonhole/render"
+import type { HydrateMode } from "./extract-hydrate-mode"
 
 // コンポーネント情報
 export interface ComponentInfo {
     filePath: string
     tagName: string
-    isIsland: boolean
+    hydrateMode: HydrateMode
     customElementTagName: string | null
     propsSchema: PropsSchema
 }
