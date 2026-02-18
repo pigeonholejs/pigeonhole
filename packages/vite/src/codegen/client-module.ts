@@ -3,25 +3,41 @@ import type { ComponentInfo } from "../scanner/types"
 
 // クライアント仮想モジュール (virtual:pigeonhole/client) を生成する
 export function generateClientModule(islands: ComponentInfo[]): string {
+    const eagerIslands = islands.filter((i) => i.hydrateMode === "eager")
+    const lazyIslands = islands.filter((i) => i.hydrateMode === "lazy")
     const lines: string[] = []
 
     // hydrate support
     lines.push('import "@lit-labs/ssr-client/lit-element-hydrate-support.js";')
     lines.push("")
 
-    // restoreIslandProps
+    // restoreIslandProps（eager 用）
     lines.push('import { restoreIslandProps } from "@pigeonhole/render/client";')
     lines.push("restoreIslandProps();")
     lines.push("")
 
-    // アイランドモジュールの eager import
-    for (const island of islands) {
+    // eager island: 即座に import
+    for (const island of eagerIslands) {
         const path = normalizePath(island.filePath)
         lines.push(`import "${path}";`)
     }
     lines.push("")
 
-    // island マップの export
+    // lazy island: observeLazyIslands + dynamic import
+    if (lazyIslands.length > 0) {
+        lines.push('import { observeLazyIslands } from "@pigeonhole/render/client";')
+        lines.push("observeLazyIslands({")
+        for (const island of lazyIslands) {
+            if (island.customElementTagName) {
+                const path = normalizePath(island.filePath)
+                lines.push(`  "${island.customElementTagName}": () => import("${path}"),`)
+            }
+        }
+        lines.push("});")
+        lines.push("")
+    }
+
+    // island マップの export（eager + lazy 両方）
     lines.push("export const islands = {")
     for (const island of islands) {
         if (island.customElementTagName !== null) {

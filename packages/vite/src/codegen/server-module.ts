@@ -66,7 +66,7 @@ function generateLitSsrFunction(
         `const ${componentName} = async (props, children) => {`,
         `  const template = html\`<${tagName}${propBindings}`,
         `  >\${unsafeHTML(children || '')}</${tagName}>\`;`,
-        `  return renderLitTemplate(template, { deferHydration: ${hydrateMode === "eager"} });`,
+        `  return renderLitTemplate(template, { deferHydration: ${hydrateMode !== "none"} });`,
         `};`,
     ].join("\n")
 }

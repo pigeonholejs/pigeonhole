@@ -149,6 +149,23 @@ test("SSR-only Lit コンポーネントは deferHydration: false で生成す�
     assert.notInclude(result, "deferHydration: true")
 })
 
+// lazy Lit コンポーネントは deferHydration: true で生成する
+test("lazy Lit コンポーネントは deferHydration: true で生成する", () => {
+    const components: ComponentInfo[] = [
+        {
+            filePath: "/project/src/components/Slider.mdoc.tsx",
+            tagName: "Slider",
+            hydrateMode: "lazy",
+            customElementTagName: "ph-slider",
+            propsSchema: { index: { type: "number", optional: false } },
+        },
+    ]
+
+    const result = generateServerModule(components)
+    assert.include(result, "renderLitTemplate(template, { deferHydration: true })")
+    assert.include(result, ".index=${props.index}")
+})
+
 // 空のコンポーネントリスト
 test("空のコンポーネントリストでは空の components を生成する", () => {
     const result = generateServerModule([])

@@ -95,6 +95,27 @@ test("wrapIslandHtml: 外側タグを含まない HTML はラップする", () =
     )
 })
 
+// --- wrapIslandHtml: lazy ハイドレーション ---
+
+test("wrapIslandHtml: lazy モードで data-ph-hydrate='lazy' が注入される", () => {
+    const islandHtml = "<my-counter><template></template></my-counter>"
+    const result = wrapIslandHtml("ph-1", "my-counter", islandHtml, { count: 0 }, "lazy")
+    assert.include(result, 'data-ph-hydrate="lazy"')
+    assert.include(result, 'data-ph-island-id="ph-1"')
+})
+
+test("wrapIslandHtml: eager モード（デフォルト）では data-ph-hydrate が付かない", () => {
+    const islandHtml = "<my-counter><template></template></my-counter>"
+    const result = wrapIslandHtml("ph-1", "my-counter", islandHtml, { count: 0 })
+    assert.notInclude(result, "data-ph-hydrate")
+})
+
+test("wrapIslandHtml: lazy モードのラップ方式でも data-ph-hydrate が付く", () => {
+    const result = wrapIslandHtml("ph-1", "my-counter", "<span>0</span>", { count: 0 }, "lazy")
+    assert.include(result, 'data-ph-hydrate="lazy"')
+    assert.include(result, 'data-ph-island-id="ph-1"')
+})
+
 test("wrapIslandHtml: props JSON スクリプトが末尾に追加される", () => {
     const islandHtml = "<my-widget>content</my-widget>"
     const result = wrapIslandHtml("ph-1", "my-widget", islandHtml, { title: "test" })

@@ -19,6 +19,6 @@ export { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX } from "./island/index"
 export { serializeIslandProps, wrapIslandHtml, createRenderContext } from "./island/index"
 export type { RenderContext } from "./island/index"
 // client
-export { restoreIslandProps } from "./client/index"
+export { restoreIslandProps, observeLazyIslands } from "./client/index"
 // document
 export { createDocument } from "./document/index"

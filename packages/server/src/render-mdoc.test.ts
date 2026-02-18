@@ -109,7 +109,7 @@ describe("renderMdoc", () => {
                         children: { type: "string", optional: true },
                     },
                 },
-                hydrateComponents: new Set(["Callout"]),
+                hydrateComponents: new Map([["Callout", "eager"]]),
             },
         )
         assert.include(result.html, "callout")

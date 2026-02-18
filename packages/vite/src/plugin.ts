@@ -111,7 +111,9 @@ export function pigeonhole(): Plugin {
             }
             if (id === RESOLVED_VIRTUAL_CLIENT) {
                 if (scannedComponents.length > 0) {
-                    const islands = scannedComponents.filter((component) => component.hydrateMode === "eager")
+                    const islands = scannedComponents.filter(
+                        (component) => component.hydrateMode === "eager" || component.hydrateMode === "lazy",
+                    )
                     return generateClientModule(islands)
                 }
                 return [

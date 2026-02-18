@@ -29,6 +29,16 @@ export class Card extends LitElement {
     assert.equal(extractHydrateMode(source), "none")
 })
 
+test("static hydrate = 'lazy' を持つクラスは 'lazy' を返す", () => {
+    const source = `
+@customElement("ph-slider")
+export class Slider extends LitElement {
+    static hydrate = "lazy"
+}
+`
+    assert.equal(extractHydrateMode(source), "lazy")
+})
+
 test("関数コンポーネントは 'none' を返す", () => {
     const source = `
 export function Card(props: CardProps, children: string): string {

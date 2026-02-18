@@ -65,6 +65,59 @@ test("customElementTagName が null の island は islands マップに含めな
     assert.notInclude(result, '"Widget"')
 })
 
+// lazy island のコード生成
+test("lazy island は observeLazyIslands + dynamic import で生成される", () => {
+    const islands: ComponentInfo[] = [
+        {
+            filePath: "/project/src/components/Slider.mdoc.tsx",
+            tagName: "Slider",
+            hydrateMode: "lazy",
+            customElementTagName: "ph-slider",
+            propsSchema: { index: { type: "number", optional: false } },
+        },
+    ]
+
+    const result = generateClientModule(islands)
+
+    // eager import がない
+    assert.notInclude(result, 'import "/project/src/components/Slider.mdoc.tsx";')
+    // observeLazyIslands が使われている
+    assert.include(result, "observeLazyIslands")
+    assert.include(result, '"ph-slider": () => import("/project/src/components/Slider.mdoc.tsx")')
+    // island マップには含まれる
+    assert.include(result, '"Slider": "ph-slider"')
+})
+
+// eager と lazy の混在
+test("eager と lazy が混在する場合に正しく分離される", () => {
+    const islands: ComponentInfo[] = [
+        {
+            filePath: "/project/src/components/Counter.mdoc.tsx",
+            tagName: "Counter",
+            hydrateMode: "eager",
+            customElementTagName: "ph-counter",
+            propsSchema: {},
+        },
+        {
+            filePath: "/project/src/components/Slider.mdoc.tsx",
+            tagName: "Slider",
+            hydrateMode: "lazy",
+            customElementTagName: "ph-slider",
+            propsSchema: {},
+        },
+    ]
+
+    const result = generateClientModule(islands)
+
+    // eager は通常 import
+    assert.include(result, 'import "/project/src/components/Counter.mdoc.tsx";')
+    // lazy は dynamic import
+    assert.include(result, '"ph-slider": () => import("/project/src/components/Slider.mdoc.tsx")')
+    // 両方 island マップに含まれる
+    assert.include(result, '"Counter": "ph-counter"')
+    assert.include(result, '"Slider": "ph-slider"')
+})
+
 // 空の island リスト
 test("空の island リストでも基本構造を生成する", () => {
     const result = generateClientModule([])

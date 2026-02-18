@@ -13,8 +13,8 @@ export interface RenderMdocOptions {
     authorAttrsMap?: Record<string, Set<string>>
     /** deny パターン（@pigeonhole/render に委譲） */
     denyPatterns?: string[]
-    /** ハイドレーション対象コンポーネント名の集合 */
-    hydrateComponents?: Set<string>
+    /** ハイドレーション対象コンポーネント名とモードの Map */
+    hydrateComponents?: Map<string, "eager" | "lazy">
     /** island タグ名マッピング */
     islandTagNames?: Record<string, string>
 }

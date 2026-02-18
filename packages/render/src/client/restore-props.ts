@@ -1,4 +1,4 @@
-import { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX } from "../island/constants"
+import { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX, PH_HYDRATE_ATTR } from "../island/constants"
 
 /**
  * アイランドのプロパティを復元する
@@ -34,6 +34,11 @@ function restoreSingleIsland(scriptElement: Element): void {
     // 対応する island 要素を検索
     const islandElement = document.querySelector(`[${PH_ISLAND_ID_ATTR}="${islandId}"]`)
     if (!islandElement) {
+        return
+    }
+
+    // lazy island はスキップ（observeLazyIslands が担当）
+    if (islandElement.getAttribute(PH_HYDRATE_ATTR) === "lazy") {
         return
     }
 

@@ -1,4 +1,4 @@
-import { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX } from "./constants"
+import { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX, PH_HYDRATE_ATTR } from "./constants"
 
 /**
  * リクエストスコープのレンダリングコンテキスト
@@ -66,19 +66,23 @@ export function wrapIslandHtml(
     tagName: string,
     islandHtml: string,
     props: Record<string, unknown>,
+    hydrateMode: "eager" | "lazy" = "eager",
 ): string {
     const propsScript = serializeIslandProps(islandId, props)
+    const hydrateAttr = hydrateMode === "lazy"
+        ? ` ${PH_HYDRATE_ATTR}="lazy"`
+        : ""
     const openTag = `<${tagName}`
 
     if (islandHtml.includes(openTag)) {
         // Lit コンポーネント: 既存の開始タグに属性を注入
         const html = islandHtml.replace(
             openTag,
-            `${openTag} ${PH_ISLAND_ID_ATTR}="${islandId}"`,
+            `${openTag} ${PH_ISLAND_ID_ATTR}="${islandId}"${hydrateAttr}`,
         )
         return html + propsScript
     }
 
     // 関数コンポーネント: 外側タグでラップ
-    return `<${tagName} ${PH_ISLAND_ID_ATTR}="${islandId}">${islandHtml}</${tagName}>${propsScript}`
+    return `<${tagName} ${PH_ISLAND_ID_ATTR}="${islandId}"${hydrateAttr}>${islandHtml}</${tagName}>${propsScript}`
 }

@@ -111,12 +111,13 @@ async function renderTag(
             (sanitized.children as string) ?? childrenHtml,
         )
 
-        if (options.hydrateComponents?.has(name)) {
-            // eager: SSR + hydration markers
+        const hydrateMode = options.hydrateComponents?.get(name)
+        if (hydrateMode) {
+            // eager/lazy: SSR + hydration markers
             context.hasIslands = true
             const islandId = generateIslandId(renderCtx)
             const ceTagName = options.islandTagNames?.[name] ?? name
-            return wrapIslandHtml(islandId, ceTagName, componentHtml, sanitized)
+            return wrapIslandHtml(islandId, ceTagName, componentHtml, sanitized, hydrateMode)
         }
 
         // none (default): SSR only

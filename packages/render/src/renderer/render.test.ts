@@ -91,7 +91,7 @@ test("renderToHtml: hydrateComponents が空なら island markers を付けな�
             Counter: () => "<span>0</span>",
         },
         propsSchemas: { Counter: {} },
-        hydrateComponents: new Set(),
+        hydrateComponents: new Map(),
     }
     const result = await renderToHtml(tag("Counter", {}), options)
     assert.notInclude(result.html, "data-ph-island-id")
@@ -106,7 +106,7 @@ test("renderToHtml: hydrateComponents に含まれるコンポーネントに is
             Counter: () => "<span>0</span>",
         },
         propsSchemas: { Counter: { count: { type: "number", optional: false } } },
-        hydrateComponents: new Set(["Counter"]),
+        hydrateComponents: new Map([["Counter", "eager"]]),
     }
     const result = await renderToHtml(tag("Counter", { count: 0 }), options)
     assert.include(result.html, 'data-ph-island-id="ph-1"')
@@ -121,7 +121,7 @@ test("renderToHtml: hydrateComponents + islandTagNames でカスタム要素名�
             Counter: () => "<span>0</span>",
         },
         propsSchemas: { Counter: { count: { type: "number", optional: false } } },
-        hydrateComponents: new Set(["Counter"]),
+        hydrateComponents: new Map([["Counter", "eager"]]),
         islandTagNames: { Counter: "my-counter" },
     }
     const result = await renderToHtml(tag("Counter", { count: 0 }), options)
@@ -137,7 +137,7 @@ test("renderToHtml: hydrateComponents に含まれないコンポーネントは
             Header: () => "<header>Header</header>",
         },
         propsSchemas: { Header: {} },
-        hydrateComponents: new Set(),
+        hydrateComponents: new Map(),
     }
     const result = await renderToHtml(tag("Header", {}), options)
     assert.equal(result.html, "<header>Header</header>")
@@ -157,6 +157,36 @@ test("renderToHtml: hydrateComponents 未指定は SSR のみ", async () => {
     const result = await renderToHtml(tag("Counter", {}), options)
     assert.notInclude(result.html, "data-ph-island-id")
     assert.equal(result.hasIslands, false)
+})
+
+// --- lazy ハイドレーション ---
+
+test("renderToHtml: hydrateComponents に lazy で含まれるコンポーネントに data-ph-hydrate='lazy' を付ける", async () => {
+    const options: RenderOptions = {
+        components: {
+            Slider: () => "<span>slide</span>",
+        },
+        propsSchemas: { Slider: { index: { type: "number", optional: false } } },
+        hydrateComponents: new Map([["Slider", "lazy"]]),
+    }
+    const result = await renderToHtml(tag("Slider", { index: 0 }), options)
+    assert.include(result.html, 'data-ph-hydrate="lazy"')
+    assert.include(result.html, 'data-ph-island-id="ph-1"')
+    assert.equal(result.hasIslands, true)
+})
+
+test("renderToHtml: eager コンポーネントには data-ph-hydrate が付かない", async () => {
+    const options: RenderOptions = {
+        components: {
+            Counter: () => "<span>0</span>",
+        },
+        propsSchemas: { Counter: { count: { type: "number", optional: false } } },
+        hydrateComponents: new Map([["Counter", "eager"]]),
+    }
+    const result = await renderToHtml(tag("Counter", { count: 0 }), options)
+    assert.notInclude(result.html, "data-ph-hydrate")
+    assert.include(result.html, 'data-ph-island-id="ph-1"')
+    assert.equal(result.hasIslands, true)
 })
 
 // --- filterProps 統合 ---

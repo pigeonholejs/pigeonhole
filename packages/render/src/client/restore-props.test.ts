@@ -120,6 +120,33 @@ test("restoreIslandProps: defer-hydration がない要素では何も起きな�
     assert.isFalse(el.hasAttribute("defer-hydration"))
 })
 
+test("restoreIslandProps: data-ph-hydrate='lazy' を持つ要素はスキップする", () => {
+    setupDom(`
+        <my-slider data-ph-island-id="ph-1" data-ph-hydrate="lazy" defer-hydration></my-slider>
+        <script type="application/json" id="ph-props-ph-1">{"index":3}</script>
+        <my-counter data-ph-island-id="ph-2"></my-counter>
+        <script type="application/json" id="ph-props-ph-2">{"count":5}</script>
+    `)
+
+    restoreIslandProps()
+
+    // lazy island はスキップされ、props が復元されない
+    const lazyEl = document.querySelector("[data-ph-island-id='ph-1']") as unknown as Record<
+        string,
+        unknown
+    >
+    assert.isUndefined(lazyEl.index)
+    // defer-hydration も残っている
+    assert.isTrue(document.querySelector("[data-ph-island-id='ph-1']")!.hasAttribute("defer-hydration"))
+
+    // eager island は通常通り復元される
+    const eagerEl = document.querySelector("[data-ph-island-id='ph-2']") as unknown as Record<
+        string,
+        unknown
+    >
+    assert.equal(eagerEl.count, 5)
+})
+
 test("restoreIslandProps: 複数プロパティを復元する", () => {
     setupDom(`
         <my-comp data-ph-island-id="ph-1"></my-comp>
