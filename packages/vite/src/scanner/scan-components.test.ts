@@ -46,7 +46,7 @@ export function Card(props: CardProps, children: string): string {
     }
 })
 
-// Island detection based on @customElement decorator
+// Island detection based on customElements registration
 test("@customElement 付きコンポーネントを island として検出する", async () => {
     const root = createTempDir()
     try {
@@ -59,8 +59,8 @@ test("@customElement 付きコンポーネントを island として検出する
     count: number;
 }
 
-@customElement("ph-counter")
-export class CounterElement extends LitElement {}
+export class CounterElement extends HTMLElement {}
+customElements.define("ph-counter", CounterElement)
 `,
         )
 
@@ -167,7 +167,7 @@ export function Greeting(props: GreetingProps): string {
     }
 })
 
-// CSR/Island component detection with @customElement
+// CSR/Island component detection with customElements registration
 test("CSR/ISLAND: @customElement 付き Lit コンポーネントは island として検出される", async () => {
     const root = createTempDir()
     try {
@@ -176,21 +176,14 @@ test("CSR/ISLAND: @customElement 付き Lit コンポーネントは island と�
 
         writeFileSync(
             join(componentsDir, "Interactive.mdoc.tsx"),
-            `import { LitElement, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
-
-interface InteractiveProps {
+            `interface InteractiveProps {
     value: string;
 }
 
-@customElement("ph-interactive")
-export class InteractiveElement extends LitElement {
-    @property({ type: String }) value = "";
-
-    render() {
-        return html\`<div>\${this.value}</div>\`;
-    }
+export class InteractiveElement extends HTMLElement {
+    value = "";
 }
+customElements.define("ph-interactive", InteractiveElement)
 `,
         )
 
@@ -259,15 +252,8 @@ export function Header(props: HeaderProps): string {
         // Island component
         writeFileSync(
             join(componentsDir, "SearchBox.mdoc.tsx"),
-            `import { LitElement, html } from "lit";
-import { customElement } from "lit/decorators.js";
-
-@customElement("ph-search-box")
-export class SearchBoxElement extends LitElement {
-    render() {
-        return html\`<input type="text" />\`;
-    }
-}
+            `export class SearchBoxElement extends HTMLElement {}
+customElements.define("ph-search-box", SearchBoxElement)
 `,
         )
 
@@ -303,7 +289,7 @@ export class SearchBoxElement extends LitElement {
     }
 })
 
-// Edge case: @customElement with single quotes
+// Edge case: customElements.define with single quotes
 test("ISLAND: シングルクォートの @customElement も正しく検出される", async () => {
     const root = createTempDir()
     try {
@@ -312,11 +298,8 @@ test("ISLAND: シングルクォートの @customElement も正しく検出さ�
 
         writeFileSync(
             join(componentsDir, "SingleQuote.mdoc.tsx"),
-            `import { LitElement } from "lit";
-import { customElement } from "lit/decorators.js";
-
-@customElement('ph-single-quote')
-export class SingleQuoteElement extends LitElement {}
+            `export class SingleQuoteElement extends HTMLElement {}
+customElements.define('ph-single-quote', SingleQuoteElement)
 `,
         )
 
