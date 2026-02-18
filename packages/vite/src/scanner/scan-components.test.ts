@@ -46,8 +46,8 @@ export function Card(props: CardProps, children: string): string {
     }
 })
 
-// アイランドコンポーネントの検出
-test("use client 付きコンポーネントを island として検出する", async () => {
+// Island detection based on @customElement decorator
+test("@customElement 付きコンポーネントを island として検出する", async () => {
     const root = createTempDir()
     try {
         const componentsDir = join(root, "src/components")
@@ -55,9 +55,7 @@ test("use client 付きコンポーネントを island として検出する", a
 
         writeFileSync(
             join(componentsDir, "Counter.mdoc.tsx"),
-            `"use client"
-
-interface CounterProps {
+            `interface CounterProps {
     count: number;
 }
 

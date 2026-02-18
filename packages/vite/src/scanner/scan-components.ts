@@ -2,7 +2,6 @@ import { readFile } from "node:fs/promises"
 import { basename, join } from "node:path"
 import { glob } from "tinyglobby"
 import { normalizePath } from "vite"
-import { detectUseClient } from "./detect-use-client"
 import { extractCustomElementTag } from "./extract-custom-element-tag"
 import { extractExportNames } from "./extract-export-names"
 import { extractPropsSchema } from "./extract-props-schema"
@@ -26,8 +25,9 @@ function scanComponentFile(filePath: string, source: string): ComponentInfo {
         )
     }
 
-    const isIsland = detectUseClient(source)
     const customElementTagName = extractCustomElementTag(source)
+    // Island detection: components with @customElement decorator need client-side hydration
+    const isIsland = customElementTagName !== null
     const propsSchema = extractPropsSchema(source, `${tagName}Props`)
 
     return {
