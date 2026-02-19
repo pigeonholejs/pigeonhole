@@ -27,10 +27,6 @@
     "scripts": {
         "build": "vite build",
         "clean": "rm -rf dist",
-        "lint": "oxlint .",
-        "lint:fix": "oxlint --fix .",
-        "fmt:check": "oxfmt .",
-        "fmt": "oxfmt --write .",
         "typecheck": "tsc --noEmit",
         "test": "pnpm vitest run"
     },
@@ -52,7 +48,7 @@
     },
     "devDependencies": {
         "@lit-labs/ssr": "^4.0.0",
-        "jsdom": "^26.1.0",
+        "jsdom": "^28.1.0",
         "lit": "^3.3.2",
         "typescript": "^5.9.3",
         "vitest": "^4.0.18"

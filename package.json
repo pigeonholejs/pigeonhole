@@ -14,15 +14,15 @@
         "lint:fix": "oxlint --fix .",
         "fmt:check": "oxfmt .",
         "fmt": "oxfmt --write .",
-        "typecheck": "pnpm -r run typecheck",
-        "test": "pnpm -r  run test"
+        "typecheck": "pnpm -r --parallel --stream run typecheck",
+        "test": "pnpm -r --stream run test"
     },
     "devDependencies": {
-        "oxfmt": "^0.31.0",
-        "oxlint": "^1.46.0",
-        "oxlint-tsgolint": "^0.12.0",
+        "oxfmt": "^0.33.0",
+        "oxlint": "^1.48.0",
+        "oxlint-tsgolint": "^0.14.1",
         "vite": "^7.3.1",
         "vite-plugin-dts": "^4.5.4"
     },
-    "packageManager": "pnpm@10.28.1"
+    "packageManager": "pnpm@10.30.0"
 }

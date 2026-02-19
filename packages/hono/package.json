@@ -14,10 +14,6 @@
     "scripts": {
         "build": "vite build",
         "clean": "rm -rf dist",
-        "lint": "oxlint .",
-        "lint:fix": "oxlint --fix .",
-        "fmt:check": "oxfmt .",
-        "fmt": "oxfmt --write .",
         "typecheck": "tsc --noEmit",
         "test": "pnpm vitest run"
     },
