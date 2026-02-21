@@ -4,7 +4,8 @@
     "scripts": {
         "dev": "vite --configLoader runner",
         "typecheck": "tsc --noEmit",
-        "test": "pnpm vitest run"
+        "test": "pnpm vitest run",
+        "build": "vite build --configLoader runner --ssr src/server.ts"
     },
     "dependencies": {
         "@hono/node-server": "^1.19.9",
