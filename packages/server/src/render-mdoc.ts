@@ -1,5 +1,5 @@
 import { transformMarkdoc } from "@pigeonhole/markdoc"
-import { type Config } from "@markdoc/markdoc"
+import { type Config } from "markdecl"
 import { renderToHtml } from "@pigeonhole/render"
 import type { RenderOptions } from "@pigeonhole/render"
 import type { RenderMdocOptions, RenderPageResult } from "./types"

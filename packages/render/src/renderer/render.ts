@@ -1,8 +1,6 @@
-import Markdoc from "@markdoc/markdoc"
-import type { RenderableTreeNode } from "@markdoc/markdoc"
+import { Tag } from "markdecl"
+import type { RenderableTreeNode } from "markdecl"
 
-type Tag = InstanceType<typeof Markdoc.Tag>
-const { Tag } = Markdoc
 import { filterProps } from "../props/index"
 import { createRenderContext, generateIslandId, wrapIslandHtml } from "../island/island-marker"
 import type { RenderContext } from "../island/island-marker"
@@ -83,7 +81,7 @@ async function renderChildren(
  * それ以外は SSR のみ。
  */
 async function renderTag(
-    tag: Tag,
+    tag: InstanceType<typeof Tag>,
     options: RenderOptions,
     context: { hasIslands: boolean },
     renderCtx: RenderContext,

@@ -1,4 +1,4 @@
-import { type Config, type Node } from "@markdoc/markdoc"
+import { type Config, type Node } from "markdecl"
 import { filterFrontmatter } from "./frontmatter"
 
 /**

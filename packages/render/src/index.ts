@@ -1,6 +1,5 @@
-import Markdoc from "@markdoc/markdoc"
-export const Tag = Markdoc.Tag
-export type { RenderableTreeNode } from "@markdoc/markdoc"
+export { Tag } from "markdecl"
+export type { RenderableTreeNode } from "markdecl"
 
 // props
 export { matchesDenyPattern } from "./props/index"

@@ -37,7 +37,7 @@
         "test": "pnpm vitest run"
     },
     "dependencies": {
-        "@markdoc/markdoc": "^0.5.4"
+        "markdecl": "^0.1.0"
     },
     "devDependencies": {
         "@lit-labs/ssr": "^4.0.0",

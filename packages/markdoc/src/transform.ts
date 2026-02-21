@@ -1,4 +1,4 @@
-import Markdoc, { type Config, type RenderableTreeNode } from "@markdoc/markdoc"
+import { parse, validate, transform, type Config, type RenderableTreeNode } from "markdecl"
 import { buildConfig } from "./config"
 
 export type Components = {
@@ -28,9 +28,9 @@ export function transformMarkdoc(
     restrictions: Restrictions = {},
     variables: Record<string, unknown> = {},
 ): RenderableTreeNode {
-    const ast = Markdoc.parse(source)
+    const ast = parse(source)
 
-    // Markdoc.validate() で未定義関数を検出
+    // validate() で未定義関数を検出
     const allowedFns: Config["functions"] = {}
     if (restrictions.allowedFunctions) {
         for (const name of restrictions.allowedFunctions) {
@@ -41,7 +41,7 @@ export function transformMarkdoc(
         functions: { ...components.functions, ...allowedFns },
         validation: { validateFunctions: true },
     }
-    const validationErrors = Markdoc.validate(ast, validationConfig)
+    const validationErrors = validate(ast, validationConfig)
     const fnErrors = validationErrors.filter(
         (e) => e.error.id === "function-undefined" && e.error.level === "critical",
     )
@@ -62,5 +62,5 @@ export function transformMarkdoc(
         variables: { ...baseConfig.variables, ...variables },
     }
 
-    return Markdoc.transform(ast, config)
+    return transform(ast, config)
 }

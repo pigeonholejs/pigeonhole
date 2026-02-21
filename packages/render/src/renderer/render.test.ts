@@ -1,9 +1,7 @@
 import { test, assert } from "vitest"
-import Markdoc from "@markdoc/markdoc"
-import type { RenderableTreeNode } from "@markdoc/markdoc"
+import { Tag } from "markdecl"
+import type { RenderableTreeNode } from "markdecl"
 
-type Tag = InstanceType<typeof Markdoc.Tag>
-const { Tag } = Markdoc
 import { renderToHtml } from "./render"
 import type { RenderOptions } from "../types"
 
@@ -14,7 +12,7 @@ function tag(
     name: string,
     attributes: Record<string, unknown> = {},
     children: RenderableTreeNode[] = [],
-): Tag {
+): InstanceType<typeof Tag> {
     return new Tag(name, attributes, children)
 }
 

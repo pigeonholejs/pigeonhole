@@ -1,6 +1,5 @@
-import Markdoc from "@markdoc/markdoc"
-import type { Node } from "@markdoc/markdoc"
-const { parse } = Markdoc
+import { parse } from "markdecl"
+import type { Node } from "markdecl"
 
 export { parse }
 export type { Node }
