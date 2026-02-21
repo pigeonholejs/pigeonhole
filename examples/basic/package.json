@@ -5,7 +5,8 @@
         "dev": "vite --configLoader runner",
         "typecheck": "tsc --noEmit",
         "e2e": "playwright test",
-        "e2e:install": "playwright install --with-deps chromium"
+        "e2e:install": "playwright install --with-deps chromium",
+        "build": "vite build --configLoader runner"
     },
     "dependencies": {
         "@hono/node-server": "^1.19.9",
