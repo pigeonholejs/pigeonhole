@@ -53,6 +53,7 @@ test("仮想モジュールの型定義を生成する", () => {
     const result = generateVirtualModuleTypes()
     assert.include(result, 'declare module "virtual:pigeonhole/components"')
     assert.include(result, "export const components:")
+    assert.include(result, "export const propsSchemas:")
     assert.include(result, 'declare module "virtual:pigeonhole/client"')
     assert.include(result, "export const islands:")
 })

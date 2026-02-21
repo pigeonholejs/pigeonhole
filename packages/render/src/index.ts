@@ -1,16 +1,11 @@
-export { Tag } from "@markdoc/markdoc"
-export type { RenderableTreeNode } from "@markdoc/markdoc"
+export { Tag } from "markdecl"
+export type { RenderableTreeNode } from "markdecl"
 
 // props
 export { matchesDenyPattern } from "./props/index"
 export { filterProps, type FilterPropsInput, type PropsSchema, type PropsDef } from "./props/index"
 // types
-export type {
-    RenderOptions,
-    RenderResult,
-    ServerComponent,
-    DocumentOptions,
-} from "./types"
+export type { RenderOptions, RenderResult, ServerComponent, DocumentOptions } from "./types"
 // renderer
 export { renderToHtml } from "./renderer/index"
 export { escapeHtml, escapeAttribute } from "./renderer/index"

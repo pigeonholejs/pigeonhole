@@ -1,8 +1,6 @@
 import { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX, PH_HYDRATE_ATTR } from "../island/constants"
 
-export function observeLazyIslands(
-    lazyModules: Record<string, () => Promise<unknown>>,
-): void {
+export function observeLazyIslands(lazyModules: Record<string, () => Promise<unknown>>): void {
     const lazyElements = document.querySelectorAll(`[${PH_HYDRATE_ATTR}="lazy"]`)
     if (lazyElements.length === 0) return
 

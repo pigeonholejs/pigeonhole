@@ -14,7 +14,7 @@ export interface RenderMdocOptions {
     /** deny パターン（@pigeonhole/render に委譲） */
     denyPatterns?: string[]
     /** ハイドレーション対象コンポーネント名とモードの Map */
-    hydrateComponents?: Map<string, "eager" | "lazy">
+    hydrateComponents?: Map<string, "eager" | "lazy" | "client-only">
     /** island タグ名マッピング */
     islandTagNames?: Record<string, string>
 }

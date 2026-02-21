@@ -41,7 +41,7 @@ describe("renderMdoc", () => {
     })
 
     test("number 型の属性が正しく渡される", async () => {
-        const source = '{% Counter count=5 %}content{% /Counter %}'
+        const source = "{% Counter count=5 %}content{% /Counter %}"
         const result = await renderMdoc(
             source,
             {},

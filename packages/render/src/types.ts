@@ -38,6 +38,5 @@ export interface DocumentOptions {
     head?: string
     body: string
     hasIslands?: boolean
-    islandModules?: string[]
     lang?: string
 }

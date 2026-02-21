@@ -7,6 +7,8 @@ import type { PropsSchema } from "@pigeonhole/render"
 export interface PageRendererOptions {
     components?: Record<string, ServerComponent>
     propsSchemas?: Record<string, PropsSchema>
+    hydrateComponents?: Map<string, "eager" | "lazy" | "client-only">
+    islandTagNames?: Record<string, string>
 }
 
 export function createPageRenderer(options: PageRendererOptions = {}) {
@@ -18,6 +20,8 @@ export function createPageRenderer(options: PageRendererOptions = {}) {
         const result = await renderMdoc(source, variables, {
             components: options.components,
             propsSchemas: options.propsSchemas,
+            hydrateComponents: options.hydrateComponents,
+            islandTagNames: options.islandTagNames,
         })
         return c.html(
             createDocument({

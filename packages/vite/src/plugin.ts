@@ -85,11 +85,13 @@ export function pigeonhole(): Plugin {
             validateMdocFiles(mdocPages, root, componentSchemaMap, denyPatterns)
             validateMdocFiles(mdocComponents, root, componentSchemaMap, denyPatterns)
 
-            // .pigeonhole/*.d.ts 生成
+            // .pigeonhole/ 生成
             const outDir = join(root, ".pigeonhole")
             mkdirSync(outDir, { recursive: true })
             writeFileSync(join(outDir, "types.d.ts"), generateTypeDefinitions(scannedComponents))
             writeFileSync(join(outDir, "virtual-modules.d.ts"), generateVirtualModuleTypes())
+            // クライアントエントリポイント: Vite がモジュールリクエストとして処理し virtual module を解決する
+            writeFileSync(join(outDir, "client-entry.js"), 'import "virtual:pigeonhole/client";\n')
         },
 
         resolveId(id) {

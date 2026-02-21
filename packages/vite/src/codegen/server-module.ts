@@ -53,6 +53,26 @@ export function generateServerModule(components: ComponentInfo[]): string {
     lines.push("};")
     lines.push("")
 
+    // hydrateComponents: hydrate 対象コンポーネント名 → モードの Map
+    const hydrateEntries = components.filter((c) => c.hydrateMode !== "none")
+    lines.push("export const hydrateComponents = new Map([")
+    for (const component of hydrateEntries) {
+        lines.push(`  ["${component.tagName}", "${component.hydrateMode}"],`)
+    }
+    lines.push("]);")
+    lines.push("")
+
+    // islandTagNames: コンポーネント名 → カスタム要素タグ名のマッピング
+    const islandEntries = components.filter(
+        (c) => c.customElementTagName !== null && c.hydrateMode !== "none",
+    )
+    lines.push("export const islandTagNames = {")
+    for (const component of islandEntries) {
+        lines.push(`  "${component.tagName}": "${component.customElementTagName}",`)
+    }
+    lines.push("};")
+    lines.push("")
+
     return lines.join("\n")
 }
 
@@ -63,9 +83,7 @@ function generateLitSsrFunction(
     propNames: string[],
     hydrateMode: HydrateMode,
 ): string {
-    const propBindings = propNames
-        .map((name) => `\n    .${name}=\${props.${name}}`)
-        .join("")
+    const propBindings = propNames.map((name) => `\n    .${name}=\${props.${name}}`).join("")
 
     return [
         `const ${componentName} = async (props, children) => {`,

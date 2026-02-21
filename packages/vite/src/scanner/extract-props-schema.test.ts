@@ -78,13 +78,46 @@ interface ListProps {
 
 // 対象の interface が存在しない場合
 test("対象の interface が存在しない場合は空オブジェクトを返す", () => {
-    const source = `
-interface OtherProps {
-    title: string;
-}
-`
+    const source = `const x = 1;`
     const schema = extractPropsSchema(source, "CardProps")
     assert.deepEqual(schema, {})
+})
+
+// Lit @property デコレータからの抽出
+test("Lit の @property デコレータから props スキーマを抽出する", () => {
+    const source = `
+@customElement("ph-counter")
+export class Counter extends LitElement {
+    @property({ type: Number }) count = 0
+    @property({ type: String }) label = ""
+    @property({ type: Boolean }) active = false
+}
+`
+    const schema = extractPropsSchema(source, "CounterProps")
+    assert.deepEqual(schema, {
+        count: { type: "number", optional: true },
+        label: { type: "string", optional: true },
+        active: { type: "boolean", optional: true },
+    })
+})
+
+// interface が存在する場合は @property より優先
+test("interface が存在する場合は @property より優先する", () => {
+    const source = `
+interface CounterProps {
+    count: number;
+}
+
+@customElement("ph-counter")
+export class Counter extends LitElement {
+    @property({ type: Number }) count = 0
+    @property({ type: String }) label = ""
+}
+`
+    const schema = extractPropsSchema(source, "CounterProps")
+    assert.deepEqual(schema, {
+        count: { type: "number", optional: false },
+    })
 })
 
 // children を含む場合

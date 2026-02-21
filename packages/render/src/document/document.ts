@@ -1,28 +1,16 @@
 import type { DocumentOptions } from "../types"
 
 /**
- * クライアントブートストラップスクリプトを生成する
+ * クライアントブートストラップスクリプトタグを生成する
  *
- * @param islandModules - eager import するアイランドモジュールパスの配列
+ * .pigeonhole/client-entry.js を外部スクリプトとして読み込む。
+ * client-entry.js は virtual:pigeonhole/client を import し、
+ * Vite がモジュールリクエストとして処理することで virtual module 解決が動く。
+ *
  * @returns script タグ文字列
  */
-export function buildBootstrapScript(islandModules?: string[]): string {
-    const lines: string[] = [
-        '<script type="module">',
-        'import "@lit-labs/ssr-client/lit-element-hydrate-support.js";',
-        'import { restoreIslandProps } from "@pigeonhole/render/client";',
-        "restoreIslandProps();",
-    ]
-
-    // アイランドモジュールを eager import
-    if (islandModules) {
-        for (const modulePath of islandModules) {
-            lines.push(`import "${modulePath}";`)
-        }
-    }
-
-    lines.push("</script>")
-    return lines.join("")
+export function buildBootstrapScript(): string {
+    return '<script type="module" src="/.pigeonhole/client-entry.js"></script>'
 }
 
 /**
@@ -34,10 +22,10 @@ export function buildBootstrapScript(islandModules?: string[]): string {
  * @returns 完全な HTML 文字列
  */
 export function createDocument(options: DocumentOptions): string {
-    const { title, head, body, hasIslands, islandModules, lang = "en" } = options
+    const { title, head, body, hasIslands, lang = "en" } = options
     const titleTag = title !== undefined ? `<title>${title}</title>` : ""
     const headContent = head ?? ""
-    const bootstrapScript = hasIslands === true ? buildBootstrapScript(islandModules) : ""
+    const bootstrapScript = hasIslands === true ? buildBootstrapScript() : ""
 
     return [
         "<!doctype html>",

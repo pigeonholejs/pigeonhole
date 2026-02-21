@@ -16,7 +16,9 @@ export async function renderLitTemplate(
     template: unknown,
     options?: RenderLitOptions,
 ): Promise<string> {
-    return collectResult(render(template as Parameters<typeof render>[0], {
-        deferHydration: options?.deferHydration ?? false,
-    }))
+    return collectResult(
+        render(template as Parameters<typeof render>[0], {
+            deferHydration: options?.deferHydration ?? false,
+        }),
+    )
 }

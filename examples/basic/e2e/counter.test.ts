@@ -1,15 +1,20 @@
 import { test, expect } from "@playwright/test"
 
-test("SSR 出力に ph-counter と shadowrootmode が含まれる", async ({ page }) => {
-    await page.goto("/")
-    const html = await page.content()
+test("SSR 出力に ph-counter と shadowrootmode が含まれる", async ({ request }) => {
+    // page.content() はブラウザのパース後 DOM を返すため、
+    // DSD の <template shadowrootmode> はパース時に消費されて見えない。
+    // 生の HTTP レスポンスを検査する。
+    const res = await request.get("/")
+    const html = await res.text()
     expect(html).toContain("<ph-counter")
     expect(html).toContain('shadowrootmode="open"')
 })
 
-test("SSR 出力に defer-hydration が含まれる", async ({ page }) => {
-    await page.goto("/")
-    const html = await page.content()
+test("SSR 出力に defer-hydration が含まれる", async ({ request }) => {
+    // defer-hydration はクライアント JS (restoreIslandProps) が除去するため、
+    // page.content() では見えない。生の HTTP レスポンスを検査する。
+    const res = await request.get("/")
+    const html = await res.text()
     expect(html).toContain("defer-hydration")
 })
 

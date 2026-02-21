@@ -1,25 +1,31 @@
 {
     "name": "@pigeonhole/vite",
     "version": "0.0.0",
-    "private": true,
     "license": "MIT",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "type": "module",
     "exports": {
-        ".": "./src/index.ts",
-        "./virtual": {
-            "types": "./virtual.d.ts"
+        ".": {
+            "types": "./dist/index.d.ts",
+            "development": "./src/index.ts",
+            "default": "./dist/index.js"
         }
     },
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
-        "lint": "oxlint .",
-        "lint:fix": "oxlint --fix .",
-        "fmt:check": "oxfmt .",
-        "fmt": "oxfmt --write .",
+        "build": "vite build",
+        "clean": "rm -rf dist",
         "typecheck": "tsc --noEmit",
         "test": "pnpm vitest run"
     },
     "dependencies": {
-        "@pigeonhole/markdoc": "workspace:*",
-        "@pigeonhole/render": "workspace:*",
+        "@pigeonhole/markdoc": "workspace:^",
+        "@pigeonhole/render": "workspace:^",
         "jiti": "^2.6.1",
         "tinyglobby": "^0.2.15",
         "zod": "^4.3.6"

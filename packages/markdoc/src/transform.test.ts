@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import Markdoc, { Tag } from "@markdoc/markdoc"
+import { parse, Tag } from "markdecl"
 import { transformMarkdoc } from "./transform"
 
 function isTag(node: unknown): node is Tag {
@@ -89,7 +89,7 @@ describe("transformMarkdoc", () => {
 
     test("partialsでパーシャルを渡すとテンプレート内で使用できる", () => {
         const partialContent = "**partial content**"
-        const partialAst = Markdoc.parse(partialContent)
+        const partialAst = parse(partialContent)
         const source = '{% partial file="header.md" /%}'
         const tree = transformMarkdoc(source, {
             tags: {

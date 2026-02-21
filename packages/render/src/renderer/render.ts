@@ -1,10 +1,8 @@
-import { Tag, type RenderableTreeNode } from "@markdoc/markdoc"
+import { Tag } from "markdecl"
+import type { RenderableTreeNode } from "markdecl"
+
 import { filterProps } from "../props/index"
-import {
-    createRenderContext,
-    generateIslandId,
-    wrapIslandHtml,
-} from "../island/island-marker"
+import { createRenderContext, generateIslandId, wrapIslandHtml } from "../island/island-marker"
 import type { RenderContext } from "../island/island-marker"
 import { escapeHtml } from "./escape"
 import { serializeAttributes } from "./serialize-attributes"
@@ -83,7 +81,7 @@ async function renderChildren(
  * それ以外は SSR のみ。
  */
 async function renderTag(
-    tag: Tag,
+    tag: InstanceType<typeof Tag>,
     options: RenderOptions,
     context: { hasIslands: boolean },
     renderCtx: RenderContext,

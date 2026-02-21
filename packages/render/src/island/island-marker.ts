@@ -69,9 +69,7 @@ export function wrapIslandHtml(
     hydrateMode: "eager" | "lazy" | "client-only" = "eager",
 ): string {
     const propsScript = serializeIslandProps(islandId, props)
-    const hydrateAttr = hydrateMode === "eager"
-        ? ""
-        : ` ${PH_HYDRATE_ATTR}="${hydrateMode}"`
+    const hydrateAttr = hydrateMode === "eager" ? "" : ` ${PH_HYDRATE_ATTR}="${hydrateMode}"`
     const openTag = `<${tagName}`
 
     if (islandHtml.includes(openTag)) {

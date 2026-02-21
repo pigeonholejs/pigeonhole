@@ -137,7 +137,9 @@ test("restoreIslandProps: data-ph-hydrate='lazy' を持つ要素はスキップ�
     >
     assert.isUndefined(lazyEl.index)
     // defer-hydration も残っている
-    assert.isTrue(document.querySelector("[data-ph-island-id='ph-1']")!.hasAttribute("defer-hydration"))
+    assert.isTrue(
+        document.querySelector("[data-ph-island-id='ph-1']")!.hasAttribute("defer-hydration"),
+    )
 
     // eager island は通常通り復元される
     const eagerEl = document.querySelector("[data-ph-island-id='ph-2']") as unknown as Record<

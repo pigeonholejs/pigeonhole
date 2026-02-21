@@ -68,12 +68,16 @@ test("serializeIslandProps: シリアライズ不可な props でエラーを投
 // --- wrapIslandHtml: 注入方式（Lit コンポーネント）---
 
 test("wrapIslandHtml: 外側タグを含む HTML に data-island-id を注入する", () => {
-    const islandHtml = '<my-counter defer-hydration><template shadowrootmode="open"><span>0</span></template></my-counter>'
+    const islandHtml =
+        '<my-counter defer-hydration><template shadowrootmode="open"><span>0</span></template></my-counter>'
     const result = wrapIslandHtml("ph-1", "my-counter", islandHtml, { count: 0 })
     assert.include(result, 'data-ph-island-id="ph-1"')
     assert.include(result, "<my-counter")
     assert.include(result, "</my-counter>")
-    assert.include(result, '<script type="application/json" id="ph-props-ph-1">{"count":0}</script>')
+    assert.include(
+        result,
+        '<script type="application/json" id="ph-props-ph-1">{"count":0}</script>',
+    )
 })
 
 test("wrapIslandHtml: 開始タグの最初の出現箇所に属性を注入する", () => {
