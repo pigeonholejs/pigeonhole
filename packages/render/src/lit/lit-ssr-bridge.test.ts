@@ -1,5 +1,5 @@
 import { test, assert } from "vitest"
-import { renderLitTemplate } from "../lit-ssr-bridge"
+import { renderLitTemplate } from "./lit-ssr-bridge"
 import { LitElement, html } from "lit"
 
 // テスト用 LitElement（デコレータ不使用、静的 properties で定義）

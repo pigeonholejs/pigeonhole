@@ -1,8 +1,6 @@
 import type { Context } from "hono"
-import { renderMdoc } from "@pigeonhole/server"
-import type { ServerComponent } from "@pigeonhole/server"
-import { createDocument } from "@pigeonhole/render"
-import type { PropsSchema } from "@pigeonhole/render"
+import { renderMdoc, createDocument } from "@pigeonhole/render"
+import type { ServerComponent, PropsSchema } from "@pigeonhole/render"
 
 export interface PageRendererOptions {
     components?: Record<string, ServerComponent>

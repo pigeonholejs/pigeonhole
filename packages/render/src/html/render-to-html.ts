@@ -1,8 +1,8 @@
 import { Tag } from "markdecl"
 import type { RenderableTreeNode } from "markdecl"
 
-import { createRenderContext, generateIslandId, wrapIslandHtml } from "../island/island-marker"
-import type { RenderContext } from "../island/island-marker"
+import { createRenderContext, generateIslandId, wrapIslandHtml } from "../island/marker"
+import type { RenderContext } from "../types"
 import { escapeHtml } from "./escape"
 import { serializeAttributes } from "./serialize-attributes"
 import type { RenderOptions, RenderResult } from "../types"

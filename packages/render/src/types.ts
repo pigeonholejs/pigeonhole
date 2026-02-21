@@ -9,7 +9,28 @@ export type ServerComponent = (
 ) => string | Promise<string>
 
 /**
- * レンダラオプション
+ * コンポーネントの props スキーマにおけるプロパティ定義。
+ */
+export interface PropsDef {
+    type: string
+}
+
+/**
+ * コンポーネントの props スキーマ型。
+ * 例: { title: { type: "string" }, count: { type: "number" } }
+ */
+export type PropsSchema = Record<string, PropsDef>
+
+/**
+ * レンダリング結果
+ */
+export interface RenderResult {
+    html: string
+    hasIslands: boolean
+}
+
+/**
+ * renderToHtml のオプション
  */
 export interface RenderOptions {
     components?: Record<string, ServerComponent>
@@ -18,11 +39,14 @@ export interface RenderOptions {
 }
 
 /**
- * レンダリング結果
+ * renderMdoc のオプション
  */
-export interface RenderResult {
-    html: string
-    hasIslands: boolean
+export interface RenderMdocOptions {
+    components?: Record<string, ServerComponent>
+    propsSchemas?: Record<string, PropsSchema>
+    denyPatterns?: string[]
+    hydrateComponents?: Map<string, "eager" | "lazy" | "client-only">
+    islandTagNames?: Record<string, string>
 }
 
 /**
@@ -34,4 +58,18 @@ export interface DocumentOptions {
     body: string
     hasIslands?: boolean
     lang?: string
+}
+
+/**
+ * リクエストスコープのレンダリングコンテキスト
+ */
+export interface RenderContext {
+    islandCounter: number
+}
+
+/**
+ * Lit SSR オプション
+ */
+export interface RenderLitOptions {
+    deferHydration?: boolean
 }

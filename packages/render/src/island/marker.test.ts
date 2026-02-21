@@ -4,7 +4,7 @@ import {
     generateIslandId,
     serializeIslandProps,
     wrapIslandHtml,
-} from "./island-marker"
+} from "./marker"
 
 test("generateIslandId: 連番 ID を生成する", () => {
     const ctx = createRenderContext()
