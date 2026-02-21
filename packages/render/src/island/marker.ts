@@ -1,14 +1,5 @@
 import { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX, PH_HYDRATE_ATTR } from "./constants"
-
-/**
- * リクエストスコープのレンダリングコンテキスト
- *
- * 並行リクエストでもアイランド ID が重複しないよう、
- * カウンターをリクエストごとに分離する。
- */
-export interface RenderContext {
-    islandCounter: number
-}
+import type { RenderContext } from "../types"
 
 /** 新しいレンダリングコンテキストを作成する */
 export function createRenderContext(): RenderContext {

@@ -37,6 +37,7 @@
         "test": "pnpm vitest run"
     },
     "dependencies": {
+        "@pigeonhole/markdoc": "workspace:^",
         "markdecl": "^0.1.0"
     },
     "devDependencies": {

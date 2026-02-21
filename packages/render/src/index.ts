@@ -1,19 +1,32 @@
+// Types
+export type {
+    ServerComponent,
+    RenderOptions,
+    RenderResult,
+    RenderMdocOptions,
+    DocumentOptions,
+    RenderContext,
+    PropsSchema,
+    PropsDef,
+} from "./types"
+
+// Re-exports from markdecl
 export { Tag } from "markdecl"
 export type { RenderableTreeNode } from "markdecl"
 
-// props
-export { matchesDenyPattern } from "./props/index"
-export { type PropsSchema, type PropsDef } from "./props/index"
-// types
-export type { RenderOptions, RenderResult, ServerComponent, DocumentOptions } from "./types"
-// renderer
-export { renderToHtml } from "./renderer/index"
-export { escapeHtml, escapeAttribute } from "./renderer/index"
-// island
-export { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX } from "./island/index"
-export { serializeIslandProps, wrapIslandHtml, createRenderContext } from "./island/index"
-export type { RenderContext } from "./island/index"
-// client
-export { restoreIslandProps, observeLazyIslands } from "./client/index"
-// document
-export { createDocument } from "./document/index"
+// HTML rendering
+export { renderToHtml } from "./html/render-to-html"
+export { escapeHtml, escapeAttribute } from "./html/escape"
+
+// Markdoc rendering
+export { renderMdoc } from "./mdoc/render-mdoc"
+
+// Island system
+export { PH_ISLAND_ID_ATTR, PH_ISLAND_PROPS_PREFIX, PH_HYDRATE_ATTR } from "./island/constants"
+export { createRenderContext, serializeIslandProps, wrapIslandHtml } from "./island/marker"
+
+// Document
+export { createDocument } from "./document/document"
+
+// Props
+export { matchesDenyPattern } from "./props/deny-pattern"

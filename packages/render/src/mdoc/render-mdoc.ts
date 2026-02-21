@@ -1,8 +1,8 @@
 import { transformMarkdoc } from "@pigeonhole/markdoc"
 import { type Config } from "markdecl"
-import { renderToHtml, matchesDenyPattern } from "@pigeonhole/render"
-import type { RenderOptions } from "@pigeonhole/render"
-import type { RenderMdocOptions, RenderPageResult } from "./types"
+import { renderToHtml } from "../html/render-to-html"
+import { matchesDenyPattern } from "../props/deny-pattern"
+import type { RenderOptions, RenderMdocOptions, RenderResult } from "../types"
 
 const MARKDOC_TYPE_MAP: Record<string, BooleanConstructor | NumberConstructor | StringConstructor> =
     {
@@ -23,7 +23,7 @@ export async function renderMdoc(
     source: string,
     variables: Record<string, unknown>,
     options: RenderMdocOptions = {},
-): Promise<RenderPageResult> {
+): Promise<RenderResult> {
     const tags: NonNullable<Config["tags"]> = {}
     if (options.components) {
         for (const name of Object.keys(options.components)) {

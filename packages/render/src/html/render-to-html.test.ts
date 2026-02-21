@@ -2,7 +2,7 @@ import { test, assert } from "vitest"
 import { Tag } from "markdecl"
 import type { RenderableTreeNode } from "markdecl"
 
-import { renderToHtml } from "./render"
+import { renderToHtml } from "./render-to-html"
 import type { RenderOptions } from "../types"
 
 /**

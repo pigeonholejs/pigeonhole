@@ -1,10 +1,7 @@
 import "@lit-labs/ssr/lib/install-global-dom-shim.js"
 import { render } from "@lit-labs/ssr"
 import { collectResult } from "@lit-labs/ssr/lib/render-result.js"
-
-export interface RenderLitOptions {
-    deferHydration?: boolean
-}
+import type { RenderLitOptions } from "../types"
 
 /**
  * Lit テンプレートを SSR レンダリングして HTML 文字列を返す

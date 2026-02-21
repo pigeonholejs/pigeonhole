@@ -24,8 +24,7 @@
         "test": "pnpm vitest run"
     },
     "dependencies": {
-        "@pigeonhole/render": "workspace:^",
-        "@pigeonhole/server": "workspace:^"
+        "@pigeonhole/render": "workspace:^"
     },
     "devDependencies": {
         "hono": "^4.12.0",
