@@ -4,6 +4,7 @@
 node_modules
 .pnpm-store
 dist
+__test__
 test-results
 
 .codex

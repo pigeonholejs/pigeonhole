@@ -1,0 +1,227 @@
+{
+    "schemaVersion": "2.1.0",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "src/components/LoginForm.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "LoginForm",
+                    "tagName": "sns-login-form",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "static": true,
+                            "default": "eager"
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "LoginForm",
+                    "declaration": { "name": "LoginForm" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-login-form",
+                    "declaration": { "name": "LoginForm" }
+                }
+            ]
+        },
+        {
+            "kind": "javascript-module",
+            "path": "src/components/SignupForm.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "SignupForm",
+                    "tagName": "sns-signup-form",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "static": true,
+                            "default": "eager"
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "SignupForm",
+                    "declaration": { "name": "SignupForm" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-signup-form",
+                    "declaration": { "name": "SignupForm" }
+                }
+            ]
+        },
+        {
+            "kind": "javascript-module",
+            "path": "src/components/AppHeader.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "AppHeader",
+                    "tagName": "sns-app-header",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "static": true,
+                            "default": "eager"
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "AppHeader",
+                    "declaration": { "name": "AppHeader" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-app-header",
+                    "declaration": { "name": "AppHeader" }
+                }
+            ]
+        },
+        {
+            "kind": "javascript-module",
+            "path": "src/components/PostComposer.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "PostComposer",
+                    "tagName": "sns-post-composer",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "static": true,
+                            "default": "eager"
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "PostComposer",
+                    "declaration": { "name": "PostComposer" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-post-composer",
+                    "declaration": { "name": "PostComposer" }
+                }
+            ]
+        },
+        {
+            "kind": "javascript-module",
+            "path": "src/components/PostCard.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "PostCard",
+                    "tagName": "sns-post-card",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "static": true,
+                            "default": "eager"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "postId",
+                            "attribute": "post-id",
+                            "type": { "text": "string" }
+                        },
+                        {
+                            "kind": "field",
+                            "name": "content",
+                            "attribute": "content",
+                            "type": { "text": "string" }
+                        },
+                        {
+                            "kind": "field",
+                            "name": "username",
+                            "attribute": "username",
+                            "type": { "text": "string" }
+                        },
+                        {
+                            "kind": "field",
+                            "name": "createdAt",
+                            "attribute": "created-at",
+                            "type": { "text": "string" }
+                        },
+                        {
+                            "kind": "field",
+                            "name": "likes",
+                            "attribute": "likes",
+                            "type": { "text": "number" }
+                        },
+                        {
+                            "kind": "field",
+                            "name": "likedByMe",
+                            "attribute": "liked-by-me",
+                            "type": { "text": "boolean" }
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "PostCard",
+                    "declaration": { "name": "PostCard" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-post-card",
+                    "declaration": { "name": "PostCard" }
+                }
+            ]
+        },
+        {
+            "kind": "javascript-module",
+            "path": "src/components/Timeline.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "Timeline",
+                    "tagName": "sns-timeline",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "static": true,
+                            "default": "eager"
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "Timeline",
+                    "declaration": { "name": "Timeline" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-timeline",
+                    "declaration": { "name": "Timeline" }
+                }
+            ]
+        }
+    ]
+}

@@ -6,7 +6,8 @@ function generatePropsInterface(component: ComponentInfo): string {
     lines.push(`  interface ${component.tagName}Props {`)
 
     for (const [key, def] of Object.entries(component.propsSchema)) {
-        lines.push(`    ${key}: ${def.type};`)
+        const quotedKey = /[^a-zA-Z0-9_$]/.test(key) ? `"${key}"` : key
+        lines.push(`    ${quotedKey}: ${def.type};`)
     }
 
     lines.push("  }")
