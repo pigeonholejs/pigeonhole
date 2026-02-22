@@ -1,6 +1,8 @@
 import { LitElement, html } from "lit"
 import { customElement, state } from "lit/decorators.js"
 
+const DRAFT_KEY = "sns:draft:post"
+
 @customElement("sns-post-composer")
 export class PostComposer extends LitElement {
     static hydrate = "eager"
@@ -11,6 +13,9 @@ export class PostComposer extends LitElement {
 
     firstUpdated() {
         this._loggedIn = !!localStorage.getItem("token")
+        if (this._loggedIn) {
+            this._content = localStorage.getItem(DRAFT_KEY) ?? ""
+        }
     }
 
     render() {
@@ -21,9 +26,7 @@ export class PostComposer extends LitElement {
                 <textarea
                     placeholder="What's on your mind?"
                     .value=${this._content}
-                    @input=${(e: Event) => {
-                        this._content = (e.target as HTMLTextAreaElement).value
-                    }}
+                    @input=${this._handleInput}
                     required
                 ></textarea>
                 <button type="submit" ?disabled=${this._loading || !this._content.trim()}>
@@ -38,6 +41,11 @@ export class PostComposer extends LitElement {
         this._loading = true
 
         const token = localStorage.getItem("token")
+        if (!token) {
+            this._loading = false
+            return
+        }
+
         try {
             const res = await fetch("/api/posts", {
                 method: "POST",
@@ -51,10 +59,25 @@ export class PostComposer extends LitElement {
             if (res.ok) {
                 const post = await res.json()
                 this._content = ""
+                localStorage.removeItem(DRAFT_KEY)
                 document.dispatchEvent(new CustomEvent("post-created", { detail: post }))
             }
         } finally {
             this._loading = false
         }
+    }
+
+    private _handleInput(e: Event) {
+        const value = (e.target as HTMLTextAreaElement).value
+        this._content = value
+        this._syncDraft(value)
+    }
+
+    private _syncDraft(value: string) {
+        if (value.trim().length === 0) {
+            localStorage.removeItem(DRAFT_KEY)
+            return
+        }
+        localStorage.setItem(DRAFT_KEY, value)
     }
 }

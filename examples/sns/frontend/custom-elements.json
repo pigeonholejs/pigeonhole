@@ -127,6 +127,68 @@
         },
         {
             "kind": "javascript-module",
+            "path": "src/components/SuggestedPosts.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "SuggestedPosts",
+                    "tagName": "sns-suggested-posts",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "static": true,
+                            "default": "lazy"
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "SuggestedPosts",
+                    "declaration": { "name": "SuggestedPosts" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-suggested-posts",
+                    "declaration": { "name": "SuggestedPosts" }
+                }
+            ]
+        },
+        {
+            "kind": "javascript-module",
+            "path": "src/components/ClientStatusPanel.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "ClientStatusPanel",
+                    "tagName": "sns-client-status-panel",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "static": true,
+                            "default": "client-only"
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "ClientStatusPanel",
+                    "declaration": { "name": "ClientStatusPanel" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-client-status-panel",
+                    "declaration": { "name": "ClientStatusPanel" }
+                }
+            ]
+        },
+        {
+            "kind": "javascript-module",
             "path": "src/components/PostCard.tsx",
             "declarations": [
                 {
