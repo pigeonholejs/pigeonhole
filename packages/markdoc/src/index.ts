@@ -1,5 +1,5 @@
-import { parse } from "markdecl"
-import type { Node } from "markdecl"
+import { parse } from "strictmdoc"
+import type { Node } from "strictmdoc"
 
 export { parse }
 export type { Node }

@@ -1,5 +1,5 @@
-import { Tag } from "markdecl"
-import type { RenderableTreeNode } from "markdecl"
+import { Tag } from "strictmdoc"
+import type { RenderableTreeNode } from "strictmdoc"
 
 import { createRenderContext, generateIslandId, wrapIslandHtml } from "../island/marker"
 import type { RenderContext } from "../types"

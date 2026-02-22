@@ -1,4 +1,4 @@
-import { parse, validate, transform, type Config, type RenderableTreeNode } from "markdecl"
+import { parse, validate, transform, type Config, type RenderableTreeNode } from "strictmdoc"
 import { buildConfig } from "./config"
 
 export type Components = {

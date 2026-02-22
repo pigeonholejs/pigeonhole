@@ -1,5 +1,5 @@
 import { test, assert } from "vitest"
-import { parse } from "markdecl"
+import { parse } from "strictmdoc"
 import { buildConfig } from "./config"
 
 test("frontmatterがない場合は空のvariablesを返す", () => {

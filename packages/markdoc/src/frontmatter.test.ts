@@ -1,5 +1,5 @@
 import { test, assert } from "vitest"
-import { parse } from "markdecl"
+import { parse } from "strictmdoc"
 import { filterFrontmatter } from "./frontmatter"
 
 test("frontmatterがない場合は空のfrontmatterを返す", () => {

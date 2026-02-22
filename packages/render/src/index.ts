@@ -9,9 +9,9 @@ export type {
 } from "./types"
 export type { PropsSchema, PropsDef } from "@pigeonhole/contracts"
 
-// Re-exports from markdecl
-export { Tag } from "markdecl"
-export type { RenderableTreeNode } from "markdecl"
+// Re-exports from strictmdoc
+export { Tag } from "strictmdoc"
+export type { RenderableTreeNode } from "strictmdoc"
 
 // HTML rendering
 export { renderToHtml } from "./html/render-to-html"

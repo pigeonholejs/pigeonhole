@@ -1,4 +1,4 @@
-import { type Config, type Node } from "markdecl"
+import { type Config, type Node } from "strictmdoc"
 import { filterFrontmatter } from "./frontmatter"
 
 /**

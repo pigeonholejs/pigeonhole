@@ -1,6 +1,6 @@
 import { test, assert } from "vitest"
-import { Tag } from "markdecl"
-import type { RenderableTreeNode } from "markdecl"
+import { Tag } from "strictmdoc"
+import type { RenderableTreeNode } from "strictmdoc"
 
 import { renderToHtml } from "./render-to-html"
 import type { RenderOptions } from "../types"

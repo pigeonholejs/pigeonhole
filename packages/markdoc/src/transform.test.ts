@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import { parse, Tag } from "markdecl"
+import { parse, Tag } from "strictmdoc"
 import { transformMarkdoc } from "./transform"
 
 function isTag(node: unknown): node is Tag {

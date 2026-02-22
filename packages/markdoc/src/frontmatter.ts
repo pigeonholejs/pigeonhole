@@ -1,5 +1,5 @@
 import yaml from "js-yaml"
-import type { Node } from "markdecl"
+import type { Node } from "strictmdoc"
 
 // ---
 // - import

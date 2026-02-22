@@ -131,7 +131,7 @@ describe("renderMdoc", () => {
                 },
             },
         )
-        // children は props に含まれない（markdecl attributes から除外される）
+        // children は props に含まれない（strictmdoc attributes から除外される）
         assert.include(result.html, 'has-children-prop="false"')
         // children は第2引数として渡される
         assert.include(result.html, "child content")

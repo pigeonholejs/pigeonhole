@@ -1,6 +1,6 @@
 import { transformMarkdoc } from "@pigeonhole/markdoc"
 import { matchesDenyPattern } from "@pigeonhole/contracts"
-import { type Config } from "markdecl"
+import { type Config } from "strictmdoc"
 import { renderToHtml } from "../html/render-to-html"
 import type { RenderOptions, RenderMdocOptions, RenderResult } from "../types"
 
@@ -49,7 +49,7 @@ export async function renderMdoc(
                     }
                 }
             }
-            // 非ワイルドカード deny: スキーマ未宣言でも markdecl に通知（現状維持）
+            // 非ワイルドカード deny: スキーマ未宣言でも strictmdoc に通知（現状維持）
             if (options.denyPatterns) {
                 for (const pattern of options.denyPatterns) {
                     if (!pattern.includes("*") && !(pattern in attributes)) {

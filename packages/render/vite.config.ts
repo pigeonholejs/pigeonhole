@@ -17,7 +17,7 @@ export default defineConfig({
         },
         outDir: "dist",
         rollupOptions: {
-            external: [/^@pigeonhole\//, /^@markdoc\//, /^@lit/, "lit", "markdecl"],
+            external: [/^@pigeonhole\//, /^@markdoc\//, /^@lit/, "lit", "strictmdoc"],
             output: {
                 preserveModules: true,
                 preserveModulesRoot: "src",
