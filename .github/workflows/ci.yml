@@ -78,7 +78,7 @@ jobs:
                       needsPlaywright: true
                     - name: sns
                       path: examples/sns
-                      needsPlaywright: false
+                      needsPlaywright: true
         steps:
             - uses: actions/checkout@v4
 
@@ -96,7 +96,30 @@ jobs:
               uses: actions/download-artifact@v4
               with:
                   name: packages-dist
-                  path: .
+                  path: packages
+
+            - name: Inspect downloaded package dist
+              run: |
+                  ls -la packages
+                  find packages -maxdepth 3 -type d | sort
+
+            - name: Verify package dist exists
+              shell: bash
+              run: |
+                  set -euo pipefail
+                  required_files=(
+                      "packages/vite/dist/index.js"
+                      "packages/render/dist/index.js"
+                      "packages/adapters/dist/hono/index.js"
+                  )
+                  for file in "${required_files[@]}"; do
+                      if [ ! -f "$file" ]; then
+                          echo "Missing required file: $file"
+                          echo "--- files under packages ---"
+                          find packages -maxdepth 4 -type f | sort
+                          exit 1
+                      fi
+                  done
 
             - name: Get pnpm store directory
               shell: bash
