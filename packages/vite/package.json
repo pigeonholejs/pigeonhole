@@ -26,6 +26,8 @@
     "dependencies": {
         "@pigeonhole/markdoc": "workspace:^",
         "@pigeonhole/render": "workspace:^",
+        "ajv": "^8.18.0",
+        "custom-elements-manifest": "^2.1.0",
         "jiti": "^2.6.1",
         "tinyglobby": "^0.2.15",
         "zod": "^4.3.6"

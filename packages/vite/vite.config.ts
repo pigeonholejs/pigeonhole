@@ -24,6 +24,8 @@ export default defineConfig({
                 "jiti",
                 "tinyglobby",
                 "zod",
+                "ajv",
+                "custom-elements-manifest",
             ],
             output: {
                 preserveModules: true,

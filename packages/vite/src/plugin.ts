@@ -12,6 +12,14 @@ import { generateServerModule } from "./codegen/server-module"
 import { generateClientModule } from "./codegen/client-module"
 import { generateTypeDefinitions, generateVirtualModuleTypes } from "./codegen/type-definitions"
 import { validateMdocFiles } from "./validation/validate-mdoc-files"
+import { loadCemRegistry } from "./registry/load-cem"
+import { normalizeCemManifest } from "./registry/normalize-cem"
+import {
+    componentContractToPropsSchema,
+    type ComponentContract,
+    type AttributeContract,
+} from "./registry/types"
+import { validateCemManifest } from "./registry/validate-cem"
 
 // 仮想モジュール ID
 const VIRTUAL_COMPONENTS = "virtual:pigeonhole/components"
@@ -34,6 +42,37 @@ function registerTagName(
     tagNameSourceMap.set(tagName, filePath)
 }
 
+function cloneContractWithName(contract: ComponentContract, componentName: string): ComponentContract {
+    const attributes: Record<string, AttributeContract> = {}
+    for (const [name, value] of Object.entries(contract.attributes)) {
+        attributes[name] = {
+            name: value.name,
+            required: value.required,
+            type: value.type,
+        }
+    }
+
+    return {
+        componentName,
+        customElementTagName: contract.customElementTagName,
+        source: contract.source,
+        attributes,
+    }
+}
+
+function mergeContracts(
+    targetByComponentName: Map<string, ComponentContract>,
+    targetByCustomElementTagName: Map<string, ComponentContract>,
+    contracts: ReturnType<typeof normalizeCemManifest>,
+): void {
+    for (const [name, contract] of contracts.byComponentName) {
+        targetByComponentName.set(name, contract)
+    }
+    for (const [name, contract] of contracts.byCustomElementTagName) {
+        targetByCustomElementTagName.set(name, contract)
+    }
+}
+
 // Pigeonhole Vite プラグインを作成する
 export function pigeonhole(): Plugin {
     let root: string
@@ -49,6 +88,22 @@ export function pigeonhole(): Plugin {
         async buildStart() {
             const config = await loadConfig(root)
             const denyPatterns = config.denyPatterns
+            const knownPackageImports = new Set<string>()
+
+            const cemContractsByComponentName = new Map<string, ComponentContract>()
+            const cemContractsByCustomElementTagName = new Map<string, ComponentContract>()
+            for (const registry of config.componentRegistries) {
+                const loaded = await loadCemRegistry(root, registry)
+                validateCemManifest(loaded.manifest, loaded.sourceId)
+                mergeContracts(
+                    cemContractsByComponentName,
+                    cemContractsByCustomElementTagName,
+                    normalizeCemManifest(loaded.manifest, loaded.sourceId),
+                )
+                if (loaded.packageName) {
+                    knownPackageImports.add(loaded.packageName)
+                }
+            }
 
             // コンポーネントスキャン
             scannedComponents = await scanComponents(root, config.componentsDir)
@@ -62,9 +117,33 @@ export function pigeonhole(): Plugin {
 
             // コンポーネント名 → PropsSchema マップ
             const componentSchemaMap = new Map<string, PropsSchema>()
+            const componentContractMap = new Map<string, ComponentContract>()
             for (const component of scannedComponents) {
                 registerTagName(tagNameSourceMap, component.tagName, component.filePath)
+
+                const matchedContract =
+                    cemContractsByComponentName.get(component.tagName) ??
+                    (component.customElementTagName
+                        ? cemContractsByCustomElementTagName.get(component.customElementTagName)
+                        : undefined)
+
+                if (matchedContract) {
+                    const renamed = cloneContractWithName(matchedContract, component.tagName)
+                    componentContractMap.set(component.tagName, renamed)
+                    component.propsSchema = componentContractToPropsSchema(renamed)
+                }
+
                 componentSchemaMap.set(component.tagName, component.propsSchema)
+            }
+
+            // 外部 CEM コンポーネント（ローカル scan 対象外）を補完
+            for (const [name, contract] of cemContractsByComponentName) {
+                if (componentSchemaMap.has(name)) {
+                    continue
+                }
+                registerTagName(tagNameSourceMap, name, contract.source)
+                componentContractMap.set(name, contract)
+                componentSchemaMap.set(name, componentContractToPropsSchema(contract))
             }
 
             // .mdoc コンポーネントの input から PropsSchema を構築
@@ -82,8 +161,16 @@ export function pigeonhole(): Plugin {
             }
 
             // import 解決 + 属性検証
-            validateMdocFiles(mdocPages, root, componentSchemaMap, denyPatterns)
-            validateMdocFiles(mdocComponents, root, componentSchemaMap, denyPatterns)
+            validateMdocFiles(mdocPages, root, componentSchemaMap, denyPatterns, {
+                knownPackageImports,
+                componentContracts: componentContractMap,
+                strictComplexTypes: config.strictComplexTypes,
+            })
+            validateMdocFiles(mdocComponents, root, componentSchemaMap, denyPatterns, {
+                knownPackageImports,
+                componentContracts: componentContractMap,
+                strictComplexTypes: config.strictComplexTypes,
+            })
 
             // .pigeonhole/ 生成
             const outDir = join(root, ".pigeonhole")

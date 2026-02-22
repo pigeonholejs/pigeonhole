@@ -20,6 +20,8 @@ test("config ファイルが存在しない場合はデフォルト値を返す"
         assert.equal(config.componentsDir, "src/components")
         assert.equal(config.pagesDir, "src/pages")
         assert.deepEqual(config.denyPatterns, [])
+        assert.equal(config.strictComplexTypes, false)
+        assert.deepEqual(config.componentRegistries, [])
     } finally {
         rmSync(root, { recursive: true, force: true })
     }
@@ -34,6 +36,14 @@ test("config ファイルからユーザー設定を読み込む", async () => {
     componentsDir: "lib/components",
     pagesDir: "lib/pages",
     denyPatterns: ["class", "style"],
+    strictComplexTypes: true,
+    componentRegistries: [
+        {
+            kind: "package",
+            packageName: "@acme/ui",
+            cemPath: "dist/custom-elements.json",
+        },
+    ],
 }
 `,
         )
@@ -42,6 +52,14 @@ test("config ファイルからユーザー設定を読み込む", async () => {
         assert.equal(config.componentsDir, "lib/components")
         assert.equal(config.pagesDir, "lib/pages")
         assert.deepEqual(config.denyPatterns, ["class", "style"])
+        assert.equal(config.strictComplexTypes, true)
+        assert.deepEqual(config.componentRegistries, [
+            {
+                kind: "package",
+                packageName: "@acme/ui",
+                cemPath: "dist/custom-elements.json",
+            },
+        ])
     } finally {
         rmSync(root, { recursive: true, force: true })
     }
@@ -60,6 +78,8 @@ test("部分的な config でもデフォルト値が補完される", async () 
         assert.equal(config.componentsDir, "src/components")
         assert.equal(config.pagesDir, "content/pages")
         assert.deepEqual(config.denyPatterns, [])
+        assert.equal(config.strictComplexTypes, false)
+        assert.deepEqual(config.componentRegistries, [])
     } finally {
         rmSync(root, { recursive: true, force: true })
     }

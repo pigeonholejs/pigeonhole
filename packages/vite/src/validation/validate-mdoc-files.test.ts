@@ -5,6 +5,7 @@ import { assert, test } from "vitest"
 import { validateMdocFiles } from "./validate-mdoc-files"
 import type { MdocFileInfo } from "../scanner/types"
 import type { PropsSchema } from "@pigeonhole/render"
+import type { ComponentContract } from "../registry/types"
 
 /**
  * テスト用の一時ディレクトリを作成する
@@ -169,6 +170,144 @@ test("スキーマが存在しないタグの属性は検証をスキップす�
          * スキーマが存在しないタグは検証をスキップする
          */
         validateMdocFiles(mdocFiles, root, new Map(), [])
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("knownPackageImports に含まれる bare import は許可される", () => {
+    const root = createTempDir()
+    try {
+        const mdocFiles: MdocFileInfo[] = [
+            {
+                filePath: join(root, "src/pages/index.mdoc"),
+                imports: [{ path: "@acme/ui" }],
+                inputs: [],
+                tagAttributes: {},
+            },
+        ]
+
+        validateMdocFiles(mdocFiles, root, new Map(), [], {
+            knownPackageImports: new Set(["@acme/ui"]),
+        })
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("unknown bare import はエラーを投げる", () => {
+    const root = createTempDir()
+    try {
+        const mdocFiles: MdocFileInfo[] = [
+            {
+                filePath: join(root, "src/pages/index.mdoc"),
+                imports: [{ path: "@acme/missing" }],
+                inputs: [],
+                tagAttributes: {},
+            },
+        ]
+
+        try {
+            validateMdocFiles(mdocFiles, root, new Map(), [], {
+                knownPackageImports: new Set(["@acme/ui"]),
+            })
+            assert.fail("エラーが投げられるべき")
+        } catch (error) {
+            assert.include((error as Error).message, "bare specifier")
+        }
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("required 属性が欠落している場合はエラーを投げる", () => {
+    const root = createTempDir()
+    try {
+        const componentSchemaMap = new Map<string, PropsSchema>()
+        componentSchemaMap.set("Profile", {
+            user: { type: "string" },
+            count: { type: "number" },
+        })
+
+        const profileContract: ComponentContract = {
+            componentName: "Profile",
+            customElementTagName: "ph-profile",
+            source: "custom-elements.json",
+            attributes: {
+                user: {
+                    name: "user",
+                    required: true,
+                    type: { kind: "primitive", primitive: "string", rawText: "string" },
+                },
+                count: {
+                    name: "count",
+                    required: false,
+                    type: { kind: "primitive", primitive: "number", rawText: "number" },
+                },
+            },
+        }
+
+        const mdocFiles: MdocFileInfo[] = [
+            {
+                filePath: join(root, "src/pages/index.mdoc"),
+                imports: [],
+                inputs: [],
+                tagAttributes: { Profile: ["count"] },
+            },
+        ]
+
+        try {
+            validateMdocFiles(mdocFiles, root, componentSchemaMap, [], {
+                componentContracts: new Map([["Profile", profileContract]]),
+            })
+            assert.fail("エラーが投げられるべき")
+        } catch (error) {
+            assert.include((error as Error).message, 'required attribute "user"')
+        }
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("strictComplexTypes で complex/reference/unknown を拒否する", () => {
+    const root = createTempDir()
+    try {
+        const componentSchemaMap = new Map<string, PropsSchema>()
+        componentSchemaMap.set("Card", {
+            meta: { type: "unknown" },
+        })
+
+        const cardContract: ComponentContract = {
+            componentName: "Card",
+            customElementTagName: "ph-card",
+            source: "custom-elements.json",
+            attributes: {
+                meta: {
+                    name: "meta",
+                    required: false,
+                    type: { kind: "complex", rawText: "Record<string, unknown>", references: [] },
+                },
+            },
+        }
+
+        const mdocFiles: MdocFileInfo[] = [
+            {
+                filePath: join(root, "src/pages/index.mdoc"),
+                imports: [],
+                inputs: [],
+                tagAttributes: { Card: ["meta"] },
+            },
+        ]
+
+        try {
+            validateMdocFiles(mdocFiles, root, componentSchemaMap, [], {
+                componentContracts: new Map([["Card", cardContract]]),
+                strictComplexTypes: true,
+            })
+            assert.fail("エラーが投げられるべき")
+        } catch (error) {
+            assert.include((error as Error).message, "strictComplexTypes")
+        }
     } finally {
         rmSync(root, { recursive: true, force: true })
     }
