@@ -2,11 +2,8 @@ import { mkdirSync, rmSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
 import { assert, test } from "vitest"
-import { scanMdocFiles } from "./scan-mdoc-files"
+import { collectMdocFiles } from "./collect-mdoc-files"
 
-/**
- * テスト用の一時ディレクトリを作成する
- */
 function createTempDir(): string {
     const dir = join(
         tmpdir(),
@@ -16,7 +13,6 @@ function createTempDir(): string {
     return dir
 }
 
-// 基本的な .mdoc ファイルスキャン
 test("*.mdoc ファイルを走査して MdocFileInfo を返す", async () => {
     const root = createTempDir()
     try {
@@ -38,7 +34,7 @@ content
 `,
         )
 
-        const results = await scanMdocFiles(root, "src/pages")
+        const results = await collectMdocFiles(root, "src/pages")
         assert.equal(results.length, 1)
         assert.equal(results[0].imports.length, 1)
         assert.equal(results[0].imports[0].path, "components/Card.tsx")
@@ -47,15 +43,14 @@ content
     }
 })
 
-// input を含む frontmatter
 test("frontmatter の input を抽出する", async () => {
     const root = createTempDir()
     try {
-        const componentsDir = join(root, "src/components")
-        mkdirSync(componentsDir, { recursive: true })
+        const pagesDir = join(root, "src/pages")
+        mkdirSync(pagesDir, { recursive: true })
 
         writeFileSync(
-            join(componentsDir, "Profile.mdoc"),
+            join(pagesDir, "Profile.mdoc"),
             `---
 - input:
     - userName
@@ -66,7 +61,7 @@ test("frontmatter の input を抽出する", async () => {
 `,
         )
 
-        const results = await scanMdocFiles(root, "src/components")
+        const results = await collectMdocFiles(root, "src/pages")
         assert.equal(results.length, 1)
         assert.equal(results[0].inputs.length, 2)
         assert.equal(results[0].inputs[0].variableName, "userName")
@@ -76,7 +71,6 @@ test("frontmatter の input を抽出する", async () => {
     }
 })
 
-// タグ属性の収集
 test("タグの使用属性を AST から収集する", async () => {
     const root = createTempDir()
     try {
@@ -96,7 +90,7 @@ content
 `,
         )
 
-        const results = await scanMdocFiles(root, "src/pages")
+        const results = await collectMdocFiles(root, "src/pages")
         assert.equal(results.length, 1)
         assert.isDefined(results[0].tagAttributes["Card"])
         assert.include(results[0].tagAttributes["Card"], "title")
@@ -106,18 +100,16 @@ content
     }
 })
 
-// ディレクトリが存在しない場合
 test("ディレクトリが存在しない場合は空配列を返す", async () => {
     const root = createTempDir()
     try {
-        const results = await scanMdocFiles(root, "src/pages")
+        const results = await collectMdocFiles(root, "src/pages")
         assert.deepEqual(results, [])
     } finally {
         rmSync(root, { recursive: true, force: true })
     }
 })
 
-// サブディレクトリの再帰走査
 test("サブディレクトリを再帰的に走査する", async () => {
     const root = createTempDir()
     try {
@@ -126,9 +118,10 @@ test("サブディレクトリを再帰的に走査する", async () => {
 
         writeFileSync(join(subDir, "post.mdoc"), "# Blog Post\n")
 
-        const results = await scanMdocFiles(root, "src/pages")
+        const results = await collectMdocFiles(root, "src/pages")
         assert.equal(results.length, 1)
     } finally {
         rmSync(root, { recursive: true, force: true })
     }
 })
+

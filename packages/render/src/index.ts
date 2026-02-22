@@ -6,9 +6,8 @@ export type {
     RenderMdocOptions,
     DocumentOptions,
     RenderContext,
-    PropsSchema,
-    PropsDef,
 } from "./types"
+export type { PropsSchema, PropsDef } from "@pigeonhole/contracts"
 
 // Re-exports from markdecl
 export { Tag } from "markdecl"
@@ -29,4 +28,4 @@ export { createRenderContext, serializeIslandProps, wrapIslandHtml } from "./isl
 export { createDocument } from "./document/document"
 
 // Props
-export { matchesDenyPattern } from "./props/deny-pattern"
+export { matchesDenyPattern } from "@pigeonhole/contracts"

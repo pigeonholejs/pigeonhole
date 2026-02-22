@@ -35,9 +35,9 @@ importers:
       '@lit-labs/ssr-client':
         specifier: ^1.1.8
         version: 1.1.8
-      '@pigeonhole/hono':
+      '@pigeonhole/adapters':
         specifier: workspace:*
-        version: link:../../packages/hono
+        version: link:../../packages/adapters
       '@pigeonhole/render':
         specifier: workspace:*
         version: link:../../packages/render
@@ -63,7 +63,7 @@ importers:
 
   examples/sns: {}
 
-  packages/hono:
+  packages/adapters:
     dependencies:
       '@pigeonhole/render':
         specifier: workspace:^
@@ -72,6 +72,15 @@ importers:
       hono:
         specifier: ^4.12.0
         version: 4.12.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.18
+        version: 4.0.18(@types/node@25.2.3)(jiti@2.6.1)(jsdom@28.1.0)
+
+  packages/contracts:
+    devDependencies:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -103,6 +112,9 @@ importers:
       '@lit-labs/ssr-client':
         specifier: '>=1.0.0'
         version: 1.1.8
+      '@pigeonhole/contracts':
+        specifier: workspace:^
+        version: link:../contracts
       '@pigeonhole/markdoc':
         specifier: workspace:^
         version: link:../markdoc
@@ -128,12 +140,12 @@ importers:
 
   packages/vite:
     dependencies:
+      '@pigeonhole/contracts':
+        specifier: workspace:^
+        version: link:../contracts
       '@pigeonhole/markdoc':
         specifier: workspace:^
         version: link:../markdoc
-      '@pigeonhole/render':
-        specifier: workspace:^
-        version: link:../render
       ajv:
         specifier: ^8.18.0
         version: 8.18.0

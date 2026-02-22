@@ -1,7 +1,7 @@
 import { transformMarkdoc } from "@pigeonhole/markdoc"
+import { matchesDenyPattern } from "@pigeonhole/contracts"
 import { type Config } from "markdecl"
 import { renderToHtml } from "../html/render-to-html"
-import { matchesDenyPattern } from "../props/deny-pattern"
 import type { RenderOptions, RenderMdocOptions, RenderResult } from "../types"
 
 const MARKDOC_TYPE_MAP: Record<string, BooleanConstructor | NumberConstructor | StringConstructor> =

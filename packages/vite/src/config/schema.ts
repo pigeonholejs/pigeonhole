@@ -8,16 +8,15 @@ const componentRegistrySchema = z.discriminatedUnion("kind", [
     z.object({
         kind: z.literal("package"),
         packageName: z.string(),
-        cemPath: z.string().default("custom-elements.json"),
+        cemPath: z.string().optional(),
     }),
 ])
 
 export const configSchema = z.object({
-    componentsDir: z.string().default("src/components"),
     pagesDir: z.string().default("src/pages"),
     denyPatterns: z.array(z.string()).default([]),
     strictComplexTypes: z.boolean().default(false),
-    componentRegistries: z.array(componentRegistrySchema).default([]),
+    componentRegistries: z.array(componentRegistrySchema).min(1),
 })
 
 export type PigeonholeConfig = z.infer<typeof configSchema>

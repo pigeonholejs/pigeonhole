@@ -13,7 +13,7 @@ export default defineConfig({
         },
         outDir: "dist",
         rollupOptions: {
-            external: [/^@pigeonhole\//, "hono"],
+            external: [/^@pigeonhole\//],
             output: {
                 preserveModules: true,
                 preserveModulesRoot: "src",

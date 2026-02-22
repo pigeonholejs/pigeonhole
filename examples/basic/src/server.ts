@@ -1,5 +1,5 @@
 import { Hono } from "hono"
-import { createPageRenderer } from "@pigeonhole/hono"
+import { createPageRenderer } from "@pigeonhole/adapters/hono"
 import {
     components,
     propsSchemas,

@@ -49,8 +49,8 @@ function extractTagAttributeNames(ast: {
     return tagAttributes
 }
 
-// 指定ディレクトリ配下の .mdoc ファイルをスキャンする
-export async function scanMdocFiles(root: string, dir: string): Promise<MdocFileInfo[]> {
+// 指定ディレクトリ配下の .mdoc ファイルを収集する
+export async function collectMdocFiles(root: string, dir: string): Promise<MdocFileInfo[]> {
     const absoluteDir = join(root, dir)
     const results: MdocFileInfo[] = []
 
@@ -58,7 +58,6 @@ export async function scanMdocFiles(root: string, dir: string): Promise<MdocFile
     try {
         files = await glob(["**/*.mdoc"], { cwd: absoluteDir, absolute: true })
     } catch {
-        // ディレクトリが存在しない場合は空を返す
         return results
     }
 
@@ -78,3 +77,4 @@ export async function scanMdocFiles(root: string, dir: string): Promise<MdocFile
 
     return results
 }
+

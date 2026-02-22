@@ -6,17 +6,13 @@
 export function matchesDenyPattern(attributeName: string, denyPatterns: string[]): boolean {
     for (const pattern of denyPatterns) {
         if (pattern.endsWith("*")) {
-            /**
-             * ワイルドカードパターン: 末尾の * を除いたプレフィックスで比較
-             */
+            // ワイルドカードパターン: 末尾の * を除いたプレフィックスで比較
             const prefix = pattern.slice(0, -1)
             if (attributeName.startsWith(prefix)) {
                 return true
             }
         } else if (attributeName === pattern) {
-            /**
-             * 完全一致パターン
-             */
+            // 完全一致パターン
             return true
         }
     }

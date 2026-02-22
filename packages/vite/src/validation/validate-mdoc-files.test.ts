@@ -3,8 +3,8 @@ import { join } from "node:path"
 import { tmpdir } from "node:os"
 import { assert, test } from "vitest"
 import { validateMdocFiles } from "./validate-mdoc-files"
-import type { MdocFileInfo } from "../scanner/types"
-import type { PropsSchema } from "@pigeonhole/render"
+import type { MdocFileInfo } from "../mdoc/types"
+import type { PropsSchema } from "@pigeonhole/contracts"
 import type { ComponentContract } from "../registry/types"
 
 /**
@@ -232,6 +232,8 @@ test("required 属性が欠落している場合はエラーを投げる", () =>
         const profileContract: ComponentContract = {
             componentName: "Profile",
             customElementTagName: "ph-profile",
+            moduleSpecifier: "@acme/ui/profile.js",
+            hydrateMode: "none",
             source: "custom-elements.json",
             attributes: {
                 user: {
@@ -280,6 +282,8 @@ test("strictComplexTypes で complex/reference/unknown を拒否する", () => {
         const cardContract: ComponentContract = {
             componentName: "Card",
             customElementTagName: "ph-card",
+            moduleSpecifier: "@acme/ui/card.js",
+            hydrateMode: "none",
             source: "custom-elements.json",
             attributes: {
                 meta: {

@@ -1,9 +1,9 @@
 import { existsSync } from "node:fs"
 import { join } from "node:path"
 import { normalizePath } from "vite"
-import { matchesDenyPattern } from "@pigeonhole/render"
-import type { PropsSchema } from "@pigeonhole/render"
-import type { MdocFileInfo } from "../scanner/types"
+import { matchesDenyPattern } from "@pigeonhole/contracts"
+import type { PropsSchema } from "@pigeonhole/contracts"
+import type { MdocFileInfo } from "../mdoc/types"
 import type { ComponentContract } from "../registry/types"
 
 export interface ValidateMdocFilesOptions {

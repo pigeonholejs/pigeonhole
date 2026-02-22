@@ -10,7 +10,14 @@ export async function loadConfig(root: string): Promise<PigeonholeConfig> {
     const configPath = join(root, CONFIG_FILE_NAME)
 
     if (!existsSync(configPath)) {
-        return configSchema.parse({})
+        const defaultResult = configSchema.safeParse({})
+        if (!defaultResult.success) {
+            const messages = defaultResult.error.issues
+                .map((issue) => `  - ${issue.path.join(".")}: ${issue.message}`)
+                .join("\n")
+            throw new Error(`invalid default pigeonhole config:\n${messages}`)
+        }
+        return defaultResult.data
     }
 
     const jiti = createJiti(root)

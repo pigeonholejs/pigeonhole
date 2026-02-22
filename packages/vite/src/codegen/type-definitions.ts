@@ -1,4 +1,4 @@
-import type { ComponentInfo } from "../scanner/types"
+import type { ComponentInfo } from "../component/types"
 
 // コンポーネントの props インターフェースを生成する
 function generatePropsInterface(component: ComponentInfo): string {
@@ -47,7 +47,7 @@ export function generateVirtualModuleTypes(): string {
         "  export const components: Record<string, (props: Record<string, unknown>, children: string) => string | Promise<string>>;",
     )
     lines.push(
-        '  export const propsSchemas: Record<string, import("@pigeonhole/render").PropsSchema>;',
+        '  export const propsSchemas: Record<string, import("@pigeonhole/contracts").PropsSchema>;',
     )
     lines.push('  export const hydrateComponents: Map<string, "eager" | "lazy" | "client-only">;')
     lines.push("  export const islandTagNames: Record<string, string>;")

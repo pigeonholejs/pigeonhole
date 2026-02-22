@@ -1,15 +1,15 @@
 import { assert, test } from "vitest"
 import { generateTypeDefinitions, generateVirtualModuleTypes } from "./type-definitions"
-import type { ComponentInfo } from "../scanner/types"
+import type { ComponentInfo } from "../component/types"
 
 // types.d.ts の生成
 test("ComponentInfo から types.d.ts の内容を生成する", () => {
     const components: ComponentInfo[] = [
         {
-            filePath: "/project/src/components/Card.tsx",
             tagName: "Card",
+            customElementTagName: "ph-card",
+            moduleSpecifier: "/project/src/components/Card.js",
             hydrateMode: "none",
-            customElementTagName: null,
             propsSchema: {
                 title: { type: "string" },
                 count: { type: "number" },
@@ -28,10 +28,10 @@ test("ComponentInfo から types.d.ts の内容を生成する", () => {
 test("propsSchema が空のコンポーネントは interface を生成しない", () => {
     const components: ComponentInfo[] = [
         {
-            filePath: "/project/src/components/Footer.tsx",
             tagName: "Footer",
+            customElementTagName: "ph-footer",
+            moduleSpecifier: "/project/src/components/Footer.js",
             hydrateMode: "none",
-            customElementTagName: null,
             propsSchema: {},
         },
     ]
@@ -54,6 +54,7 @@ test("仮想モジュールの型定義を生成する", () => {
     assert.include(result, 'declare module "virtual:pigeonhole/components"')
     assert.include(result, "export const components:")
     assert.include(result, "export const propsSchemas:")
+    assert.include(result, 'import("@pigeonhole/contracts").PropsSchema')
     assert.include(result, 'declare module "virtual:pigeonhole/client"')
     assert.include(result, "export const islands:")
 })

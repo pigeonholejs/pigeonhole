@@ -2,6 +2,7 @@
 .oxlintrc.jsonc
 
 node_modules
+.pnpm-store
 dist
 test-results
 

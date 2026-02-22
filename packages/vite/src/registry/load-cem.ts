@@ -9,6 +9,8 @@ const require = createRequire(import.meta.url)
 export interface LoadedCemRegistry {
     sourceId: string
     manifest: unknown
+    manifestPath: string
+    kind: ComponentRegistryConfig["kind"]
     packageName?: string
 }
 
@@ -30,6 +32,8 @@ export async function loadCemRegistry(
         return {
             sourceId: path,
             manifest: await readJson(path),
+            manifestPath: path,
+            kind: "file",
         }
     }
 
@@ -50,6 +54,7 @@ export async function loadCemRegistry(
         sourceId: `${registry.packageName}:${cemPath}`,
         packageName: registry.packageName,
         manifest: await readJson(cemPath),
+        manifestPath: cemPath,
+        kind: "package",
     }
 }
-

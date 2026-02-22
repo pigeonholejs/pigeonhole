@@ -1,0 +1,74 @@
+{
+    "schemaVersion": "2.1.0",
+    "modules": [
+        {
+            "kind": "javascript-module",
+            "path": "src/components/Greeting.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "Greeting",
+                    "tagName": "ph-greeting",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "name",
+                            "attribute": "name",
+                            "type": { "text": "string" }
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "Greeting",
+                    "declaration": { "name": "Greeting" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "ph-greeting",
+                    "declaration": { "name": "Greeting" }
+                }
+            ]
+        },
+        {
+            "kind": "javascript-module",
+            "path": "src/components/Counter.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "name": "Counter",
+                    "tagName": "ph-counter",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "static": true,
+                            "default": "\"eager\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "count",
+                            "attribute": "count",
+                            "type": { "text": "number" },
+                            "default": "0"
+                        }
+                    ]
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "Counter",
+                    "declaration": { "name": "Counter" }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "ph-counter",
+                    "declaration": { "name": "Counter" }
+                }
+            ]
+        }
+    ]
+}

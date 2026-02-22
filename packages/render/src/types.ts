@@ -1,3 +1,5 @@
+import type { PropsSchema } from "@pigeonhole/contracts"
+
 /**
  * サーバーコンポーネント関数の型
  *
@@ -7,19 +9,6 @@ export type ServerComponent = (
     props: Record<string, unknown>,
     children: string,
 ) => string | Promise<string>
-
-/**
- * コンポーネントの props スキーマにおけるプロパティ定義。
- */
-export interface PropsDef {
-    type: string
-}
-
-/**
- * コンポーネントの props スキーマ型。
- * 例: { title: { type: "string" }, count: { type: "number" } }
- */
-export type PropsSchema = Record<string, PropsDef>
 
 /**
  * レンダリング結果

@@ -1,4 +1,6 @@
-import type { PropsSchema } from "@pigeonhole/render"
+import type { PropsSchema } from "@pigeonhole/contracts"
+import type { HydrateMode } from "../component/types"
+import type { ComponentInfo } from "../component/types"
 
 export type PrimitiveType = "string" | "number" | "boolean"
 
@@ -38,6 +40,8 @@ export interface AttributeContract {
 export interface ComponentContract {
     componentName: string
     customElementTagName: string
+    moduleSpecifier: string
+    hydrateMode: HydrateMode
     source: string
     attributes: Record<string, AttributeContract>
 }
@@ -62,3 +66,12 @@ export function componentContractToPropsSchema(contract: ComponentContract): Pro
     return schema
 }
 
+export function componentContractToComponentInfo(contract: ComponentContract): ComponentInfo {
+    return {
+        tagName: contract.componentName,
+        customElementTagName: contract.customElementTagName,
+        moduleSpecifier: contract.moduleSpecifier,
+        hydrateMode: contract.hydrateMode,
+        propsSchema: componentContractToPropsSchema(contract),
+    }
+}

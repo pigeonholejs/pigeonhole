@@ -1,3 +1,6 @@
+import { dirname, isAbsolute, join } from "node:path"
+import { normalizePath } from "vite"
+import type { HydrateMode } from "../component/types"
 import type { AttributeContract, ComponentContract, ContractType, PrimitiveType } from "./types"
 
 interface CEMTypeReference {
@@ -18,6 +21,7 @@ interface CEMAttribute {
 interface CEMMember {
     kind?: string
     name?: string
+    static?: boolean
     attribute?: string | boolean
     type?: CEMType
     default?: unknown
@@ -39,6 +43,7 @@ interface CEMExport {
 }
 
 interface CEMModule {
+    path?: string
     declarations?: CEMDeclaration[]
     exports?: CEMExport[]
 }
@@ -50,6 +55,13 @@ interface CEMManifest {
 export interface NormalizedCemContracts {
     byComponentName: Map<string, ComponentContract>
     byCustomElementTagName: Map<string, ComponentContract>
+}
+
+export interface NormalizeCemOptions {
+    sourceId: string
+    manifestPath: string
+    registryKind: "file" | "package"
+    packageName?: string
 }
 
 function normalizePrimitive(text: string): PrimitiveType | null {
@@ -170,10 +182,67 @@ function ensureAttribute(
     }
 }
 
+function toImportSpecifier(modulePath: string, options: NormalizeCemOptions): string {
+    if (options.registryKind === "package") {
+        if (!options.packageName) {
+            throw new Error(`invalid package registry for "${options.sourceId}": packageName is missing`)
+        }
+        const normalizedModulePath = modulePath.replace(/^\.?\//, "").replace(/^\/+/, "")
+        return normalizedModulePath.length > 0
+            ? `${options.packageName}/${normalizedModulePath}`
+            : options.packageName
+    }
+
+    const baseDir = dirname(options.manifestPath)
+    const absolute = isAbsolute(modulePath) ? modulePath : join(baseDir, modulePath)
+    return normalizePath(absolute)
+}
+
+function parseHydrateMode(value: unknown): HydrateMode | null {
+    if (value === null || value === undefined) {
+        return null
+    }
+    if (typeof value !== "string") {
+        return null
+    }
+    const normalized = value.trim().replace(/^["']|["']$/g, "")
+    if (
+        normalized === "none" ||
+        normalized === "eager" ||
+        normalized === "lazy" ||
+        normalized === "client-only"
+    ) {
+        return normalized
+    }
+    return null
+}
+
+function extractHydrateMode(declaration: CEMDeclaration): HydrateMode {
+    for (const member of declaration.members ?? []) {
+        if (
+            member.kind === "field" &&
+            member.static === true &&
+            typeof member.name === "string" &&
+            member.name === "hydrate"
+        ) {
+            const mode = parseHydrateMode(member.default)
+            if (!mode) {
+                throw new Error(
+                    `invalid static hydrate value on "${declaration.name ?? declaration.tagName ?? "unknown"}": "${String(member.default)}"`,
+                )
+            }
+            return mode
+        }
+    }
+
+    return "none"
+}
+
 function declarationToContract(
     declaration: CEMDeclaration,
     source: string,
     tagName: string,
+    moduleSpecifier: string,
 ): ComponentContract | null {
     const componentName = declaration.name ?? toPascalFromKebab(tagName)
     if (componentName.length === 0) {
@@ -214,17 +283,27 @@ function declarationToContract(
     return {
         componentName,
         customElementTagName: tagName,
+        moduleSpecifier,
+        hydrateMode: extractHydrateMode(declaration),
         source,
         attributes,
     }
 }
 
-export function normalizeCemManifest(manifest: unknown, source: string): NormalizedCemContracts {
+export function normalizeCemManifest(
+    manifest: unknown,
+    options: NormalizeCemOptions,
+): NormalizedCemContracts {
     const byComponentName = new Map<string, ComponentContract>()
     const byCustomElementTagName = new Map<string, ComponentContract>()
     const typed = manifest as CEMManifest
 
     for (const moduleEntry of typed.modules ?? []) {
+        if (typeof moduleEntry.path !== "string" || moduleEntry.path.length === 0) {
+            continue
+        }
+        const moduleSpecifier = toImportSpecifier(moduleEntry.path, options)
+
         const customElementExportMap = new Map<string, string>()
         for (const exportEntry of moduleEntry.exports ?? []) {
             if (
@@ -247,7 +326,7 @@ export function normalizeCemManifest(manifest: unknown, source: string): Normali
                 continue
             }
 
-            const contract = declarationToContract(declaration, source, tagName)
+            const contract = declarationToContract(declaration, options.sourceId, tagName, moduleSpecifier)
             if (!contract) {
                 continue
             }
@@ -259,4 +338,3 @@ export function normalizeCemManifest(manifest: unknown, source: string): Normali
 
     return { byComponentName, byCustomElementTagName }
 }
-

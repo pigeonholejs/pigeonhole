@@ -1,5 +1,4 @@
-import { normalizePath } from "vite"
-import type { ComponentInfo } from "../scanner/types"
+import type { ComponentInfo } from "../component/types"
 
 // クライアント仮想モジュール (virtual:pigeonhole/client) を生成する
 export function generateClientModule(islands: ComponentInfo[]): string {
@@ -19,8 +18,7 @@ export function generateClientModule(islands: ComponentInfo[]): string {
 
     // eager / client-only island: 即座に import
     for (const island of [...eagerIslands, ...clientOnlyIslands]) {
-        const path = normalizePath(island.filePath)
-        lines.push(`import "${path}";`)
+        lines.push(`import "${island.moduleSpecifier}";`)
     }
     lines.push("")
 
@@ -29,10 +27,9 @@ export function generateClientModule(islands: ComponentInfo[]): string {
         lines.push('import { observeLazyIslands } from "@pigeonhole/render/client";')
         lines.push("observeLazyIslands({")
         for (const island of lazyIslands) {
-            if (island.customElementTagName) {
-                const path = normalizePath(island.filePath)
-                lines.push(`  "${island.customElementTagName}": () => import("${path}"),`)
-            }
+            lines.push(
+                `  "${island.customElementTagName}": () => import("${island.moduleSpecifier}"),`,
+            )
         }
         lines.push("});")
         lines.push("")
@@ -41,9 +38,7 @@ export function generateClientModule(islands: ComponentInfo[]): string {
     // island マップの export（eager + lazy 両方）
     lines.push("export const islands = {")
     for (const island of islands) {
-        if (island.customElementTagName !== null) {
-            lines.push(`  "${island.tagName}": "${island.customElementTagName}",`)
-        }
+        lines.push(`  "${island.tagName}": "${island.customElementTagName}",`)
     }
     lines.push("};")
     lines.push("")

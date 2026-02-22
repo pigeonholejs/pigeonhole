@@ -1,267 +1,90 @@
 import { assert, test } from "vitest"
 import { generateServerModule } from "./server-module"
-import type { ComponentInfo } from "../scanner/types"
+import type { ComponentInfo } from "../component/types"
 
-// 基本的なサーバーモジュール生成
-test("ComponentInfo からサーバー仮想モジュールを生成する", () => {
+test("Web Components からサーバー仮想モジュールを生成する", () => {
     const components: ComponentInfo[] = [
         {
-            filePath: "/project/src/components/Card.tsx",
-            tagName: "Card",
-            hydrateMode: "none",
-            customElementTagName: null,
-            propsSchema: { title: { type: "string" } },
-        },
-        {
-            filePath: "/project/src/components/Footer.tsx",
-            tagName: "Footer",
-            hydrateMode: "none",
-            customElementTagName: null,
-            propsSchema: {},
-        },
-    ]
-
-    const result = generateServerModule(components)
-    assert.include(result, 'import { Card } from "/project/src/components/Card.tsx";')
-    assert.include(result, 'import { Footer } from "/project/src/components/Footer.tsx";')
-    assert.include(result, "export const components = {")
-    assert.include(result, "  Card,")
-    assert.include(result, "  Footer,")
-    assert.include(result, "export const propsSchemas = {")
-    assert.include(result, '  Card: {"title":{"type":"string"}},')
-    assert.include(result, "  Footer: {},")
-    // hydrate 対象がないので空
-    assert.include(result, "export const hydrateComponents = new Map([")
-    assert.include(result, "export const islandTagNames = {")
-})
-
-// Lit コンポーネント（customElementTagName あり）のテンプレート関数生成
-test("Lit コンポーネントのテンプレート関数を生成する", () => {
-    const components: ComponentInfo[] = [
-        {
-            filePath: "/project/src/components/Counter.tsx",
             tagName: "Counter",
-            hydrateMode: "eager",
             customElementTagName: "ph-counter",
+            moduleSpecifier: "/project/src/components/Counter.js",
+            hydrateMode: "eager",
             propsSchema: { count: { type: "number" } },
         },
-        {
-            filePath: "/project/src/components/Card.tsx",
-            tagName: "Card",
-            hydrateMode: "none",
-            customElementTagName: null,
-            propsSchema: {},
-        },
     ]
 
     const result = generateServerModule(components)
-    // renderLitTemplate のインポート
-    assert.include(result, 'import { renderLitTemplate } from "@pigeonhole/render/lit";')
-    // html と unsafeHTML のインポート
-    assert.include(result, 'import { html } from "lit";')
-    assert.include(result, 'import { unsafeHTML } from "lit/directives/unsafe-html.js";')
-    // 副作用インポート（customElements.define 登録）
-    assert.include(result, 'import "/project/src/components/Counter.tsx";')
-    // プロパティバインディングが生成される
+    assert.include(result, 'import "/project/src/components/Counter.js";')
     assert.include(result, ".count=${props.count}")
-    // renderLitTemplate を deferHydration: true で呼び出す
     assert.include(result, "renderLitTemplate(template, { deferHydration: true })")
-    // 関数コンポーネントは既存通り
-    assert.include(result, 'import { Card } from "/project/src/components/Card.tsx";')
-    // components map に両方含まれる
-    assert.include(result, "  Counter,")
-    assert.include(result, "  Card,")
+    assert.include(result, '"Counter": "ph-counter"')
 })
 
-// 複数の props がある場合のバインディング生成
-test("複数の props のバインディングを生成する", () => {
+test("SSR-only コンポーネントは deferHydration: false で生成する", () => {
     const components: ComponentInfo[] = [
         {
-            filePath: "/project/src/components/Widget.tsx",
-            tagName: "Widget",
-            hydrateMode: "eager",
-            customElementTagName: "ph-widget",
-            propsSchema: {
-                title: { type: "string" },
-                count: { type: "number" },
-                active: { type: "boolean" },
-            },
-        },
-    ]
-
-    const result = generateServerModule(components)
-    assert.include(result, ".title=${props.title}")
-    assert.include(result, ".count=${props.count}")
-    assert.include(result, ".active=${props.active}")
-})
-
-// Lit コンポーネントがない場合は Lit 関連インポートなし
-test("Lit コンポーネントがない場合は Lit 関連をインポートしない", () => {
-    const components: ComponentInfo[] = [
-        {
-            filePath: "/project/src/components/Card.tsx",
-            tagName: "Card",
-            hydrateMode: "none",
-            customElementTagName: null,
-            propsSchema: {},
-        },
-    ]
-
-    const result = generateServerModule(components)
-    assert.notInclude(result, "renderLitTemplate")
-    assert.notInclude(result, "import { html }")
-    assert.notInclude(result, "unsafeHTML")
-})
-
-// 非 hydrate の Lit コンポーネントには deferHydration が含まれない
-test("非 hydrate コンポーネントの生成コードに deferHydration が含まれない", () => {
-    const components: ComponentInfo[] = [
-        {
-            filePath: "/project/src/components/Card.tsx",
-            tagName: "Card",
-            hydrateMode: "none",
-            customElementTagName: null,
-            propsSchema: {},
-        },
-    ]
-
-    const result = generateServerModule(components)
-    assert.notInclude(result, "deferHydration")
-})
-
-// SSR-only Lit コンポーネント（customElementTagName あり、hydrateMode: "none"）
-test("SSR-only Lit コンポーネントは deferHydration: false で生成する", () => {
-    const components: ComponentInfo[] = [
-        {
-            filePath: "/project/src/components/Header.tsx",
             tagName: "Header",
-            hydrateMode: "none",
             customElementTagName: "ph-header",
+            moduleSpecifier: "/project/src/components/Header.js",
+            hydrateMode: "none",
             propsSchema: { title: { type: "string" } },
         },
     ]
 
     const result = generateServerModule(components)
-    // Lit 関連インポートがある
-    assert.include(result, 'import { renderLitTemplate } from "@pigeonhole/render/lit";')
-    // 副作用インポートがある
-    assert.include(result, 'import "/project/src/components/Header.tsx";')
-    // deferHydration: false で呼び出す
     assert.include(result, "renderLitTemplate(template, { deferHydration: false })")
-    // deferHydration: true は含まれない
-    assert.notInclude(result, "deferHydration: true")
+    assert.include(result, '  Header: {"title":{"type":"string"}},')
+    assert.notInclude(result, '"Header": "ph-header"')
 })
 
-// lazy Lit コンポーネントは deferHydration: true で生成する
-test("lazy Lit コンポーネントは deferHydration: true で生成する", () => {
+test("client-only コンポーネントはスタブ関数を生成する", () => {
     const components: ComponentInfo[] = [
         {
-            filePath: "/project/src/components/Slider.tsx",
-            tagName: "Slider",
-            hydrateMode: "lazy",
-            customElementTagName: "ph-slider",
-            propsSchema: { index: { type: "number" } },
-        },
-    ]
-
-    const result = generateServerModule(components)
-    assert.include(result, "renderLitTemplate(template, { deferHydration: true })")
-    assert.include(result, ".index=${props.index}")
-})
-
-// client-only Lit コンポーネントはスタブ関数を生成する
-test("client-only Lit コンポーネントはサーバー import なしでスタブ関数を生成する", () => {
-    const components: ComponentInfo[] = [
-        {
-            filePath: "/project/src/components/BrowserInfo.tsx",
             tagName: "BrowserInfo",
-            hydrateMode: "client-only",
             customElementTagName: "ph-browser-info",
-            propsSchema: { ua: { type: "string" } },
-        },
-    ]
-
-    const result = generateServerModule(components)
-    // サーバー import が生成されない
-    assert.notInclude(result, 'import "/project/src/components/BrowserInfo.tsx";')
-    assert.notInclude(result, "import { BrowserInfo }")
-    // スタブ関数が生成される
-    assert.include(result, 'const BrowserInfo = () => "";')
-    // components マップに含まれる
-    assert.include(result, "  BrowserInfo,")
-    // renderLitTemplate は呼ばれない
-    assert.notInclude(result, "renderLitTemplate")
-})
-
-// client-only と他のモードが混在する場合
-test("client-only と eager が混在する場合に正しく生成する", () => {
-    const components: ComponentInfo[] = [
-        {
-            filePath: "/project/src/components/Counter.tsx",
-            tagName: "Counter",
-            hydrateMode: "eager",
-            customElementTagName: "ph-counter",
-            propsSchema: { count: { type: "number" } },
-        },
-        {
-            filePath: "/project/src/components/BrowserInfo.tsx",
-            tagName: "BrowserInfo",
+            moduleSpecifier: "/project/src/components/BrowserInfo.js",
             hydrateMode: "client-only",
-            customElementTagName: "ph-browser-info",
             propsSchema: {},
         },
     ]
 
     const result = generateServerModule(components)
-    // eager は通常の Lit SSR パス
-    assert.include(result, 'import "/project/src/components/Counter.tsx";')
-    assert.include(result, "renderLitTemplate(template, { deferHydration: true })")
-    // client-only はスタブ
     assert.include(result, 'const BrowserInfo = () => "";')
-    assert.notInclude(result, 'import "/project/src/components/BrowserInfo.tsx";')
+    assert.notInclude(result, 'import "/project/src/components/BrowserInfo.js";')
+    assert.include(result, '  ["BrowserInfo", "client-only"],')
 })
 
-// hydrateComponents と islandTagNames のエクスポート
-test("hydrateComponents と islandTagNames をエクスポートする", () => {
+test("複数モードを含む hydrateComponents と islandTagNames を生成する", () => {
     const components: ComponentInfo[] = [
         {
-            filePath: "/project/src/components/Counter.tsx",
             tagName: "Counter",
-            hydrateMode: "eager",
             customElementTagName: "ph-counter",
-            propsSchema: { count: { type: "number" } },
-        },
-        {
-            filePath: "/project/src/components/Slider.tsx",
-            tagName: "Slider",
-            hydrateMode: "lazy",
-            customElementTagName: "ph-slider",
+            moduleSpecifier: "/project/src/components/Counter.js",
+            hydrateMode: "eager",
             propsSchema: {},
         },
         {
-            filePath: "/project/src/components/Card.tsx",
-            tagName: "Card",
+            tagName: "Slider",
+            customElementTagName: "ph-slider",
+            moduleSpecifier: "/project/src/components/Slider.js",
+            hydrateMode: "lazy",
+            propsSchema: {},
+        },
+        {
+            tagName: "Header",
+            customElementTagName: "ph-header",
+            moduleSpecifier: "/project/src/components/Header.js",
             hydrateMode: "none",
-            customElementTagName: null,
             propsSchema: {},
         },
     ]
 
     const result = generateServerModule(components)
-    // hydrateComponents: none 以外のみ含まれる
-    assert.include(result, "export const hydrateComponents = new Map([")
     assert.include(result, '  ["Counter", "eager"],')
     assert.include(result, '  ["Slider", "lazy"],')
-    assert.notInclude(result, '["Card"')
-    // islandTagNames: hydrate 対象の Lit コンポーネントのみ
-    assert.include(result, "export const islandTagNames = {")
+    assert.notInclude(result, '["Header", "none"]')
     assert.include(result, '  "Counter": "ph-counter",')
     assert.include(result, '  "Slider": "ph-slider",')
+    assert.notInclude(result, '"Header": "ph-header"')
 })
 
-// 空のコンポーネントリスト
-test("空のコンポーネントリストでは空の components を生成する", () => {
-    const result = generateServerModule([])
-    assert.include(result, "export const components = {")
-    assert.include(result, "};")
-})

@@ -1,15 +1,12 @@
-import { normalizePath } from "vite"
-import type { HydrateMode } from "../scanner/extract-hydrate-mode"
-import type { ComponentInfo } from "../scanner/types"
+import type { HydrateMode } from "../component/types"
+import type { ComponentInfo } from "../component/types"
 
 // サーバー仮想モジュール (virtual:pigeonhole/components) を生成する
 export function generateServerModule(components: ComponentInfo[]): string {
     const lines: string[] = []
-    const hasLitComponents = components.some(
-        (c) => c.customElementTagName !== null && c.hydrateMode !== "client-only",
-    )
+    const hasRenderableComponents = components.some((c) => c.hydrateMode !== "client-only")
 
-    if (hasLitComponents) {
+    if (hasRenderableComponents) {
         lines.push('import { renderLitTemplate } from "@pigeonhole/render/lit";')
         lines.push('import { html } from "lit";')
         lines.push('import { unsafeHTML } from "lit/directives/unsafe-html.js";')
@@ -17,25 +14,20 @@ export function generateServerModule(components: ComponentInfo[]): string {
     }
 
     for (const component of components) {
-        const path = normalizePath(component.filePath)
         if (component.hydrateMode === "client-only") {
-            // client-only: サーバーで import せずスタブ関数を生成
             lines.push(`const ${component.tagName} = () => "";`)
-        } else if (component.customElementTagName !== null) {
-            // Lit: 副作用インポート（customElements.define）+ テンプレート関数生成
-            lines.push(`import "${path}";`)
-            lines.push(
-                generateLitSsrFunction(
-                    component.tagName,
-                    component.customElementTagName,
-                    Object.keys(component.propsSchema),
-                    component.hydrateMode,
-                ),
-            )
-        } else {
-            // 関数コンポーネント: 既存通り
-            lines.push(`import { ${component.tagName} } from "${path}";`)
+            continue
         }
+
+        lines.push(`import "${component.moduleSpecifier}";`)
+        lines.push(
+            generateLitSsrFunction(
+                component.tagName,
+                component.customElementTagName,
+                Object.keys(component.propsSchema),
+                component.hydrateMode,
+            ),
+        )
     }
 
     lines.push("")
@@ -53,7 +45,6 @@ export function generateServerModule(components: ComponentInfo[]): string {
     lines.push("};")
     lines.push("")
 
-    // hydrateComponents: hydrate 対象コンポーネント名 → モードの Map
     const hydrateEntries = components.filter((c) => c.hydrateMode !== "none")
     lines.push("export const hydrateComponents = new Map([")
     for (const component of hydrateEntries) {
@@ -62,10 +53,7 @@ export function generateServerModule(components: ComponentInfo[]): string {
     lines.push("]);")
     lines.push("")
 
-    // islandTagNames: コンポーネント名 → カスタム要素タグ名のマッピング
-    const islandEntries = components.filter(
-        (c) => c.customElementTagName !== null && c.hydrateMode !== "none",
-    )
+    const islandEntries = components.filter((c) => c.hydrateMode !== "none")
     lines.push("export const islandTagNames = {")
     for (const component of islandEntries) {
         lines.push(`  "${component.tagName}": "${component.customElementTagName}",`)
@@ -76,7 +64,6 @@ export function generateServerModule(components: ComponentInfo[]): string {
     return lines.join("\n")
 }
 
-/** Lit コンポーネントの SSR 関数をコード生成する */
 function generateLitSsrFunction(
     componentName: string,
     tagName: string,
@@ -93,3 +80,4 @@ function generateLitSsrFunction(
         `};`,
     ].join("\n")
 }
+

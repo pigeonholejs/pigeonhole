@@ -1,5 +1,5 @@
 {
-    "name": "@pigeonhole/hono",
+    "name": "@pigeonhole/adapters",
     "version": "0.0.0",
     "license": "MIT",
     "files": [
@@ -8,10 +8,10 @@
     ],
     "type": "module",
     "exports": {
-        ".": {
-            "types": "./dist/index.d.ts",
-            "development": "./src/index.ts",
-            "default": "./dist/index.js"
+        "./hono": {
+            "types": "./src/hono/index.ts",
+            "development": "./src/hono/index.ts",
+            "default": "./dist/hono/index.js"
         }
     },
     "publishConfig": {
