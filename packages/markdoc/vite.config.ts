@@ -13,7 +13,7 @@ export default defineConfig({
         },
         outDir: "dist",
         rollupOptions: {
-            external: [/^@markdoc\//, "js-yaml", "markdecl"],
+            external: ["js-yaml", "markdecl"],
             output: {
                 preserveModules: true,
                 preserveModulesRoot: "src",
