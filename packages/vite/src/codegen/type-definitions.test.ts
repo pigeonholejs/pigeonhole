@@ -24,6 +24,28 @@ test("ComponentInfo から types.d.ts の内容を生成する", () => {
     assert.include(result, "    count: number;")
 })
 
+// ハイフン付きプロパティ名を引用符で囲む
+test("ハイフン付きプロパティ名は引用符で囲む", () => {
+    const components: ComponentInfo[] = [
+        {
+            tagName: "PostCard",
+            customElementTagName: "sns-post-card",
+            moduleSpecifier: "/project/src/components/PostCard.js",
+            hydrateMode: "none",
+            propsSchema: {
+                "post-id": { type: "string" },
+                content: { type: "string" },
+                "created-at": { type: "string" },
+            },
+        },
+    ]
+
+    const result = generateTypeDefinitions(components)
+    assert.include(result, '    "post-id": string;')
+    assert.include(result, "    content: string;")
+    assert.include(result, '    "created-at": string;')
+})
+
 // props がないコンポーネント
 test("propsSchema が空のコンポーネントは interface を生成しない", () => {
     const components: ComponentInfo[] = [

@@ -1,9 +1,7 @@
 import { defineConfig } from "vite"
+import { pigeonhole } from "@pigeonhole/vite"
 import devServer from "@hono/vite-dev-server"
 
 export default defineConfig({
-    server: {
-        port: 5174,
-    },
-    plugins: [devServer({ entry: "src/server.ts" })],
+    plugins: [pigeonhole(), devServer({ entry: "src/server.ts" })],
 })

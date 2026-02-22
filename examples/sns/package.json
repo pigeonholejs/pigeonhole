@@ -2,10 +2,11 @@
     "name": "example-sns",
     "private": true,
     "scripts": {
-        "dev": "pnpm -C backend run dev",
+        "dev": "pnpm -C backend run dev -- --port 5174 & pnpm -C frontend run dev",
         "typecheck": "pnpm -C backend run typecheck && pnpm -C frontend run --if-present typecheck",
         "test": "pnpm -C backend run test && pnpm -C frontend run --if-present test",
         "e2e": "pnpm -C backend run e2e && pnpm -C frontend run --if-present e2e",
         "build": "pnpm -C backend run build && pnpm -C frontend run --if-present build"
-    }
+    },
+    "packageManager": "pnpm@10.30.0"
 }

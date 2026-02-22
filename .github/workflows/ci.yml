@@ -46,6 +46,18 @@ jobs:
             - name: Build packages
               run: pnpm run build
 
+            - name: Upload package dist
+              uses: actions/upload-artifact@v4
+              with:
+                  name: packages-dist
+                  path: |
+                      packages/adapters/dist
+                      packages/contracts/dist
+                      packages/markdoc/dist
+                      packages/render/dist
+                      packages/vite/dist
+                  if-no-files-found: error
+
             - name: Run typecheck
               run: pnpm run typecheck
 
@@ -53,6 +65,7 @@ jobs:
               run: pnpm run test
 
     examples:
+        needs: root
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -79,6 +92,12 @@ jobs:
               with:
                   version: 10.30.0
 
+            - name: Download package dist
+              uses: actions/download-artifact@v4
+              with:
+                  name: packages-dist
+                  path: .
+
             - name: Get pnpm store directory
               shell: bash
               run: |
@@ -88,16 +107,12 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: ${{ env.STORE_PATH }}
-                  key: ${{ runner.os }}-pnpm-store-${{ matrix.name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  key: ${{ runner.os }}-pnpm-store-${{ matrix.name }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', matrix.path)) }}
                   restore-keys: |
                       ${{ runner.os }}-pnpm-store-${{ matrix.name }}-
 
             - name: Install example dependencies
               run: pnpm -C ${{ matrix.path }} install --frozen-lockfile
-
-            - name: Build local @pigeonhole packages for basic
-              if: matrix.name == 'basic'
-              run: pnpm -C ${{ matrix.path }} --filter "@pigeonhole/*" run build
 
             - name: Build example
               run: pnpm -C ${{ matrix.path }} run --if-present build
