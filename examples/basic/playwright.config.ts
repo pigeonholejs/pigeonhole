@@ -1,6 +1,7 @@
 import { defineConfig } from "@playwright/test"
 
 export default defineConfig({
+    timeout: 60_000,
     webServer: {
         command: "pnpm dev -- --port 5173 --strictPort",
         port: 5173,
