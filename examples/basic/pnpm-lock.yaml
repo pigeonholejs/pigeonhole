@@ -88,9 +88,9 @@ importers:
       js-yaml:
         specifier: ^4.1.1
         version: 4.1.1
-      markdecl:
-        specifier: ^0.1.0
-        version: 0.1.0
+      strictmdoc:
+        specifier: ^0.1.1
+        version: 0.1.1
     devDependencies:
       '@types/js-yaml':
         specifier: ^4.0.9
@@ -119,9 +119,9 @@ importers:
       '@pigeonhole/markdoc':
         specifier: workspace:^
         version: link:../markdoc
-      markdecl:
-        specifier: ^0.1.0
-        version: 0.1.0
+      strictmdoc:
+        specifier: ^0.1.1
+        version: 0.1.1
     devDependencies:
       '@lit-labs/ssr':
         specifier: ^4.0.0
@@ -1032,10 +1032,6 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
-  markdecl@0.1.0:
-    resolution: {integrity: sha512-Zx+TYu8FhJD/p/U+7M5Y/d61Ze4waA/STEgMCdM8R2g4wmfD3YTJpNe20IAxf6xc3u4AObI5JWT1CcN4mZ5BRQ==}
-    engines: {node: '>=24.0.0'}
-
   markdown-it@14.1.1:
     resolution: {integrity: sha512-BuU2qnTti9YKgK5N+IeMubp14ZUKUUw7yeJbkjtosvHiP0AZ5c8IAgEMk79D0eC8F23r4Ac/q8cAIFdm2FtyoA==}
     hasBin: true
@@ -1175,6 +1171,10 @@ packages:
 
   std-env@3.10.0:
     resolution: {integrity: sha512-5GS12FdOZNliM5mAOxFRg7Ir0pWz8MdpYm6AY6VPkGpbA7ZzmbzNcBJQ0GPvvyWgcY7QAhCgf9Uy89I03faLkg==}
+
+  strictmdoc@0.1.1:
+    resolution: {integrity: sha512-u7+YHf2fqn4XXFBlcP8A5mhU+qViURjiCkVpoWO5o0eBKmw0J6TCtSwr+EhIJ93qNvuBtIS9kpgTEtn3C8FS6Q==}
+    engines: {node: '>=24.0.0'}
 
   string-argv@0.3.2:
     resolution: {integrity: sha512-aqD2Q0144Z+/RqG52NeHEkZauTAUWJO8c6yTftGJKO3Tja5tUgIfmIl6kExvhtxSDP7fXB6DvzkfMpCd/F3G+Q==}
@@ -2146,13 +2146,6 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  markdecl@0.1.0:
-    dependencies:
-      markdown-it: 14.1.1
-    optionalDependencies:
-      '@types/linkify-it': 5.0.0
-      '@types/markdown-it': 14.1.2
-
   markdown-it@14.1.1:
     dependencies:
       argparse: 2.0.1
@@ -2305,6 +2298,13 @@ snapshots:
   stackback@0.0.2: {}
 
   std-env@3.10.0: {}
+
+  strictmdoc@0.1.1:
+    dependencies:
+      markdown-it: 14.1.1
+    optionalDependencies:
+      '@types/linkify-it': 5.0.0
+      '@types/markdown-it': 14.1.2
 
   string-argv@0.3.2: {}
 

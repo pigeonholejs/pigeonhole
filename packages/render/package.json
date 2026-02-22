@@ -39,7 +39,7 @@
     "dependencies": {
         "@pigeonhole/contracts": "workspace:^",
         "@pigeonhole/markdoc": "workspace:^",
-        "markdecl": "^0.1.0"
+        "strictmdoc": "^0.1.1"
     },
     "devDependencies": {
         "@lit-labs/ssr": "^4.0.0",
