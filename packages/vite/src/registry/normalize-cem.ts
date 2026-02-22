@@ -80,7 +80,10 @@ function normalizePrimitive(text: string): PrimitiveType | null {
 
 function parseLiteral(token: string): string | number | boolean | null {
     const trimmed = token.trim()
-    if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+    if (
+        (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+        (trimmed.startsWith("'") && trimmed.endsWith("'"))
+    ) {
         return trimmed.slice(1, -1)
     }
     if (trimmed === "true") {
@@ -130,9 +133,7 @@ function classifyType(type: CEMType | undefined): ContractType {
             const concreteLiterals = literals as Array<string | number | boolean>
             const literalKinds = new Set(concreteLiterals.map((literal) => typeof literal))
             const literalPrimitive: PrimitiveType | "mixed" =
-                literalKinds.size === 1
-                    ? (Array.from(literalKinds)[0] as PrimitiveType)
-                    : "mixed"
+                literalKinds.size === 1 ? (Array.from(literalKinds)[0] as PrimitiveType) : "mixed"
             return {
                 kind: "literal-union",
                 literals: concreteLiterals,
@@ -142,7 +143,10 @@ function classifyType(type: CEMType | undefined): ContractType {
         }
     }
 
-    if (references.length > 0 || /^[A-Za-z_$][A-Za-z0-9_$]*(\.[A-Za-z_$][A-Za-z0-9_$]*)*$/.test(rawText)) {
+    if (
+        references.length > 0 ||
+        /^[A-Za-z_$][A-Za-z0-9_$]*(\.[A-Za-z_$][A-Za-z0-9_$]*)*$/.test(rawText)
+    ) {
         return {
             kind: "reference",
             references,
@@ -185,7 +189,9 @@ function ensureAttribute(
 function toImportSpecifier(modulePath: string, options: NormalizeCemOptions): string {
     if (options.registryKind === "package") {
         if (!options.packageName) {
-            throw new Error(`invalid package registry for "${options.sourceId}": packageName is missing`)
+            throw new Error(
+                `invalid package registry for "${options.sourceId}": packageName is missing`,
+            )
         }
         const normalizedModulePath = modulePath.replace(/^\.?\//, "").replace(/^\/+/, "")
         return normalizedModulePath.length > 0
@@ -259,7 +265,11 @@ function declarationToContract(
     }
 
     for (const member of declaration.members ?? []) {
-        if (member.kind !== "field" || typeof member.name !== "string" || member.name.length === 0) {
+        if (
+            member.kind !== "field" ||
+            typeof member.name !== "string" ||
+            member.name.length === 0
+        ) {
             continue
         }
         if (member.attribute === false) {
@@ -326,7 +336,12 @@ export function normalizeCemManifest(
                 continue
             }
 
-            const contract = declarationToContract(declaration, options.sourceId, tagName, moduleSpecifier)
+            const contract = declarationToContract(
+                declaration,
+                options.sourceId,
+                tagName,
+                moduleSpecifier,
+            )
             if (!contract) {
                 continue
             }

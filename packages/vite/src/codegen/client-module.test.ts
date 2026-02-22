@@ -19,7 +19,9 @@ test("island コンポーネントからクライアント仮想モジュール�
         line.includes("@lit-labs/ssr-client/lit-element-hydrate-support.js"),
     )
     const restoreIndex = lines.findIndex((line) => line.includes("restoreIslandProps"))
-    const importIndex = lines.findIndex((line) => line.includes('import "/project/src/components/Counter.js"'))
+    const importIndex = lines.findIndex((line) =>
+        line.includes('import "/project/src/components/Counter.js"'),
+    )
 
     assert.isAbove(hydrateIndex, -1)
     assert.isAbove(restoreIndex, hydrateIndex)
@@ -84,4 +86,3 @@ test("空の island リストでも基本構造を生成する", () => {
     assert.include(result, "restoreIslandProps")
     assert.include(result, "export const islands = {")
 })
-

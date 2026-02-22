@@ -98,7 +98,7 @@ export function pigeonhole(): Plugin {
 
             generatedComponents.sort((a, b) => a.tagName.localeCompare(b.tagName))
 
-            const mdocPages = await collectMdocFiles(root, config.pagesDir)
+            const mdocPages = await collectMdocFiles(root, config.mdocDir)
             validateMdocFiles(mdocPages, root, componentSchemaMap, denyPatterns, {
                 knownPackageImports,
                 componentContracts: componentContractMap,
@@ -137,7 +137,9 @@ export function pigeonhole(): Plugin {
             }
             if (id === RESOLVED_VIRTUAL_CLIENT) {
                 if (generatedComponents.length > 0) {
-                    const islands = generatedComponents.filter((component) => component.hydrateMode !== "none")
+                    const islands = generatedComponents.filter(
+                        (component) => component.hydrateMode !== "none",
+                    )
                     return generateClientModule(islands)
                 }
                 return [

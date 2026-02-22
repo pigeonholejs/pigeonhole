@@ -32,7 +32,7 @@ test("存在する import パスは検証を通過する", () => {
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [{ path: "src/components/Card.tsx" }],
                 inputs: [],
-                tagAttributes: {},
+                tagUsages: {},
             },
         ]
 
@@ -53,7 +53,7 @@ test("存在しない import パスはエラーを投げる", () => {
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [{ path: "src/components/Missing.tsx" }],
                 inputs: [],
-                tagAttributes: {},
+                tagUsages: {},
             },
         ]
 
@@ -81,7 +81,9 @@ test("スキーマに宣言されていない属性はエラーを投げる", ()
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [],
                 inputs: [],
-                tagAttributes: { Card: ["title", "undeclaredAttr"] },
+                tagUsages: {
+                    Card: { attributes: ["title", "undeclaredAttr"], hasChildren: false },
+                },
             },
         ]
 
@@ -109,7 +111,7 @@ test("deny パターンに一致する属性はエラーを投げる", () => {
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [],
                 inputs: [],
-                tagAttributes: { Card: ["class"] },
+                tagUsages: { Card: { attributes: ["class"], hasChildren: false } },
             },
         ]
 
@@ -140,7 +142,7 @@ test("スキーマに宣言されている属性は検証を通過する", () =>
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [],
                 inputs: [],
-                tagAttributes: { Card: ["title", "count"] },
+                tagUsages: { Card: { attributes: ["title", "count"], hasChildren: false } },
             },
         ]
 
@@ -154,7 +156,7 @@ test("スキーマに宣言されている属性は検証を通過する", () =>
 })
 
 // スキーマが存在しないタグ
-test("スキーマが存在しないタグの属性は検証をスキップする", () => {
+test("未登録の PascalCase タグはエラーを投げる", () => {
     const root = createTempDir()
     try {
         const mdocFiles: MdocFileInfo[] = [
@@ -162,13 +164,33 @@ test("スキーマが存在しないタグの属性は検証をスキップす�
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [],
                 inputs: [],
-                tagAttributes: { UnknownTag: ["someAttr"] },
+                tagUsages: { UnknownTag: { attributes: ["someAttr"], hasChildren: false } },
             },
         ]
 
-        /**
-         * スキーマが存在しないタグは検証をスキップする
-         */
+        try {
+            validateMdocFiles(mdocFiles, root, new Map(), [])
+            assert.fail("エラーが投げられるべき")
+        } catch (error) {
+            assert.include((error as Error).message, 'tag "UnknownTag"')
+        }
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("組み込み if タグは未登録でも許可される", () => {
+    const root = createTempDir()
+    try {
+        const mdocFiles: MdocFileInfo[] = [
+            {
+                filePath: join(root, "src/pages/index.mdoc"),
+                imports: [],
+                inputs: [],
+                tagUsages: { if: { attributes: [], hasChildren: true } },
+            },
+        ]
+
         validateMdocFiles(mdocFiles, root, new Map(), [])
     } finally {
         rmSync(root, { recursive: true, force: true })
@@ -183,7 +205,7 @@ test("knownPackageImports に含まれる bare import は許可される", () =>
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [{ path: "@acme/ui" }],
                 inputs: [],
-                tagAttributes: {},
+                tagUsages: {},
             },
         ]
 
@@ -203,7 +225,7 @@ test("unknown bare import はエラーを投げる", () => {
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [{ path: "@acme/missing" }],
                 inputs: [],
-                tagAttributes: {},
+                tagUsages: {},
             },
         ]
 
@@ -254,7 +276,7 @@ test("required 属性が欠落している場合はエラーを投げる", () =>
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [],
                 inputs: [],
-                tagAttributes: { Profile: ["count"] },
+                tagUsages: { Profile: { attributes: ["count"], hasChildren: false } },
             },
         ]
 
@@ -299,7 +321,7 @@ test("strictComplexTypes で complex/reference/unknown を拒否する", () => {
                 filePath: join(root, "src/pages/index.mdoc"),
                 imports: [],
                 inputs: [],
-                tagAttributes: { Card: ["meta"] },
+                tagUsages: { Card: { attributes: ["meta"], hasChildren: false } },
             },
         ]
 
@@ -311,6 +333,141 @@ test("strictComplexTypes で complex/reference/unknown を拒否する", () => {
             assert.fail("エラーが投げられるべき")
         } catch (error) {
             assert.include((error as Error).message, "strictComplexTypes")
+        }
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("mdoc import は PascalCase ファイル名を要求する", () => {
+    const root = createTempDir()
+    try {
+        const layoutsDir = join(root, "src/layouts")
+        mkdirSync(layoutsDir, { recursive: true })
+        writeFileSync(join(layoutsDir, "timeline-layout.mdoc"), "{% Children /%}\n")
+
+        const mdocFiles: MdocFileInfo[] = [
+            {
+                filePath: join(layoutsDir, "Page.mdoc"),
+                imports: [{ path: "src/layouts/timeline-layout.mdoc" }],
+                inputs: [],
+                tagUsages: {},
+            },
+            {
+                filePath: join(layoutsDir, "timeline-layout.mdoc"),
+                imports: [],
+                inputs: [],
+                tagUsages: { Children: { attributes: [], hasChildren: false } },
+            },
+        ]
+
+        try {
+            validateMdocFiles(mdocFiles, root, new Map(), [])
+            assert.fail("エラーが投げられるべき")
+        } catch (error) {
+            assert.include((error as Error).message, "PascalCase file name")
+        }
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("mdoc import の入力属性は child input で検証される", () => {
+    const root = createTempDir()
+    try {
+        const layoutsDir = join(root, "src/layouts")
+        mkdirSync(layoutsDir, { recursive: true })
+        writeFileSync(join(layoutsDir, "TimelineLayout.mdoc"), "{% Children /%}\n")
+
+        const mdocFiles: MdocFileInfo[] = [
+            {
+                filePath: join(layoutsDir, "Page.mdoc"),
+                imports: [{ path: "src/layouts/TimelineLayout.mdoc" }],
+                inputs: [],
+                tagUsages: {
+                    TimelineLayout: { attributes: ["unknown"], hasChildren: true },
+                },
+            },
+            {
+                filePath: join(layoutsDir, "TimelineLayout.mdoc"),
+                imports: [],
+                inputs: [{ variableName: "title" }],
+                tagUsages: { Children: { attributes: [], hasChildren: false } },
+            },
+        ]
+
+        try {
+            validateMdocFiles(mdocFiles, root, new Map(), [])
+            assert.fail("エラーが投げられるべき")
+        } catch (error) {
+            assert.include((error as Error).message, 'undeclared attribute "unknown"')
+        }
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("children 付きで mdoc タグを使う場合は child 側に Children が必要", () => {
+    const root = createTempDir()
+    try {
+        const layoutsDir = join(root, "src/layouts")
+        mkdirSync(layoutsDir, { recursive: true })
+        writeFileSync(join(layoutsDir, "TimelineLayout.mdoc"), "no slot\n")
+
+        const mdocFiles: MdocFileInfo[] = [
+            {
+                filePath: join(layoutsDir, "Page.mdoc"),
+                imports: [{ path: "src/layouts/TimelineLayout.mdoc" }],
+                inputs: [],
+                tagUsages: { TimelineLayout: { attributes: [], hasChildren: true } },
+            },
+            {
+                filePath: join(layoutsDir, "TimelineLayout.mdoc"),
+                imports: [],
+                inputs: [],
+                tagUsages: {},
+            },
+        ]
+
+        try {
+            validateMdocFiles(mdocFiles, root, new Map(), [])
+            assert.fail("エラーが投げられるべき")
+        } catch (error) {
+            assert.include((error as Error).message, 'does not include "{% Children /%}"')
+        }
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("mdoc import の循環参照はエラー", () => {
+    const root = createTempDir()
+    try {
+        const layoutsDir = join(root, "src/layouts")
+        mkdirSync(layoutsDir, { recursive: true })
+        writeFileSync(join(layoutsDir, "A.mdoc"), "{% B /%}\n")
+        writeFileSync(join(layoutsDir, "B.mdoc"), "{% A /%}\n")
+
+        const mdocFiles: MdocFileInfo[] = [
+            {
+                filePath: join(layoutsDir, "A.mdoc"),
+                imports: [{ path: "src/layouts/B.mdoc" }],
+                inputs: [],
+                tagUsages: { B: { attributes: [], hasChildren: false } },
+            },
+            {
+                filePath: join(layoutsDir, "B.mdoc"),
+                imports: [{ path: "src/layouts/A.mdoc" }],
+                inputs: [],
+                tagUsages: { A: { attributes: [], hasChildren: false } },
+            },
+        ]
+
+        try {
+            validateMdocFiles(mdocFiles, root, new Map(), [])
+            assert.fail("エラーが投げられるべき")
+        } catch (error) {
+            assert.include((error as Error).message, "circular mdoc import")
         }
     } finally {
         rmSync(root, { recursive: true, force: true })

@@ -92,9 +92,35 @@ content
 
         const results = await collectMdocFiles(root, "src/pages")
         assert.equal(results.length, 1)
-        assert.isDefined(results[0].tagAttributes["Card"])
-        assert.include(results[0].tagAttributes["Card"], "title")
-        assert.include(results[0].tagAttributes["Card"], "count")
+        assert.isDefined(results[0].tagUsages["Card"])
+        assert.include(results[0].tagUsages["Card"].attributes, "title")
+        assert.include(results[0].tagUsages["Card"].attributes, "count")
+        assert.equal(results[0].tagUsages["Card"].hasChildren, true)
+    } finally {
+        rmSync(root, { recursive: true, force: true })
+    }
+})
+
+test("self-closing タグは hasChildren=false で収集する", async () => {
+    const root = createTempDir()
+    try {
+        const pagesDir = join(root, "src/pages")
+        mkdirSync(pagesDir, { recursive: true })
+
+        writeFileSync(
+            join(pagesDir, "index.mdoc"),
+            `---
+- import:
+    - "components/Card.tsx"
+---
+
+{% Card title="hello" /%}
+`,
+        )
+
+        const results = await collectMdocFiles(root, "src/pages")
+        assert.equal(results.length, 1)
+        assert.equal(results[0].tagUsages["Card"].hasChildren, false)
     } finally {
         rmSync(root, { recursive: true, force: true })
     }
@@ -124,4 +150,3 @@ test("サブディレクトリを再帰的に走査する", async () => {
         rmSync(root, { recursive: true, force: true })
     }
 })
-

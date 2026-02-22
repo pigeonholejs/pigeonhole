@@ -87,4 +87,3 @@ test("複数モードを含む hydrateComponents と islandTagNames を生成す
     assert.include(result, '  "Slider": "ph-slider",')
     assert.notInclude(result, '"Header": "ph-header"')
 })
-

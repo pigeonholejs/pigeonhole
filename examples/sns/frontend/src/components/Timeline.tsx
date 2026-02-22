@@ -39,10 +39,13 @@ export class Timeline extends LitElement {
     render() {
         return html`
             <div class="timeline">
-                ${this._posts.length === 0 && !this._loading
-                    ? html`<p class="empty-state">No posts yet.</p>`
-                    : this._posts.map(
-                          (post) => html`
+                ${
+                    this._posts.length === 0 && !this._loading
+                        ? html`
+                              <p class="empty-state">No posts yet.</p>
+                          `
+                        : this._posts.map(
+                              (post) => html`
                               <sns-post-card
                                   post-id=${post.id}
                                   content=${post.content}
@@ -52,9 +55,11 @@ export class Timeline extends LitElement {
                                   ?liked-by-me=${post.likedByMe}
                               ></sns-post-card>
                           `,
-                      )}
-                ${this._hasMore
-                    ? html`
+                          )
+                }
+                ${
+                    this._hasMore
+                        ? html`
                           <button
                               class="load-more"
                               @click=${this._loadMore}
@@ -63,7 +68,8 @@ export class Timeline extends LitElement {
                               ${this._loading ? "Loading..." : "Load more"}
                           </button>
                       `
-                    : ""}
+                        : ""
+                }
             </div>
         `
     }

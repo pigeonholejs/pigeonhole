@@ -1,4 +1,5 @@
 import type { PropsSchema } from "@pigeonhole/contracts"
+import type { RenderableTreeNode } from "strictmdoc"
 
 /**
  * サーバーコンポーネント関数の型
@@ -36,7 +37,23 @@ export interface RenderMdocOptions {
     denyPatterns?: string[]
     hydrateComponents?: Map<string, "eager" | "lazy" | "client-only">
     islandTagNames?: Record<string, string>
+    mdoc?: {
+        sourcePath?: string
+        resolveImport?: MdocImportResolver
+    }
 }
+
+export type MdocImportResolution = {
+    id: string
+    source: string
+}
+
+export type MdocImportResolver = (
+    specifier: string,
+    importerPath?: string,
+) => Promise<MdocImportResolution | null>
+
+export type MdocSlotChildren = RenderableTreeNode | RenderableTreeNode[] | null
 
 /**
  * Document のオプション

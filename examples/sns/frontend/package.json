@@ -1,33 +1,34 @@
 {
-  "name": "example-sns-frontend",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "dev": "vite --configLoader runner",
-    "typecheck": "tsc --noEmit",
-    "e2e": "playwright test",
-    "e2e:install": "playwright install --with-deps chromium",
-    "build": "vite build --configLoader runner --ssr src/server.ts",
-    "cem": "cem analyze"
-  },
-  "dependencies": {
-    "@hono/node-server": "^1.19.9",
-    "@lit-labs/ssr": "^4.0.0",
-    "@lit-labs/ssr-client": "^1.1.8",
-    "@picocss/pico": "^2.1.1",
-    "@pigeonhole/adapters": "workspace:*",
-    "@pigeonhole/render": "workspace:*",
-    "@pigeonhole/vite": "workspace:*",
-    "hono": "^4.12.0",
-    "lit": "^3.3.2",
-    "playful-avatars": "^1.0.0"
-  },
-  "devDependencies": {
-    "@custom-elements-manifest/analyzer": "^0.10.10",
-    "@hono/vite-dev-server": "^0.25.0",
-    "@playwright/test": "^1.58.2",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.1"
-  },
-  "customElements": "custom-elements.json"
+    "name": "example-sns-frontend",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite --configLoader runner",
+        "typecheck": "tsc --noEmit",
+        "e2e": "playwright test",
+        "e2e:install": "playwright install --with-deps chromium",
+        "build": "vite build --configLoader runner --ssr src/server.ts",
+        "cem": "cem analyze"
+    },
+    "dependencies": {
+        "@hono/node-server": "^1.19.9",
+        "@lit-labs/ssr": "^4.0.0",
+        "@lit-labs/ssr-client": "^1.1.8",
+        "@picocss/pico": "^2.1.1",
+        "@pigeonhole/adapters": "workspace:*",
+        "@pigeonhole/render": "workspace:*",
+        "@pigeonhole/vite": "workspace:*",
+        "hono": "^4.12.0",
+        "lit": "^3.3.2",
+        "playful-avatars": "^1.0.0"
+    },
+    "devDependencies": {
+        "@custom-elements-manifest/analyzer": "^0.10.10",
+        "@hono/vite-dev-server": "^0.25.0",
+        "@playwright/test": "^1.58.2",
+        "@types/node": "^24.3.3",
+        "typescript": "^5.9.3",
+        "vite": "^7.3.1"
+    },
+    "customElements": "custom-elements.json"
 }

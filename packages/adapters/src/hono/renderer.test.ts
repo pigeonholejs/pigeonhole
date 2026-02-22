@@ -68,4 +68,41 @@ describe("createPageRenderer", () => {
         const html = await res.text()
         expect(html).toContain("<!doctype html>")
     })
+
+    it("supports mdoc import resolution with sourcePath input", async () => {
+        const app = new Hono()
+        const render = createPageRenderer({
+            resolveMdocImport: async (specifier: string, importerPath?: string) => {
+                if (
+                    specifier === "src/layouts/TimelineLayout.mdoc" &&
+                    importerPath === "/app/src/layouts/pages/TimelinePage.mdoc"
+                ) {
+                    return {
+                        id: "/app/src/layouts/TimelineLayout.mdoc",
+                        source: "{% Children /%}",
+                    }
+                }
+                return null
+            },
+        })
+
+        app.get("/", async (c) => {
+            return render(
+                c,
+                {
+                    source: `---
+- import:
+    - "src/layouts/TimelineLayout.mdoc"
+---
+{% TimelineLayout %}Hello{% /TimelineLayout %}`,
+                    sourcePath: "/app/src/layouts/pages/TimelinePage.mdoc",
+                },
+                {},
+            )
+        })
+
+        const res = await app.request("/")
+        const html = await res.text()
+        expect(html).toContain("Hello")
+    })
 })

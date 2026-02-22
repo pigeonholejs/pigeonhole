@@ -1,891 +1,799 @@
 {
-  "schemaVersion": "1.0.0",
-  "readme": "",
-  "modules": [
-    {
-      "kind": "javascript-module",
-      "path": "src/components/AppHeader.tsx",
-      "declarations": [
+    "schemaVersion": "1.0.0",
+    "readme": "",
+    "modules": [
         {
-          "kind": "class",
-          "description": "",
-          "name": "AppHeader",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "\"eager\""
-            },
-            {
-              "kind": "field",
-              "name": "_username",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "\"\""
-            },
-            {
-              "kind": "method",
-              "name": "_handleLogout",
-              "privacy": "private"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-app-header",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "AppHeader",
-          "declaration": {
-            "name": "AppHeader",
-            "module": "src/components/AppHeader.tsx"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "sns-app-header",
-          "declaration": {
-            "name": "AppHeader",
-            "module": "src/components/AppHeader.tsx"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/ClientStatusPanel.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "ClientStatusPanel",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "\"client-only\""
-            },
-            {
-              "kind": "field",
-              "name": "_online",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "true"
-            },
-            {
-              "kind": "field",
-              "name": "_timezone",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "\"unknown\""
-            },
-            {
-              "kind": "field",
-              "name": "_userAgent",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "\"unknown\""
-            },
-            {
-              "kind": "method",
-              "name": "_syncClientInfo",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_syncOnline",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_formatUserAgent",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
+            "kind": "javascript-module",
+            "path": "src/components/AppHeader.tsx",
+            "declarations": [
                 {
-                  "name": "userAgent",
-                  "type": {
-                    "text": "string"
-                  }
+                    "kind": "class",
+                    "description": "",
+                    "name": "AppHeader",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "type": {
+                                "text": "string"
+                            },
+                            "static": true,
+                            "default": "\"eager\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_username",
+                            "type": {
+                                "text": "string"
+                            },
+                            "privacy": "private",
+                            "default": "\"\""
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_handleLogout",
+                            "privacy": "private"
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "sns-app-header",
+                    "customElement": true
                 }
-              ]
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-client-status-panel",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "ClientStatusPanel",
-          "declaration": {
-            "name": "ClientStatusPanel",
-            "module": "src/components/ClientStatusPanel.tsx"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "sns-client-status-panel",
-          "declaration": {
-            "name": "ClientStatusPanel",
-            "module": "src/components/ClientStatusPanel.tsx"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/FormPageLayout.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "FormPageLayout",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "static": true,
-              "default": "\"none\"",
-              "type": {
-                "text": "\"none\""
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-form-page-layout",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "FormPageLayout",
-          "declaration": {
-            "name": "FormPageLayout",
-            "module": "src/components/FormPageLayout.tsx"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "sns-form-page-layout",
-          "declaration": {
-            "name": "FormPageLayout",
-            "module": "src/components/FormPageLayout.tsx"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/LoginForm.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "LoginForm",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "\"eager\""
-            },
-            {
-              "kind": "field",
-              "name": "_error",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "\"\""
-            },
-            {
-              "kind": "field",
-              "name": "_loading",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "_handleSubmit",
-              "privacy": "private",
-              "parameters": [
+            ],
+            "exports": [
                 {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-login-form",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "LoginForm",
-          "declaration": {
-            "name": "LoginForm",
-            "module": "src/components/LoginForm.tsx"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "sns-login-form",
-          "declaration": {
-            "name": "LoginForm",
-            "module": "src/components/LoginForm.tsx"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/PostCard.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "PostCard",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "\"eager\""
-            },
-            {
-              "kind": "field",
-              "name": "postId",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "post-id"
-            },
-            {
-              "kind": "field",
-              "name": "content",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "content"
-            },
-            {
-              "kind": "field",
-              "name": "username",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "username"
-            },
-            {
-              "kind": "field",
-              "name": "createdAt",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "created-at"
-            },
-            {
-              "kind": "field",
-              "name": "likes",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "likes"
-            },
-            {
-              "kind": "field",
-              "name": "likedByMe",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "attribute": "liked-by-me"
-            },
-            {
-              "kind": "field",
-              "name": "_likeLoading",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "_formatTime",
-              "privacy": "private",
-              "return": {
-                "type": {
-                  "text": "string"
-                }
-              },
-              "parameters": [
+                    "kind": "js",
+                    "name": "AppHeader",
+                    "declaration": {
+                        "name": "AppHeader",
+                        "module": "src/components/AppHeader.tsx"
+                    }
+                },
                 {
-                  "name": "iso",
-                  "type": {
-                    "text": "string"
-                  }
+                    "kind": "custom-element-definition",
+                    "name": "sns-app-header",
+                    "declaration": {
+                        "name": "AppHeader",
+                        "module": "src/components/AppHeader.tsx"
+                    }
                 }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_toggleLike",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "post-id",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "postId"
-            },
-            {
-              "name": "content",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "content"
-            },
-            {
-              "name": "username",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "username"
-            },
-            {
-              "name": "created-at",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "createdAt"
-            },
-            {
-              "name": "likes",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "likes"
-            },
-            {
-              "name": "liked-by-me",
-              "type": {
-                "text": "boolean"
-              },
-              "default": "false",
-              "fieldName": "likedByMe"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-post-card",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "PostCard",
-          "declaration": {
-            "name": "PostCard",
-            "module": "src/components/PostCard.tsx"
-          }
+            ]
         },
         {
-          "kind": "custom-element-definition",
-          "name": "sns-post-card",
-          "declaration": {
-            "name": "PostCard",
-            "module": "src/components/PostCard.tsx"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/PostComposer.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "PostComposer",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "\"eager\""
-            },
-            {
-              "kind": "field",
-              "name": "_content",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "\"\""
-            },
-            {
-              "kind": "field",
-              "name": "_loading",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_loggedIn",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_username",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "\"\""
-            },
-            {
-              "kind": "method",
-              "name": "_handleSubmit",
-              "privacy": "private",
-              "parameters": [
+            "kind": "javascript-module",
+            "path": "src/components/ClientStatusPanel.tsx",
+            "declarations": [
                 {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
+                    "kind": "class",
+                    "description": "",
+                    "name": "ClientStatusPanel",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "type": {
+                                "text": "string"
+                            },
+                            "static": true,
+                            "default": "\"client-only\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_online",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "privacy": "private",
+                            "default": "true"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_timezone",
+                            "type": {
+                                "text": "string"
+                            },
+                            "privacy": "private",
+                            "default": "\"unknown\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_userAgent",
+                            "type": {
+                                "text": "string"
+                            },
+                            "privacy": "private",
+                            "default": "\"unknown\""
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_syncClientInfo",
+                            "privacy": "private"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_syncOnline",
+                            "privacy": "private"
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_formatUserAgent",
+                            "privacy": "private",
+                            "return": {
+                                "type": {
+                                    "text": "string"
+                                }
+                            },
+                            "parameters": [
+                                {
+                                    "name": "userAgent",
+                                    "type": {
+                                        "text": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "sns-client-status-panel",
+                    "customElement": true
                 }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_handleInput",
-              "privacy": "private",
-              "parameters": [
+            ],
+            "exports": [
                 {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
-                }
-              ]
-            },
-            {
-              "kind": "method",
-              "name": "_syncDraft",
-              "privacy": "private",
-              "parameters": [
+                    "kind": "js",
+                    "name": "ClientStatusPanel",
+                    "declaration": {
+                        "name": "ClientStatusPanel",
+                        "module": "src/components/ClientStatusPanel.tsx"
+                    }
+                },
                 {
-                  "name": "value",
-                  "type": {
-                    "text": "string"
-                  }
+                    "kind": "custom-element-definition",
+                    "name": "sns-client-status-panel",
+                    "declaration": {
+                        "name": "ClientStatusPanel",
+                        "module": "src/components/ClientStatusPanel.tsx"
+                    }
                 }
-              ]
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-post-composer",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "PostComposer",
-          "declaration": {
-            "name": "PostComposer",
-            "module": "src/components/PostComposer.tsx"
-          }
+            ]
         },
         {
-          "kind": "custom-element-definition",
-          "name": "sns-post-composer",
-          "declaration": {
-            "name": "PostComposer",
-            "module": "src/components/PostComposer.tsx"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/SignupForm.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "SignupForm",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "\"eager\""
-            },
-            {
-              "kind": "field",
-              "name": "_error",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "\"\""
-            },
-            {
-              "kind": "field",
-              "name": "_loading",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "method",
-              "name": "_handleSubmit",
-              "privacy": "private",
-              "parameters": [
+            "kind": "javascript-module",
+            "path": "src/components/LoginForm.tsx",
+            "declarations": [
                 {
-                  "name": "e",
-                  "type": {
-                    "text": "Event"
-                  }
+                    "kind": "class",
+                    "description": "",
+                    "name": "LoginForm",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "type": {
+                                "text": "string"
+                            },
+                            "static": true,
+                            "default": "\"eager\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_error",
+                            "type": {
+                                "text": "string"
+                            },
+                            "privacy": "private",
+                            "default": "\"\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_loading",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "privacy": "private",
+                            "default": "false"
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_handleSubmit",
+                            "privacy": "private",
+                            "parameters": [
+                                {
+                                    "name": "e",
+                                    "type": {
+                                        "text": "Event"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "sns-login-form",
+                    "customElement": true
                 }
-              ]
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-signup-form",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "SignupForm",
-          "declaration": {
-            "name": "SignupForm",
-            "module": "src/components/SignupForm.tsx"
-          }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "LoginForm",
+                    "declaration": {
+                        "name": "LoginForm",
+                        "module": "src/components/LoginForm.tsx"
+                    }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-login-form",
+                    "declaration": {
+                        "name": "LoginForm",
+                        "module": "src/components/LoginForm.tsx"
+                    }
+                }
+            ]
         },
         {
-          "kind": "custom-element-definition",
-          "name": "sns-signup-form",
-          "declaration": {
-            "name": "SignupForm",
-            "module": "src/components/SignupForm.tsx"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/SuggestedPosts.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "SuggestedPosts",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "\"lazy\""
-            },
-            {
-              "kind": "field",
-              "name": "_loading",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_error",
-              "type": {
-                "text": "string"
-              },
-              "privacy": "private",
-              "default": "\"\""
-            },
-            {
-              "kind": "field",
-              "name": "_posts",
-              "type": {
-                "text": "ApiPost[]"
-              },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "method",
-              "name": "_loadSuggestedPosts",
-              "privacy": "private"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-suggested-posts",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "SuggestedPosts",
-          "declaration": {
-            "name": "SuggestedPosts",
-            "module": "src/components/SuggestedPosts.tsx"
-          }
+            "kind": "javascript-module",
+            "path": "src/components/PostCard.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "PostCard",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "type": {
+                                "text": "string"
+                            },
+                            "static": true,
+                            "default": "\"eager\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "postId",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "attribute": "post-id"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "content",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "attribute": "content"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "username",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "attribute": "username"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "createdAt",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "attribute": "created-at"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "likes",
+                            "type": {
+                                "text": "number"
+                            },
+                            "default": "0",
+                            "attribute": "likes"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "likedByMe",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "default": "false",
+                            "attribute": "liked-by-me"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_likeLoading",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "privacy": "private",
+                            "default": "false"
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_formatTime",
+                            "privacy": "private",
+                            "return": {
+                                "type": {
+                                    "text": "string"
+                                }
+                            },
+                            "parameters": [
+                                {
+                                    "name": "iso",
+                                    "type": {
+                                        "text": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_toggleLike",
+                            "privacy": "private"
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "post-id",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "fieldName": "postId"
+                        },
+                        {
+                            "name": "content",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "fieldName": "content"
+                        },
+                        {
+                            "name": "username",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "fieldName": "username"
+                        },
+                        {
+                            "name": "created-at",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "fieldName": "createdAt"
+                        },
+                        {
+                            "name": "likes",
+                            "type": {
+                                "text": "number"
+                            },
+                            "default": "0",
+                            "fieldName": "likes"
+                        },
+                        {
+                            "name": "liked-by-me",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "default": "false",
+                            "fieldName": "likedByMe"
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "sns-post-card",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "PostCard",
+                    "declaration": {
+                        "name": "PostCard",
+                        "module": "src/components/PostCard.tsx"
+                    }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-post-card",
+                    "declaration": {
+                        "name": "PostCard",
+                        "module": "src/components/PostCard.tsx"
+                    }
+                }
+            ]
         },
         {
-          "kind": "custom-element-definition",
-          "name": "sns-suggested-posts",
-          "declaration": {
-            "name": "SuggestedPosts",
-            "module": "src/components/SuggestedPosts.tsx"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/Timeline.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "Timeline",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "\"eager\""
-            },
-            {
-              "kind": "field",
-              "name": "_posts",
-              "type": {
-                "text": "PostData[]"
-              },
-              "privacy": "private",
-              "default": "[]"
-            },
-            {
-              "kind": "field",
-              "name": "_loading",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_hasMore",
-              "type": {
-                "text": "boolean"
-              },
-              "privacy": "private",
-              "default": "false"
-            },
-            {
-              "kind": "field",
-              "name": "_nextCursor",
-              "type": {
-                "text": "string | null"
-              },
-              "privacy": "private",
-              "default": "null"
-            },
-            {
-              "kind": "method",
-              "name": "_loadPosts",
-              "privacy": "private"
-            },
-            {
-              "kind": "method",
-              "name": "_loadMore",
-              "privacy": "private"
-            },
-            {
-              "kind": "field",
-              "name": "_handlePostCreated",
-              "privacy": "private"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-timeline",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "Timeline",
-          "declaration": {
-            "name": "Timeline",
-            "module": "src/components/Timeline.tsx"
-          }
+            "kind": "javascript-module",
+            "path": "src/components/PostComposer.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "PostComposer",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "type": {
+                                "text": "string"
+                            },
+                            "static": true,
+                            "default": "\"eager\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_content",
+                            "type": {
+                                "text": "string"
+                            },
+                            "privacy": "private",
+                            "default": "\"\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_loading",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "privacy": "private",
+                            "default": "false"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_loggedIn",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "privacy": "private",
+                            "default": "false"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_username",
+                            "type": {
+                                "text": "string"
+                            },
+                            "privacy": "private",
+                            "default": "\"\""
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_handleSubmit",
+                            "privacy": "private",
+                            "parameters": [
+                                {
+                                    "name": "e",
+                                    "type": {
+                                        "text": "Event"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_handleInput",
+                            "privacy": "private",
+                            "parameters": [
+                                {
+                                    "name": "e",
+                                    "type": {
+                                        "text": "Event"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_syncDraft",
+                            "privacy": "private",
+                            "parameters": [
+                                {
+                                    "name": "value",
+                                    "type": {
+                                        "text": "string"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "sns-post-composer",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "PostComposer",
+                    "declaration": {
+                        "name": "PostComposer",
+                        "module": "src/components/PostComposer.tsx"
+                    }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-post-composer",
+                    "declaration": {
+                        "name": "PostComposer",
+                        "module": "src/components/PostComposer.tsx"
+                    }
+                }
+            ]
         },
         {
-          "kind": "custom-element-definition",
-          "name": "sns-timeline",
-          "declaration": {
-            "name": "Timeline",
-            "module": "src/components/Timeline.tsx"
-          }
-        }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/TimelinePageLayout.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "TimelinePageLayout",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "static": true,
-              "default": "\"none\"",
-              "type": {
-                "text": "\"none\""
-              }
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "sns-timeline-page-layout",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "TimelinePageLayout",
-          "declaration": {
-            "name": "TimelinePageLayout",
-            "module": "src/components/TimelinePageLayout.tsx"
-          }
+            "kind": "javascript-module",
+            "path": "src/components/SignupForm.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "SignupForm",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "type": {
+                                "text": "string"
+                            },
+                            "static": true,
+                            "default": "\"eager\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_error",
+                            "type": {
+                                "text": "string"
+                            },
+                            "privacy": "private",
+                            "default": "\"\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_loading",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "privacy": "private",
+                            "default": "false"
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_handleSubmit",
+                            "privacy": "private",
+                            "parameters": [
+                                {
+                                    "name": "e",
+                                    "type": {
+                                        "text": "Event"
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "sns-signup-form",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "SignupForm",
+                    "declaration": {
+                        "name": "SignupForm",
+                        "module": "src/components/SignupForm.tsx"
+                    }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-signup-form",
+                    "declaration": {
+                        "name": "SignupForm",
+                        "module": "src/components/SignupForm.tsx"
+                    }
+                }
+            ]
         },
         {
-          "kind": "custom-element-definition",
-          "name": "sns-timeline-page-layout",
-          "declaration": {
-            "name": "TimelinePageLayout",
-            "module": "src/components/TimelinePageLayout.tsx"
-          }
+            "kind": "javascript-module",
+            "path": "src/components/SuggestedPosts.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "SuggestedPosts",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "type": {
+                                "text": "string"
+                            },
+                            "static": true,
+                            "default": "\"lazy\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_loading",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "privacy": "private",
+                            "default": "false"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_error",
+                            "type": {
+                                "text": "string"
+                            },
+                            "privacy": "private",
+                            "default": "\"\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_posts",
+                            "type": {
+                                "text": "ApiPost[]"
+                            },
+                            "privacy": "private",
+                            "default": "[]"
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_loadSuggestedPosts",
+                            "privacy": "private"
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "sns-suggested-posts",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "SuggestedPosts",
+                    "declaration": {
+                        "name": "SuggestedPosts",
+                        "module": "src/components/SuggestedPosts.tsx"
+                    }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-suggested-posts",
+                    "declaration": {
+                        "name": "SuggestedPosts",
+                        "module": "src/components/SuggestedPosts.tsx"
+                    }
+                }
+            ]
+        },
+        {
+            "kind": "javascript-module",
+            "path": "src/components/Timeline.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "Timeline",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "type": {
+                                "text": "string"
+                            },
+                            "static": true,
+                            "default": "\"eager\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_posts",
+                            "type": {
+                                "text": "PostData[]"
+                            },
+                            "privacy": "private",
+                            "default": "[]"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_loading",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "privacy": "private",
+                            "default": "false"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_hasMore",
+                            "type": {
+                                "text": "boolean"
+                            },
+                            "privacy": "private",
+                            "default": "false"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_nextCursor",
+                            "type": {
+                                "text": "string | null"
+                            },
+                            "privacy": "private",
+                            "default": "null"
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_loadPosts",
+                            "privacy": "private"
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_loadMore",
+                            "privacy": "private"
+                        },
+                        {
+                            "kind": "field",
+                            "name": "_handlePostCreated",
+                            "privacy": "private"
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "sns-timeline",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "Timeline",
+                    "declaration": {
+                        "name": "Timeline",
+                        "module": "src/components/Timeline.tsx"
+                    }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "sns-timeline",
+                    "declaration": {
+                        "name": "Timeline",
+                        "module": "src/components/Timeline.tsx"
+                    }
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

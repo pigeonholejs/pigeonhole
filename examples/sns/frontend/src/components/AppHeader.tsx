@@ -19,15 +19,19 @@ export class AppHeader extends LitElement {
         return html`
             <header class="app-header">
                 <a href="/" class="app-title">SNS</a>
-                ${this._username
-                    ? html`
+                ${
+                    this._username
+                        ? html`
                           <div class="user-info">
                               <playful-avatar name=${this._username} variant="beam"></playful-avatar>
                               <span class="current-user">${this._username}</span>
                           </div>
                           <button class="logout-button" @click=${this._handleLogout}>Logout</button>
                       `
-                    : html`<a href="/login">Login</a>`}
+                        : html`
+                              <a href="/login">Login</a>
+                          `
+                }
             </header>
         `
     }

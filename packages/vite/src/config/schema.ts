@@ -13,7 +13,7 @@ const componentRegistrySchema = z.discriminatedUnion("kind", [
 ])
 
 export const configSchema = z.object({
-    pagesDir: z.string().default("src/pages"),
+    mdocDir: z.string().default("src/layouts"),
     denyPatterns: z.array(z.string()).default([]),
     strictComplexTypes: z.boolean().default(false),
     componentRegistries: z.array(componentRegistrySchema).min(1),

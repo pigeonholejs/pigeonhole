@@ -1,4 +1,4 @@
-import { describe, test, assert } from "vitest"
+import { describe, test, assert, expect } from "vitest"
 import { renderMdoc } from "./render-mdoc"
 
 describe("renderMdoc", () => {
@@ -135,5 +135,120 @@ describe("renderMdoc", () => {
         assert.include(result.html, 'has-children-prop="false"')
         // children は第2引数として渡される
         assert.include(result.html, "child content")
+    })
+
+    test("mdoc import を解決してネストしたレイアウトを描画できる", async () => {
+        const source = `---
+- import:
+    - "src/layouts/TimelineLayout.mdoc"
+    - "src/components/AppHeader.tsx"
+---
+
+{% TimelineLayout %}
+  {% AppHeader /%}
+{% /TimelineLayout %}`
+
+        const result = await renderMdoc(
+            source,
+            {},
+            {
+                components: {
+                    AppHeader: () => "<header>app header</header>",
+                },
+                mdoc: {
+                    sourcePath: "/app/src/layouts/pages/TimelinePage.mdoc",
+                    async resolveImport(specifier, importerPath) {
+                        if (
+                            specifier === "src/layouts/TimelineLayout.mdoc" &&
+                            importerPath === "/app/src/layouts/pages/TimelinePage.mdoc"
+                        ) {
+                            return {
+                                id: "/app/src/layouts/TimelineLayout.mdoc",
+                                source: `{% Children /%}`,
+                            }
+                        }
+                        return null
+                    },
+                },
+            },
+        )
+
+        assert.include(result.html, "<header>app header</header>")
+    })
+
+    test("mdoc import された子の input 変数に属性が渡る", async () => {
+        const source = `---
+- import:
+    - "src/layouts/WithTitle.mdoc"
+---
+
+{% WithTitle title="hello" /%}`
+
+        const result = await renderMdoc(
+            source,
+            {},
+            {
+                mdoc: {
+                    sourcePath: "/app/src/layouts/pages/Page.mdoc",
+                    async resolveImport(specifier, importerPath) {
+                        if (
+                            specifier === "src/layouts/WithTitle.mdoc" &&
+                            importerPath === "/app/src/layouts/pages/Page.mdoc"
+                        ) {
+                            return {
+                                id: "/app/src/layouts/WithTitle.mdoc",
+                                source: `---
+- input:
+    - title
+---
+{% $title %}`,
+                            }
+                        }
+                        return null
+                    },
+                },
+            },
+        )
+
+        assert.include(result.html, "hello")
+    })
+
+    test("mdoc import があるのに resolver 未設定ならエラー", async () => {
+        const source = `---
+- import:
+    - "src/layouts/TimelineLayout.mdoc"
+---
+
+{% TimelineLayout /%}`
+
+        await expect(renderMdoc(source, {})).rejects.toThrow(
+            /requires options\.mdoc\.resolveImport/,
+        )
+    })
+
+    test("mdoc import は PascalCase ファイル名を要求する", async () => {
+        const source = `---
+- import:
+    - "src/layouts/timeline-layout.mdoc"
+---
+
+{% timeline-layout /%}`
+
+        await expect(
+            renderMdoc(
+                source,
+                {},
+                {
+                    mdoc: {
+                        async resolveImport() {
+                            return {
+                                id: "/app/src/layouts/timeline-layout.mdoc",
+                                source: "{% Children /%}",
+                            }
+                        },
+                    },
+                },
+            ),
+        ).rejects.toThrow(/PascalCase file name/)
     })
 })

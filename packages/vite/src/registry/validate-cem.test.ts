@@ -18,4 +18,3 @@ test("無効な CEM はエラーを投げる", () => {
         assert.include((error as Error).message, "invalid custom-elements manifest")
     }
 })
-

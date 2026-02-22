@@ -1,132 +1,132 @@
 {
-  "schemaVersion": "1.0.0",
-  "readme": "",
-  "modules": [
-    {
-      "kind": "javascript-module",
-      "path": "src/components/Counter.tsx",
-      "declarations": [
+    "schemaVersion": "1.0.0",
+    "readme": "",
+    "modules": [
         {
-          "kind": "class",
-          "description": "",
-          "name": "Counter",
-          "members": [
-            {
-              "kind": "field",
-              "name": "hydrate",
-              "type": {
-                "text": "string"
-              },
-              "static": true,
-              "default": "\"eager\""
-            },
-            {
-              "kind": "field",
-              "name": "count",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "attribute": "count"
-            },
-            {
-              "kind": "method",
-              "name": "_increment",
-              "privacy": "private"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "count",
-              "type": {
-                "text": "number"
-              },
-              "default": "0",
-              "fieldName": "count"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "ph-counter",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "Counter",
-          "declaration": {
-            "name": "Counter",
-            "module": "src/components/Counter.tsx"
-          }
+            "kind": "javascript-module",
+            "path": "src/components/Counter.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "Counter",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "hydrate",
+                            "type": {
+                                "text": "string"
+                            },
+                            "static": true,
+                            "default": "\"eager\""
+                        },
+                        {
+                            "kind": "field",
+                            "name": "count",
+                            "type": {
+                                "text": "number"
+                            },
+                            "default": "0",
+                            "attribute": "count"
+                        },
+                        {
+                            "kind": "method",
+                            "name": "_increment",
+                            "privacy": "private"
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "count",
+                            "type": {
+                                "text": "number"
+                            },
+                            "default": "0",
+                            "fieldName": "count"
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "ph-counter",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "Counter",
+                    "declaration": {
+                        "name": "Counter",
+                        "module": "src/components/Counter.tsx"
+                    }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "ph-counter",
+                    "declaration": {
+                        "name": "Counter",
+                        "module": "src/components/Counter.tsx"
+                    }
+                }
+            ]
         },
         {
-          "kind": "custom-element-definition",
-          "name": "ph-counter",
-          "declaration": {
-            "name": "Counter",
-            "module": "src/components/Counter.tsx"
-          }
+            "kind": "javascript-module",
+            "path": "src/components/Greeting.tsx",
+            "declarations": [
+                {
+                    "kind": "class",
+                    "description": "",
+                    "name": "Greeting",
+                    "members": [
+                        {
+                            "kind": "field",
+                            "name": "name",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "attribute": "name"
+                        }
+                    ],
+                    "attributes": [
+                        {
+                            "name": "name",
+                            "type": {
+                                "text": "string"
+                            },
+                            "default": "\"\"",
+                            "fieldName": "name"
+                        }
+                    ],
+                    "superclass": {
+                        "name": "LitElement",
+                        "package": "lit"
+                    },
+                    "tagName": "ph-greeting",
+                    "customElement": true
+                }
+            ],
+            "exports": [
+                {
+                    "kind": "js",
+                    "name": "Greeting",
+                    "declaration": {
+                        "name": "Greeting",
+                        "module": "src/components/Greeting.tsx"
+                    }
+                },
+                {
+                    "kind": "custom-element-definition",
+                    "name": "ph-greeting",
+                    "declaration": {
+                        "name": "Greeting",
+                        "module": "src/components/Greeting.tsx"
+                    }
+                }
+            ]
         }
-      ]
-    },
-    {
-      "kind": "javascript-module",
-      "path": "src/components/Greeting.tsx",
-      "declarations": [
-        {
-          "kind": "class",
-          "description": "",
-          "name": "Greeting",
-          "members": [
-            {
-              "kind": "field",
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "attribute": "name"
-            }
-          ],
-          "attributes": [
-            {
-              "name": "name",
-              "type": {
-                "text": "string"
-              },
-              "default": "\"\"",
-              "fieldName": "name"
-            }
-          ],
-          "superclass": {
-            "name": "LitElement",
-            "package": "lit"
-          },
-          "tagName": "ph-greeting",
-          "customElement": true
-        }
-      ],
-      "exports": [
-        {
-          "kind": "js",
-          "name": "Greeting",
-          "declaration": {
-            "name": "Greeting",
-            "module": "src/components/Greeting.tsx"
-          }
-        },
-        {
-          "kind": "custom-element-definition",
-          "name": "ph-greeting",
-          "declaration": {
-            "name": "Greeting",
-            "module": "src/components/Greeting.tsx"
-          }
-        }
-      ]
-    }
-  ]
+    ]
 }

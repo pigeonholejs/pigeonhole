@@ -30,4 +30,3 @@ export function validateCemManifest(manifest: unknown, sourceId: string): void {
 
     throw new Error(`invalid custom-elements manifest at "${sourceId}":\n${details}`)
 }
-

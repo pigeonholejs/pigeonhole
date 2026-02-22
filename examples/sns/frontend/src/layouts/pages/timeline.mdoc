@@ -1,6 +1,6 @@
 ---
 - import:
-    - "src/components/TimelinePageLayout.tsx"
+    - "src/layouts/components/TimelineLayout.mdoc"
     - "src/components/AppHeader.tsx"
     - "src/components/PostComposer.tsx"
     - "src/components/Timeline.tsx"
@@ -8,10 +8,10 @@
     - "src/components/ClientStatusPanel.tsx"
 ---
 
-{% TimelinePageLayout %}
+{% TimelineLayout %}
   {% AppHeader /%}
   {% PostComposer /%}
   {% Timeline /%}
   {% SuggestedPosts /%}
   {% ClientStatusPanel /%}
-{% /TimelinePageLayout %}
+{% /TimelineLayout %}

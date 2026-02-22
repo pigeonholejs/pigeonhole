@@ -80,4 +80,3 @@ function generateLitSsrFunction(
         `};`,
     ].join("\n")
 }
-

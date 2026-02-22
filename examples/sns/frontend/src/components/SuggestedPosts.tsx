@@ -28,13 +28,18 @@ export class SuggestedPosts extends LitElement {
         return html`
             <section class="suggested-posts">
                 <h3>Suggested posts</h3>
-                ${this._loading
-                    ? html`<p>Loading suggestions...</p>`
-                    : this._error
-                      ? html`<p class="error">${this._error}</p>`
-                      : this._posts.length === 0
-                        ? html`<p>No suggestions yet.</p>`
-                        : html`
+                ${
+                    this._loading
+                        ? html`
+                              <p>Loading suggestions...</p>
+                          `
+                        : this._error
+                          ? html`<p class="error">${this._error}</p>`
+                          : this._posts.length === 0
+                            ? html`
+                                  <p>No suggestions yet.</p>
+                              `
+                            : html`
                               <ul>
                                   ${this._posts.map(
                                       (post) => html`
@@ -54,7 +59,8 @@ export class SuggestedPosts extends LitElement {
                                       `,
                                   )}
                               </ul>
-                          `}
+                          `
+                }
             </section>
         `
     }

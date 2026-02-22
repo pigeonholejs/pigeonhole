@@ -37,13 +37,18 @@ export async function loadCemRegistry(
         }
     }
 
-    const packageJsonPath = require.resolve(`${registry.packageName}/package.json`, { paths: [root] })
+    const packageJsonPath = require.resolve(`${registry.packageName}/package.json`, {
+        paths: [root],
+    })
     const packageDir = dirname(packageJsonPath)
     const packageJson = (await readJson(packageJsonPath)) as {
         customElements?: string
     }
 
-    const cemPath = join(packageDir, registry.cemPath ?? packageJson.customElements ?? "custom-elements.json")
+    const cemPath = join(
+        packageDir,
+        registry.cemPath ?? packageJson.customElements ?? "custom-elements.json",
+    )
     if (!existsSync(cemPath)) {
         throw new Error(
             `CEM file for package "${registry.packageName}" does not exist: "${cemPath}"`,

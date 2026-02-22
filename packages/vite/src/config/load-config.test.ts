@@ -33,7 +33,7 @@ test("config ファイルからユーザー設定を読み込む", async () => {
         writeFileSync(
             join(root, "pigeonhole.config.ts"),
             `export default {
-    pagesDir: "lib/pages",
+    mdocDir: "lib/layouts",
     denyPatterns: ["class", "style"],
     strictComplexTypes: true,
     componentRegistries: [
@@ -48,7 +48,7 @@ test("config ファイルからユーザー設定を読み込む", async () => {
         )
 
         const config = await loadConfig(root)
-        assert.equal(config.pagesDir, "lib/pages")
+        assert.equal(config.mdocDir, "lib/layouts")
         assert.deepEqual(config.denyPatterns, ["class", "style"])
         assert.equal(config.strictComplexTypes, true)
         assert.deepEqual(config.componentRegistries, [
@@ -69,17 +69,19 @@ test("部分的な config でもデフォルト値が補完される", async () 
         writeFileSync(
             join(root, "pigeonhole.config.ts"),
             `export default {
-    pagesDir: "content/pages",
+    mdocDir: "content/layouts",
     componentRegistries: [{ kind: "file", path: "custom-elements.json" }]
 }
 `,
         )
 
         const config = await loadConfig(root)
-        assert.equal(config.pagesDir, "content/pages")
+        assert.equal(config.mdocDir, "content/layouts")
         assert.deepEqual(config.denyPatterns, [])
         assert.equal(config.strictComplexTypes, false)
-        assert.deepEqual(config.componentRegistries, [{ kind: "file", path: "custom-elements.json" }])
+        assert.deepEqual(config.componentRegistries, [
+            { kind: "file", path: "custom-elements.json" },
+        ])
     } finally {
         rmSync(root, { recursive: true, force: true })
     }

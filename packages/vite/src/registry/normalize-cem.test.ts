@@ -108,7 +108,9 @@ test("static hydrate から hydrateMode を抽出する", () => {
                     {
                         name: "Slider",
                         tagName: "ph-slider",
-                        members: [{ kind: "field", static: true, name: "hydrate", default: "lazy" }],
+                        members: [
+                            { kind: "field", static: true, name: "hydrate", default: "lazy" },
+                        ],
                     },
                 ],
             },

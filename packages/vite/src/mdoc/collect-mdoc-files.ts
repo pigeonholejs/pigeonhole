@@ -5,48 +5,40 @@ import { normalizePath } from "vite"
 import { parse, filterFrontmatter } from "@pigeonhole/markdoc"
 import type { MdocFileInfo } from "./types"
 
-// AST からタグの使用属性名を収集する
-function extractTagAttributeNames(ast: {
+type AstNode = {
     type: string
     tag?: string
     attributes?: Record<string, unknown>
     children?: unknown[]
-}): Record<string, string[]> {
-    const tagAttributes: Record<string, string[]> = {}
+}
 
-    function walk(node: {
-        type: string
-        tag?: string
-        attributes?: Record<string, unknown>
-        children?: unknown[]
-    }): void {
+// AST からタグの使用情報を収集する
+function extractTagUsages(ast: AstNode): MdocFileInfo["tagUsages"] {
+    const tagUsages: MdocFileInfo["tagUsages"] = {}
+
+    function walk(node: AstNode): void {
         if (node.type === "tag" && node.tag) {
-            const attributeNames = Object.keys(node.attributes ?? {})
-            if (attributeNames.length > 0) {
-                const existing = tagAttributes[node.tag] ?? []
-                for (const name of attributeNames) {
-                    if (!existing.includes(name)) {
-                        existing.push(name)
-                    }
+            const usage = tagUsages[node.tag] ?? { attributes: [], hasChildren: false }
+            for (const attributeName of Object.keys(node.attributes ?? {})) {
+                if (!usage.attributes.includes(attributeName)) {
+                    usage.attributes.push(attributeName)
                 }
-                tagAttributes[node.tag] = existing
             }
+            if ((node.children?.length ?? 0) > 0) {
+                usage.hasChildren = true
+            }
+            tagUsages[node.tag] = usage
         }
 
-        if (node.children) {
-            for (const child of node.children as {
-                type: string
-                tag?: string
-                attributes?: Record<string, unknown>
-                children?: unknown[]
-            }[]) {
+        for (const child of (node.children ?? []) as AstNode[]) {
+            if (child && typeof child === "object") {
                 walk(child)
             }
         }
     }
 
     walk(ast)
-    return tagAttributes
+    return tagUsages
 }
 
 // 指定ディレクトリ配下の .mdoc ファイルを収集する
@@ -65,16 +57,15 @@ export async function collectMdocFiles(root: string, dir: string): Promise<MdocF
         const source = await readFile(filePath, "utf-8")
         const ast = parse(source)
         const frontmatter = filterFrontmatter(ast)
-        const tagAttributes = extractTagAttributeNames(ast)
+        const tagUsages = extractTagUsages(ast as AstNode)
 
         results.push({
             filePath: normalizePath(filePath),
             imports: frontmatter.imports ?? [],
             inputs: frontmatter.inputs ?? [],
-            tagAttributes,
+            tagUsages,
         })
     }
 
     return results
 }
-

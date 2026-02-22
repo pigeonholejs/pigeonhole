@@ -4,6 +4,8 @@ export type {
     RenderOptions,
     RenderResult,
     RenderMdocOptions,
+    MdocImportResolution,
+    MdocImportResolver,
     DocumentOptions,
     RenderContext,
 } from "./types"

@@ -111,7 +111,9 @@ export const postCardStyles = css`
         margin: 0;
         font-size: 0.875rem;
         cursor: pointer;
-        transition: color 0.15s, background-color 0.15s;
+        transition:
+            color 0.15s,
+            background-color 0.15s;
     }
 
     .like-button:hover {

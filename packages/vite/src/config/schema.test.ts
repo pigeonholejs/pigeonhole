@@ -5,7 +5,7 @@ test("デフォルト値が適用される", () => {
     const result = configSchema.parse({
         componentRegistries: [{ kind: "file", path: "custom-elements.json" }],
     })
-    assert.equal(result.pagesDir, "src/pages")
+    assert.equal(result.mdocDir, "src/layouts")
     assert.deepEqual(result.denyPatterns, [])
     assert.equal(result.strictComplexTypes, false)
     assert.deepEqual(result.componentRegistries, [{ kind: "file", path: "custom-elements.json" }])
@@ -13,7 +13,7 @@ test("デフォルト値が適用される", () => {
 
 test("ユーザー指定値が優先される", () => {
     const result = configSchema.parse({
-        pagesDir: "lib/pages",
+        mdocDir: "lib/layouts",
         denyPatterns: ["class", "style"],
         strictComplexTypes: true,
         componentRegistries: [
@@ -24,7 +24,7 @@ test("ユーザー指定値が優先される", () => {
             },
         ],
     })
-    assert.equal(result.pagesDir, "lib/pages")
+    assert.equal(result.mdocDir, "lib/layouts")
     assert.deepEqual(result.denyPatterns, ["class", "style"])
     assert.equal(result.strictComplexTypes, true)
     assert.deepEqual(result.componentRegistries, [
@@ -38,10 +38,10 @@ test("ユーザー指定値が優先される", () => {
 
 test("部分的な指定でも残りはデフォルトが適用される", () => {
     const result = configSchema.parse({
-        pagesDir: "content/pages",
+        mdocDir: "content/layouts",
         componentRegistries: [{ kind: "file", path: "custom-elements.json" }],
     })
-    assert.equal(result.pagesDir, "content/pages")
+    assert.equal(result.mdocDir, "content/layouts")
     assert.deepEqual(result.denyPatterns, [])
     assert.equal(result.strictComplexTypes, false)
     assert.deepEqual(result.componentRegistries, [{ kind: "file", path: "custom-elements.json" }])

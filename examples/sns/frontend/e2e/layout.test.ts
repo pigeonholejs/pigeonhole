@@ -16,11 +16,30 @@ async function signupAndLogin(page: import("@playwright/test").Page) {
     return username
 }
 
+async function getMaxWidthInPxAndExpectedFromRem(
+    page: import("@playwright/test").Page,
+    selector: string,
+    rem: number,
+) {
+    return page.evaluate(({ selector, rem }) => {
+        const el = document.querySelector(selector)
+        if (!el) {
+            throw new Error(`Element not found: ${selector}`)
+        }
+
+        const actualPx = Number.parseFloat(getComputedStyle(el).maxWidth)
+        const rootFontSizePx = Number.parseFloat(getComputedStyle(document.documentElement).fontSize)
+        return { actualPx, expectedPx: rem * rootFontSizePx }
+    }, { selector, rem })
+}
+
 test.describe("Timeline page layout", () => {
-    test("sns-timeline-page-layout exists on timeline", async ({ page }) => {
+    test("timeline page renders layout components", async ({ page }) => {
         await signupAndLogin(page)
 
-        await expect(page.locator("sns-timeline-page-layout")).toBeVisible()
+        await expect(page.locator("sns-app-header")).toBeVisible()
+        await expect(page.locator("sns-post-composer")).toBeVisible()
+        await expect(page.locator("sns-timeline")).toBeVisible()
     })
 
     test("desktop: 2-column grid layout", async ({ page }) => {
@@ -28,9 +47,7 @@ test.describe("Timeline page layout", () => {
         await signupAndLogin(page)
 
         const columns = await page.evaluate(() => {
-            const el = document.querySelector("sns-timeline-page-layout")
-            if (!el?.shadowRoot) return ""
-            return getComputedStyle(el).gridTemplateColumns
+            return getComputedStyle(document.body).gridTemplateColumns
         })
         // 2fr 1fr resolves to two pixel values
         const parts = columns.split(" ").filter((s) => s.length > 0)
@@ -42,8 +59,7 @@ test.describe("Timeline page layout", () => {
         await signupAndLogin(page)
 
         const columns = await page.evaluate(() => {
-            const el = document.querySelector("sns-timeline-page-layout")
-            return getComputedStyle(el!).gridTemplateColumns
+            return getComputedStyle(document.body).gridTemplateColumns
         })
         const parts = columns.split(" ").filter((s) => s.length > 0)
         expect(parts.length).toBe(1)
@@ -61,63 +77,46 @@ test.describe("Timeline page layout", () => {
 })
 
 test.describe("Form page layout", () => {
-    test("login: sns-form-page-layout exists with max-width", async ({ page }) => {
+    test("login: form component has max-width", async ({ page }) => {
         await page.goto("/login")
 
-        await expect(page.locator("sns-form-page-layout")).toBeVisible()
+        await expect(page.locator("sns-login-form")).toBeVisible()
 
-        const maxWidth = await page.evaluate(() => {
-            const el = document.querySelector("sns-form-page-layout")
-            return getComputedStyle(el!).maxWidth
-        })
-        // 24rem = 384px at default 16px font-size
-        expect(maxWidth).toBe("384px")
+        const { actualPx, expectedPx } = await getMaxWidthInPxAndExpectedFromRem(
+            page,
+            "sns-login-form",
+            24,
+        )
+        // 24rem should resolve against the current root font-size.
+        expect(actualPx).toBeCloseTo(expectedPx, 1)
     })
 
-    test("signup: sns-form-page-layout exists with max-width", async ({ page }) => {
+    test("signup: form component has max-width", async ({ page }) => {
         await page.goto("/signup")
 
-        await expect(page.locator("sns-form-page-layout")).toBeVisible()
+        await expect(page.locator("sns-signup-form")).toBeVisible()
 
-        const maxWidth = await page.evaluate(() => {
-            const el = document.querySelector("sns-form-page-layout")
-            return getComputedStyle(el!).maxWidth
-        })
-        expect(maxWidth).toBe("384px")
+        const { actualPx, expectedPx } = await getMaxWidthInPxAndExpectedFromRem(
+            page,
+            "sns-signup-form",
+            24,
+        )
+        expect(actualPx).toBeCloseTo(expectedPx, 1)
     })
 })
 
-test.describe("Server-only components (hydrate=none)", () => {
-    test("timeline layout has Declarative Shadow DOM", async ({ page }) => {
+test.describe("Non-hydrated layout shell", () => {
+    test("timeline and form layout custom elements are removed", async ({ page }) => {
         await signupAndLogin(page)
+        const timelineLayoutExists = await page.evaluate(
+            () => document.querySelector("sns-timeline-page-layout") !== null,
+        )
+        expect(timelineLayoutExists).toBe(false)
 
-        const hasShadowRoot = await page.evaluate(() => {
-            const el = document.querySelector("sns-timeline-page-layout")
-            return el?.shadowRoot !== null
-        })
-        expect(hasShadowRoot).toBe(true)
-    })
-
-    test("form layout has Declarative Shadow DOM", async ({ page }) => {
         await page.goto("/login")
-
-        const hasShadowRoot = await page.evaluate(() => {
-            const el = document.querySelector("sns-form-page-layout")
-            return el?.shadowRoot !== null
-        })
-        expect(hasShadowRoot).toBe(true)
-    })
-
-    test("layout components are not registered as custom elements on client", async ({ page }) => {
-        await signupAndLogin(page)
-
-        const registered = await page.evaluate(() => {
-            return {
-                timeline: customElements.get("sns-timeline-page-layout") !== undefined,
-                form: customElements.get("sns-form-page-layout") !== undefined,
-            }
-        })
-        expect(registered.timeline).toBe(false)
-        expect(registered.form).toBe(false)
+        const formLayoutExists = await page.evaluate(
+            () => document.querySelector("sns-form-page-layout") !== null,
+        )
+        expect(formLayoutExists).toBe(false)
     })
 })

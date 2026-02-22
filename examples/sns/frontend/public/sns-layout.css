@@ -12,6 +12,15 @@ sns-app-header {
     grid-column: 1 / -1;
 }
 
+sns-login-form,
+sns-signup-form {
+    display: block;
+    width: 100%;
+    max-width: 24rem;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
 @media (min-width: 768px) {
     body {
         grid-template-columns: 2fr 1fr;
