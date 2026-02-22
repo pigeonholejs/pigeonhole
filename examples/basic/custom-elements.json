@@ -45,7 +45,7 @@
                             "kind": "field",
                             "name": "hydrate",
                             "static": true,
-                            "default": "\"eager\""
+                            "default": "eager"
                         },
                         {
                             "kind": "field",
