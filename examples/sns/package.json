@@ -2,9 +2,10 @@
     "name": "example-sns",
     "private": true,
     "scripts": {
-        "dev": "pnpm -C . --filter ./backend run dev",
-        "typecheck": "pnpm -C . -r --if-present run typecheck",
-        "test": "pnpm -C . -r --if-present run test",
-        "build": "pnpm -C . -r --if-present run build"
+        "dev": "pnpm -C backend run dev",
+        "typecheck": "pnpm -C backend run typecheck && pnpm -C frontend run --if-present typecheck",
+        "test": "pnpm -C backend run test && pnpm -C frontend run --if-present test",
+        "e2e": "pnpm -C backend run e2e && pnpm -C frontend run --if-present e2e",
+        "build": "pnpm -C backend run build && pnpm -C frontend run --if-present build"
     }
 }

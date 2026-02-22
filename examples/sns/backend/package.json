@@ -5,6 +5,7 @@
         "dev": "vite --configLoader runner",
         "typecheck": "tsc --noEmit",
         "test": "pnpm vitest run",
+        "e2e": "pnpm vitest run src/server.test.ts",
         "build": "vite build --configLoader runner --ssr src/server.ts"
     },
     "dependencies": {
