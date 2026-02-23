@@ -1,0 +1,14 @@
+---
+# 外部から何を受け取るのか
+input:
+    - chatroomInfo
+    - chatroomMessages
+---
+
+
+{% ChatRoom %}
+- {% ChatRoomHeader role="header" /%}
+- {% ChatRoomNotification role="notification" /%}
+- {% ChatBubbles role="timeline" /%}
+- {% ChatTextInputArea role="input" /%}
+{% ChatRoom /%}
