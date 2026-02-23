@@ -1,6 +1,6 @@
 ---
 - import:
-    - "src/layouts/components/TimelineLayout.mdoc"
+    - "src/components/TimelineLayout.tsx"
     - "src/components/AppHeader.tsx"
     - "src/components/PostComposer.tsx"
     - "src/components/Timeline.tsx"
@@ -9,9 +9,9 @@
 ---
 
 {% TimelineLayout %}
-  {% AppHeader /%}
-  {% PostComposer /%}
-  {% Timeline /%}
-  {% SuggestedPosts /%}
-  {% ClientStatusPanel /%}
+  {% AppHeader slot="header" /%}
+  {% PostComposer slot="composer" /%}
+  {% Timeline slot="feed" /%}
+  {% SuggestedPosts slot="suggestions" /%}
+  {% ClientStatusPanel slot="status" /%}
 {% /TimelineLayout %}

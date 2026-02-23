@@ -84,7 +84,7 @@ function buildComponentTags(options: RenderMdocOptions): NonNullable<Config["tag
                 }
             }
         }
-        tags[name] = { render: name, attributes }
+        tags[name] = { render: name, attributes: { ...attributes, slot: { type: String } } }
     }
 
     return tags

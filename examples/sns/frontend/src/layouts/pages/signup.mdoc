@@ -1,9 +1,9 @@
 ---
 - import:
-    - "src/layouts/components/FormLayout.mdoc"
+    - "src/components/FormLayout.tsx"
     - "src/components/SignupForm.tsx"
 ---
 
 {% FormLayout %}
-  {% SignupForm /%}
+  {% SignupForm slot="form" /%}
 {% /FormLayout %}

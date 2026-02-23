@@ -8,7 +8,7 @@ export function generateServerModule(components: ComponentInfo[]): string {
 
     if (hasRenderableComponents) {
         lines.push('import { renderLitTemplate } from "@pigeonhole/render/lit";')
-        lines.push('import { html } from "lit";')
+        lines.push('import { html, nothing } from "lit";')
         lines.push('import { unsafeHTML } from "lit/directives/unsafe-html.js";')
         lines.push("")
     }
@@ -75,6 +75,7 @@ function generateLitSsrFunction(
     return [
         `const ${componentName} = async (props, children) => {`,
         `  const template = html\`<${tagName}${propBindings}`,
+        `  slot=\${props.slot ?? nothing}`,
         `  >\${unsafeHTML(children || '')}</${tagName}>\`;`,
         `  return renderLitTemplate(template, { deferHydration: ${hydrateMode !== "none"} });`,
         `};`,

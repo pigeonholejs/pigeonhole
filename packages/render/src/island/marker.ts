@@ -73,5 +73,6 @@ export function wrapIslandHtml(
     }
 
     // 関数コンポーネント: 外側タグでラップ
-    return `<${tagName} ${PH_ISLAND_ID_ATTR}="${islandId}"${hydrateAttr}>${islandHtml}</${tagName}>${propsScript}`
+    const slotAttr = typeof props.slot === "string" ? ` slot="${props.slot}"` : ""
+    return `<${tagName} ${PH_ISLAND_ID_ATTR}="${islandId}"${hydrateAttr}${slotAttr}>${islandHtml}</${tagName}>${propsScript}`
 }
